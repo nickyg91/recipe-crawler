@@ -2,9 +2,9 @@ using HtmlAgilityPack;
 using Microsoft.AspNetCore.Mvc;
 using RecipeCrawler.Web.Models;
 
-namespace RecipeCrawler.Web.Controller
+namespace RecipeCrawler.Web.Controllers.Features
 {
-    [Route("api/[controller]")]
+    [Route("api/features/[controller]")]
     [ApiController]
     public class CrawlerController : ControllerBase
     {

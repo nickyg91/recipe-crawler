@@ -5,8 +5,8 @@ import { NConfigProvider, NSpace, darkTheme } from 'naive-ui';
 import RecipeCrawler from './components/RecipeCrawler.vue';
 </script>
 <template>
-  <n-config-provider :theme="darkTheme"> 
-  <n-space justify="center">
+  <n-config-provider> 
+  <n-space content-style="padding: 24px;" justify="center">
     <RecipeCrawler />
   </n-space>
   </n-config-provider>

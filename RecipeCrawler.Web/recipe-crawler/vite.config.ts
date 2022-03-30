@@ -30,14 +30,5 @@ export default defineConfig({
         secure: false
       }
     },
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        prependData: `
-          @import "./src/styles/main.scss";
-        `
-      }
-    }
   }
 })

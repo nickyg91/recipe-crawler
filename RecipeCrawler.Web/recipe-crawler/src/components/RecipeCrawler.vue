@@ -6,7 +6,7 @@
     let url = ref('');
     let response = reactive(new ParsedResponse());
     const submit = () => {
-        axios.post("/api/crawler", {
+        axios.post("/api/features/crawler", {
             url: url.value
         }).then((result: AxiosResponse<ParsedResponse>) => {
             response.ingredients = result.data.ingredients;
@@ -18,7 +18,7 @@
 </script>
 <template>
 <div>
-    <n-grid cols="1">
+    <n-grid x-gap="12" :cols="1">
         <n-gi>
             <n-form>
                 <n-form-item label="Url">
