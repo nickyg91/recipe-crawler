@@ -21,7 +21,7 @@ namespace RecipeCrawler.Web.Controllers.Features
                 var anyOrderedListsWithIngredients = htmlParser.DocumentNode.SelectNodes("//ol[contains(@class, 'ingredients')]");
                 var anyUnorderedListsWithIngredients = htmlParser.DocumentNode.SelectNodes("//ul[contains(@class, 'ingredients')]");
                 var anyDivTagsWithIngredients = htmlParser.DocumentNode.SelectNodes("//div[contains(@class, 'ingredients')]");
-                var anyDivTagsWithSteps = htmlParser.DocumentNode.SelectNodes("//div[contains(@class, 'instructions')]");
+                var anyDivTagsWithSteps = htmlParser.DocumentNode.SelectNodes("//div[contains(@class, 'instructions')]|//section[contains(@class, 'steps')]");
                 var anyUlWithSteps = htmlParser.DocumentNode.SelectNodes("//ul[contains(@class, 'instructions')]|//ul[contains(@class, 'directions')]");
                 var anyOlWithSteps = htmlParser.DocumentNode.SelectNodes("//ol[contains(@class, 'instructions')]|//ol[contains(@class, 'directions')]");
                 var listOfIngredientSections = new List<string>();
