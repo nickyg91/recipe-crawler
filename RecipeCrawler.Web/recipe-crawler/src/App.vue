@@ -7,13 +7,13 @@ import {
   NLayout,
   darkTheme,
 } from "naive-ui";
-import RecipeCrawler from "./components/RecipeCrawler.vue";
+import { RouterView } from "vue-router";
 </script>
 <template>
   <n-config-provider :theme="darkTheme">
     <n-notification-provider>
       <n-layout class="full-height">
-        <RecipeCrawler />
+        <router-view />
       </n-layout>
     </n-notification-provider>
   </n-config-provider>

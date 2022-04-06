@@ -58,5 +58,17 @@ namespace RecipeCrawler.Web.Controllers.Features
                 return Ok(parsedResponse);
             }
         }
+
+        [HttpPost("save")]
+        public async Task<IActionResult> Save(ParsedHtmlRecipeModel model)
+        {
+            using (var provider = System.Security.Cryptography.SHA512.Create())
+            {
+                var urlBytes = System.Text.Encoding.GetEncoding(0).GetBytes(model.Url);
+                var hashedString = provider.ComputeHash(urlBytes);
+                // store it in redis
+                return Ok(hashedString);
+            }
+        }
     }
 }

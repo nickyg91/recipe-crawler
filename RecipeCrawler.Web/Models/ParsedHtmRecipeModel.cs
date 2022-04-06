@@ -4,5 +4,6 @@ namespace RecipeCrawler.Web
     {
         public List<string>? Ingredients { get; set; }
         public List<string>? Steps { get; set; }
+        public string? Url { get; set; }
     }
 }
