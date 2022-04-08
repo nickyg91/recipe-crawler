@@ -1,7 +1,10 @@
-@import '../../node_modules/bulma/bulma.sass';
-
 html {
-    height: 100vh;
-    margin: 0;
-    padding: 0;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.full-height {
+  height: 100vh;
+  padding: 1em;
 }
