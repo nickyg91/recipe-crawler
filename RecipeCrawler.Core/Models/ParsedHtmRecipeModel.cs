@@ -1,4 +1,4 @@
-namespace RecipeCrawler.Web 
+namespace RecipeCrawler.Core.Models 
 {
     public class ParsedHtmlRecipeModel
     {
