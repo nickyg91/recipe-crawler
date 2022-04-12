@@ -13,11 +13,11 @@ namespace RecipeCrawler.Data.Redis
             _connectionString = connectionString;
         }
 
-        public async Task Connect()
+        public void Connect()
         {
             if (Connection == null || !Connection.Value.IsConnected && !Connection.Value.IsConnecting)
             {
-                Connection = new Lazy<ConnectionMultiplexer>(await ConnectionMultiplexer.ConnectAsync(_connectionString));
+                Connection = new Lazy<ConnectionMultiplexer>(ConnectionMultiplexer.Connect(_connectionString));
                 Database = Connection.Value.GetDatabase();
             }
         }

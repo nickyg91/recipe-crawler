@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using RecipeCrawler.Core.Models;
 using RecipeCrawler.Core.Services;
+using System.Text;
 
 namespace RecipeCrawler.Web.Controllers.Features
 {
@@ -24,12 +26,14 @@ namespace RecipeCrawler.Web.Controllers.Features
         [HttpPost("save")]
         public async Task<IActionResult> Save(ParsedHtmlRecipeModel model)
         {
-            var url = await _recipeCrawlerService.StoreRecipe(model);
-            return Ok(url);
+            var bytes = Encoding.UTF8.GetBytes(model.Url);
+            var shortenedUrl = WebEncoders.Base64UrlEncode(bytes);
+            await _recipeCrawlerService.StoreRecipe(shortenedUrl, model);
+            return Ok(shortenedUrl);
         }
 
-        [HttpGet("{slug:string}")]
-        public async Task<IActionResult> Save(string slug)
+        [HttpGet("find/{slug}")]
+        public async Task<IActionResult> GetRecipe(string slug)
         {
             var recipe = await _recipeCrawlerService.GetRecipeFromUrl(slug);
             return Ok(recipe);

@@ -1,8 +1,6 @@
 ﻿using HtmlAgilityPack;
 using RecipeCrawler.Core.Models;
 using RecipeCrawler.Data.Redis;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace RecipeCrawler.Core.Services
 {
@@ -68,31 +66,29 @@ namespace RecipeCrawler.Core.Services
             return await _redisService.GetKey<ParsedHtmlRecipeModel?>(url);
         }
 
-        public async Task<string> StoreRecipe(ParsedHtmlRecipeModel recipe)
+        public async Task StoreRecipe(string shortenedUrl, ParsedHtmlRecipeModel recipe)
         {
-            var slugifiedUrl = SlugifyUrl(recipe.Url);
-            await _redisService.StoreKey(slugifiedUrl, recipe);
-            return slugifiedUrl;
+            await _redisService.StoreKey(shortenedUrl, recipe);
         }
 
-        private string SlugifyUrl(string url)
-        {
-            url = url.ToLowerInvariant();
+        //private string ShortenUrl(string url)
+        //{
+        //    url = url.ToLowerInvariant();
+        //    WebEncoders.
+        //    var bytes = Encoding.GetEncoding("Cyrillic").GetBytes(url);
+        //    url = Encoding.ASCII.GetString(bytes);
 
-            var bytes = Encoding.GetEncoding("Cyrillic").GetBytes(url);
-            url = Encoding.ASCII.GetString(bytes);
+        //    url = Regex.Replace(url, @"\s", "-", RegexOptions.Compiled);
 
-            url = Regex.Replace(url, @"\s", "-", RegexOptions.Compiled);
+        //    //Remove invalid chars 
+        //    url = Regex.Replace(url, @"[^\w\s\p{Pd}]", "", RegexOptions.Compiled);
 
-            //Remove invalid chars 
-            url = Regex.Replace(url, @"[^\w\s\p{Pd}]", "", RegexOptions.Compiled);
+        //    //Trim dashes from end 
+        //    url = url.Trim('-', '_');
 
-            //Trim dashes from end 
-            url = url.Trim('-', '_');
-
-            //Replace double occurences of - or \_ 
-            url = Regex.Replace(url, @"([-_]){2,}", "$1", RegexOptions.Compiled);
-            return url;
-        }
+        //    //Replace double occurences of - or \_ 
+        //    url = Regex.Replace(url, @"([-_]){2,}", "$1", RegexOptions.Compiled);
+        //    return url;
+        //}
     }
 }

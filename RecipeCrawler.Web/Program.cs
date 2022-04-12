@@ -1,6 +1,5 @@
 using RecipeCrawler.Core.Services;
 using RecipeCrawler.Data.Redis;
-using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +12,7 @@ var connection = builder.Configuration["redis"];
 builder.Services.AddSingleton<IRedisService, RedisService>((provider) =>
 {
     var redisService = new RedisService(connection);
-    //await redisService.Connect();
+    redisService.Connect();
     return redisService;
 });
 

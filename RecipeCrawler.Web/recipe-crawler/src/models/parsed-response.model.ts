@@ -1,4 +1,5 @@
 export class ParsedResponse {
-    ingredients!: Array<string>;
-    steps!: Array<string>;
+  ingredients!: Array<string>;
+  steps!: Array<string>;
+  url!: string;
 }
