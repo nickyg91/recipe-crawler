@@ -24,13 +24,15 @@ namespace RecipeCrawler.Web.Controllers.Features
         [HttpPost("save")]
         public async Task<IActionResult> Save(ParsedHtmlRecipeModel model)
         {
-            using (var provider = System.Security.Cryptography.SHA512.Create())
-            {
-                var urlBytes = System.Text.Encoding.GetEncoding(0).GetBytes(model.Url);
-                var hashedString = provider.ComputeHash(urlBytes);
-                // store it in redis
-                return Ok(hashedString);
-            }
+            var url = await _recipeCrawlerService.StoreRecipe(model);
+            return Ok(url);
+        }
+
+        [HttpGet("{slug:string}")]
+        public async Task<IActionResult> Save(string slug)
+        {
+            var recipe = await _recipeCrawlerService.GetRecipeFromUrl(slug);
+            return Ok(recipe);
         }
     }
 }

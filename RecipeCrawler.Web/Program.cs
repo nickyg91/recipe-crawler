@@ -1,8 +1,23 @@
+using RecipeCrawler.Core.Services;
+using RecipeCrawler.Data.Redis;
+using System.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
+var connection = builder.Configuration["redis"];
+
+
+builder.Services.AddSingleton<IRedisService, RedisService>((provider) =>
+{
+    var redisService = new RedisService(connection);
+    //await redisService.Connect();
+    return redisService;
+});
+
+builder.Services.AddScoped<IRecipeCrawlerService, RecipeCrawlerService>();
 
 var app = builder.Build();
 
