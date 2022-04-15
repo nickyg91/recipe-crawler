@@ -18,8 +18,10 @@ import {
   FormInst,
   useNotification,
   NSpin,
+  NDivider,
 } from "naive-ui";
 import { Checkmark, Close, Save } from "@vicons/carbon";
+import { computed } from "@vue/reactivity";
 const notificationService = useNotification();
 let response = reactive(new ParsedResponse());
 let loading = ref(false);
@@ -41,6 +43,13 @@ const rules: FormRules = {
     trigger: ["input", "blur"],
   },
 };
+
+const calculateCols = computed(() => {
+  return response.ingredients?.length > 4 || response.steps?.length > 4
+    ? 4
+    : Math.min(response.ingredients?.length, response.steps?.length);
+});
+
 const submit = () => {
   formRef.value?.validate((errors) => {
     if (!errors) {
@@ -114,7 +123,10 @@ const save = () => {
                 <div>
                   <n-space size="large" justify="end">
                     <n-button
-                      :disabled="response === null"
+                      :disabled="
+                        response.ingredients?.length > 0 ||
+                        response.steps?.length > 0
+                      "
                       size="large"
                       ghost
                       @click="save"
@@ -149,10 +161,11 @@ const save = () => {
         </n-layout-content>
       </n-layout>
     </n-space>
+    <n-divider></n-divider>
     <n-space bordered justify="center">
       <n-layout>
         <n-layout-content>
-          <n-grid x-gap="10" cols="4">
+          <n-grid x-gap="10" :cols="calculateCols">
             <n-gi
               v-if="response.ingredients?.length > 0"
               v-for="(item, index) in response.ingredients"

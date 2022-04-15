@@ -7,5 +7,6 @@
         Task StoreKey(string key, string value);
         Task<string> GetKey(string key);
         Task<T?> GetKey<T>(string key);
+        Task<bool> KeyExists(string key);
     }
 }

@@ -55,5 +55,10 @@ namespace RecipeCrawler.Data.Redis
             }
             return default;
         }
+
+        public async Task<bool> KeyExists(string key)
+        {
+            return await Database.KeyExistsAsync(key);
+        }
     }
 }

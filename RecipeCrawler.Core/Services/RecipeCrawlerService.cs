@@ -66,29 +66,33 @@ namespace RecipeCrawler.Core.Services
             return await _redisService.GetKey<ParsedHtmlRecipeModel?>(url);
         }
 
-        public async Task StoreRecipe(string shortenedUrl, ParsedHtmlRecipeModel recipe)
+        public async Task<string> StoreRecipe(ParsedHtmlRecipeModel recipe)
         {
+
+            var randomInteger = Random.Shared.Next(0, int.MaxValue);
+            var shortenedUrl = GetBase64String(randomInteger);
+
+            var exists = await _redisService.KeyExists(shortenedUrl);
+
+            if (exists)
+            {
+                while (!exists)
+                {
+                    randomInteger = Random.Shared.Next(0, int.MaxValue);
+                    shortenedUrl = GetBase64String(randomInteger);
+                    exists = await _redisService.KeyExists(shortenedUrl);
+                }
+            }
+
             await _redisService.StoreKey(shortenedUrl, recipe);
+            return shortenedUrl;
         }
 
-        //private string ShortenUrl(string url)
-        //{
-        //    url = url.ToLowerInvariant();
-        //    WebEncoders.
-        //    var bytes = Encoding.GetEncoding("Cyrillic").GetBytes(url);
-        //    url = Encoding.ASCII.GetString(bytes);
-
-        //    url = Regex.Replace(url, @"\s", "-", RegexOptions.Compiled);
-
-        //    //Remove invalid chars 
-        //    url = Regex.Replace(url, @"[^\w\s\p{Pd}]", "", RegexOptions.Compiled);
-
-        //    //Trim dashes from end 
-        //    url = url.Trim('-', '_');
-
-        //    //Replace double occurences of - or \_ 
-        //    url = Regex.Replace(url, @"([-_]){2,}", "$1", RegexOptions.Compiled);
-        //    return url;
-        //}
+        private string GetBase64String(int randomInteger)
+        {
+            var bytes = System.Text.Encoding.UTF8.GetBytes(randomInteger.ToString()); 
+            var shortenedUrl = Convert.ToBase64String(bytes);
+            return shortenedUrl;
+        }
     }
 }

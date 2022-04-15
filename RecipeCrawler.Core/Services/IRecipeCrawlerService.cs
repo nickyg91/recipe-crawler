@@ -5,7 +5,7 @@ namespace RecipeCrawler.Core.Services
     public interface IRecipeCrawlerService
     {
         Task<ParsedHtmlRecipeModel> CrawlUrl(string url);
-        Task StoreRecipe(string shortenedUrl, ParsedHtmlRecipeModel recipe);
+        Task<string> StoreRecipe(ParsedHtmlRecipeModel recipe);
         Task<ParsedHtmlRecipeModel?> GetRecipeFromUrl(string slugifiedUrl);
     }
 }

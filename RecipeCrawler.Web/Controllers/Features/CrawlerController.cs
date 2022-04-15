@@ -26,9 +26,7 @@ namespace RecipeCrawler.Web.Controllers.Features
         [HttpPost("save")]
         public async Task<IActionResult> Save(ParsedHtmlRecipeModel model)
         {
-            var bytes = Encoding.UTF8.GetBytes(model.Url);
-            var shortenedUrl = WebEncoders.Base64UrlEncode(bytes);
-            await _recipeCrawlerService.StoreRecipe(shortenedUrl, model);
+            var shortenedUrl = await _recipeCrawlerService.StoreRecipe(model);
             return Ok(shortenedUrl);
         }
 
