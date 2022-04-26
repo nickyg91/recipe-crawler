@@ -42,9 +42,9 @@ namespace RecipeCrawler.Web.Controllers.Features
         }
 
         [HttpGet("{shortenedUrl}")]
-        public async Task<IActionResult> GetRecipe(string slug)
+        public async Task<IActionResult> GetRecipe(string shortenedUrl)
         {
-            var recipe = await _recipeCrawlerService.GetRecipeFromUrl(slug);
+            var recipe = await _recipeCrawlerService.GetRecipeFromUrl(shortenedUrl);
             return Ok(recipe);
         }
     }

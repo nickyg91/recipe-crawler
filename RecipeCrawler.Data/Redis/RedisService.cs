@@ -28,7 +28,8 @@ namespace RecipeCrawler.Data.Redis
             using (var reader = new StreamReader(stream))
             {
                 await JsonSerializer.SerializeAsync<T>(stream, value);
-                var json = reader.ReadToEnd();
+                stream.Seek(0, SeekOrigin.Begin);
+                var json = await reader.ReadToEndAsync();
                 await Database.StringSetAsync(key, json);
             }
         }
