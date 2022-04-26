@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using RecipeCrawler.Core.Models;
 using RecipeCrawler.Core.Services;
-using System.Text;
 
 namespace RecipeCrawler.Web.Controllers.Features
 {
@@ -26,11 +25,23 @@ namespace RecipeCrawler.Web.Controllers.Features
         [HttpPost("save")]
         public async Task<IActionResult> Save(ParsedHtmlRecipeModel model)
         {
-            var shortenedUrl = await _recipeCrawlerService.StoreRecipe(model);
+            var randomInteger = Random.Shared.Next(0, int.MaxValue);
+            var shortenedUrl = WebEncoders.Base64UrlEncode(BitConverter.GetBytes(randomInteger));
+
+            var exists = await _recipeCrawlerService.UrlUsed(shortenedUrl);
+
+            while (exists)
+            {
+                randomInteger = Random.Shared.Next(0, int.MaxValue);
+                shortenedUrl = WebEncoders.Base64UrlEncode(BitConverter.GetBytes(randomInteger));
+                exists = await _recipeCrawlerService.UrlUsed(shortenedUrl);
+            }
+
+            await _recipeCrawlerService.StoreRecipe(shortenedUrl, model);
             return Ok(shortenedUrl);
         }
 
-        [HttpGet("find/{slug}")]
+        [HttpGet("{shortenedUrl}")]
         public async Task<IActionResult> GetRecipe(string slug)
         {
             var recipe = await _recipeCrawlerService.GetRecipeFromUrl(slug);

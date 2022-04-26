@@ -22,7 +22,9 @@ import {
 } from "naive-ui";
 import { Checkmark, Close, Save } from "@vicons/carbon";
 import { computed } from "@vue/reactivity";
+import { useRouter } from "vue-router";
 const notificationService = useNotification();
+const router = useRouter();
 let response = reactive(new ParsedResponse());
 let loading = ref(false);
 const removeIngredient = (index: number) => {
@@ -43,11 +45,12 @@ const rules: FormRules = {
     trigger: ["input", "blur"],
   },
 };
+const submitEnabled = computed(() => {
+  return model.url.length > 1;
+});
 
-const calculateCols = computed(() => {
-  return response.ingredients?.length > 4 || response.steps?.length > 4
-    ? 4
-    : Math.min(response.ingredients?.length, response.steps?.length);
+const saveEnabled = computed(() => {
+  return response.ingredients?.length > 0 || response.steps?.length > 0;
 });
 
 const submit = () => {
@@ -89,8 +92,8 @@ const save = () => {
   loading.value = true;
   response.url = model.url;
   axios.post("/api/features/crawler/save", response).then(
-    (data: AxiosResponse<string>) => {
-      console.log(data);
+    (result: AxiosResponse<string>) => {
+      router.push({ name: "savedRecipe", params: { url: result.data } });
       loading.value = false;
     },
     (error) => {
@@ -106,9 +109,9 @@ const save = () => {
 </script>
 <template>
   <n-spin :show="loading">
-    <n-space vertical size="large">
-      <n-layout content-style="margin-bottom: 5px;">
-        <n-layout-content>
+    <n-layout>
+      <n-layout-content>
+        <n-space vertical size="large">
           <n-grid x-gap="12" :cols="3">
             <n-gi offset="1">
               <n-form
@@ -123,10 +126,7 @@ const save = () => {
                 <div>
                   <n-space size="large" justify="end">
                     <n-button
-                      :disabled="
-                        response.ingredients?.length > 0 ||
-                        response.steps?.length > 0
-                      "
+                      :disabled="!saveEnabled"
                       size="large"
                       ghost
                       @click="save"
@@ -140,7 +140,7 @@ const save = () => {
                       Save
                     </n-button>
                     <n-button
-                      :disabled="model.url.length < 1"
+                      :disabled="!submitEnabled"
                       size="large"
                       ghost
                       @click="submit"
@@ -158,59 +158,46 @@ const save = () => {
               </n-form>
             </n-gi>
           </n-grid>
-        </n-layout-content>
-      </n-layout>
-    </n-space>
-    <n-divider></n-divider>
-    <n-space bordered justify="center">
-      <n-layout>
-        <n-layout-content>
-          <n-grid x-gap="10" :cols="calculateCols">
-            <n-gi
-              v-if="response.ingredients?.length > 0"
-              v-for="(item, index) in response.ingredients"
-            >
-              <n-card>
-                <n-space justify="end">
-                  <n-button
-                    @click="removeIngredient(index)"
-                    type="primary"
-                    strong
-                    circle
-                    secondary
-                  >
-                    <template #icon>
-                      <Close />
-                    </template>
-                  </n-button>
-                </n-space>
-                <div v-html="item"></div>
-              </n-card>
-            </n-gi>
-            <n-gi
-              v-if="response.steps?.length > 0"
-              v-for="(item, index) in response.steps"
-            >
-              <n-card>
-                <n-space justify="end">
-                  <n-button
-                    @click="removeStep(index)"
-                    type="primary"
-                    strong
-                    circle
-                    secondary
-                  >
-                    <template #icon>
-                      <Close />
-                    </template>
-                  </n-button>
-                </n-space>
-                <div v-html="item"></div>
-              </n-card>
-            </n-gi>
-          </n-grid>
-        </n-layout-content>
-      </n-layout>
-    </n-space>
+        </n-space>
+        <n-divider></n-divider>
+        <n-space vertical justify="center">
+          <n-card
+            style="margin-bottom: 5px"
+            v-for="(item, index) in response.ingredients"
+          >
+            <n-space justify="end">
+              <n-button
+                @click="removeIngredient(index)"
+                type="primary"
+                strong
+                circle
+                secondary
+              >
+                <template #icon>
+                  <Close />
+                </template>
+              </n-button>
+            </n-space>
+            <div v-html="item"></div>
+          </n-card>
+          <n-card v-for="(item, index) in response.steps">
+            <n-space justify="end">
+              <n-button
+                @click="removeStep(index)"
+                type="primary"
+                strong
+                circle
+                secondary
+              >
+                <template #icon>
+                  <Close />
+                </template>
+              </n-button>
+            </n-space>
+            <div v-html="item"></div>
+          </n-card>
+        </n-space>
+      </n-layout-content>
+    </n-layout>
   </n-spin>
 </template>

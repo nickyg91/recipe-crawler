@@ -66,26 +66,15 @@ namespace RecipeCrawler.Core.Services
             return await _redisService.GetKey<ParsedHtmlRecipeModel?>(url);
         }
 
-        public async Task<string> StoreRecipe(ParsedHtmlRecipeModel recipe)
+        public async Task<string> StoreRecipe(string shortenedUrl, ParsedHtmlRecipeModel recipe)
         {
-
-            var randomInteger = Random.Shared.Next(0, int.MaxValue);
-            var shortenedUrl = GetBase64String(randomInteger);
-
-            var exists = await _redisService.KeyExists(shortenedUrl);
-
-            if (exists)
-            {
-                while (!exists)
-                {
-                    randomInteger = Random.Shared.Next(0, int.MaxValue);
-                    shortenedUrl = GetBase64String(randomInteger);
-                    exists = await _redisService.KeyExists(shortenedUrl);
-                }
-            }
-
             await _redisService.StoreKey(shortenedUrl, recipe);
             return shortenedUrl;
+        }
+
+        public Task<bool> UrlUsed(string url)
+        {
+            return _redisService.KeyExists(url);
         }
 
         private string GetBase64String(int randomInteger)
