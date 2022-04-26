@@ -1,4 +1,4 @@
-namespace RecipeCrawler.Web.Models 
+namespace RecipeCrawler.Core.Models 
 {
     public class CrawlerRecipeModel 
     {

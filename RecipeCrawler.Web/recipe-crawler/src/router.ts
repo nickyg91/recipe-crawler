@@ -11,6 +11,7 @@ export const routes = [
     path: "/recipe/:url",
     component: SavedRecipe,
     props: true,
+    name: "savedRecipe",
   } as RouteRecordRaw,
   {
     path: "/:catchAll(.*)",
