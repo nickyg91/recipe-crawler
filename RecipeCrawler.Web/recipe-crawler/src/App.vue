@@ -6,6 +6,7 @@ import {
   NNotificationProvider,
   NLayout,
   darkTheme,
+  NLayoutContent,
 } from "naive-ui";
 import { RouterView } from "vue-router";
 </script>
@@ -13,7 +14,9 @@ import { RouterView } from "vue-router";
   <n-config-provider :theme="darkTheme">
     <n-notification-provider>
       <n-layout class="full-height">
-        <router-view />
+        <n-layout-content>
+          <router-view />
+        </n-layout-content>
       </n-layout>
     </n-notification-provider>
   </n-config-provider>

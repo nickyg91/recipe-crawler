@@ -20,22 +20,20 @@ import {
   NSpin,
   NDivider,
 } from "naive-ui";
-import { Checkmark, Close, Save } from "@vicons/carbon";
+import { Checkmark, Save } from "@vicons/carbon";
 import { computed } from "@vue/reactivity";
 import { useRouter } from "vue-router";
+import RecipeDetails from "./RecipeDetails.vue";
+
 const notificationService = useNotification();
 const router = useRouter();
 let response = reactive(new ParsedResponse());
 let loading = ref(false);
-const removeIngredient = (index: number) => {
-  response.ingredients.splice(index, 1);
-};
-const removeStep = (index: number) => {
-  response.steps.splice(index, 1);
-};
+
 const formRef = ref<FormInst | null>(null);
 const model = reactive({
   url: "",
+  title: "",
 });
 const rules: FormRules = {
   url: {
@@ -44,9 +42,14 @@ const rules: FormRules = {
     message: "A valid URL must be supplied.",
     trigger: ["input", "blur"],
   },
+  title: {
+    required: true,
+    message: "A title is required.",
+    trigger: ["input", "blur"],
+  },
 };
 const submitEnabled = computed(() => {
-  return model.url.length > 1;
+  return model.url.length > 0 && model.title.length > 0;
 });
 
 const saveEnabled = computed(() => {
@@ -81,7 +84,7 @@ const submit = () => {
         });
     } else {
       notificationService.error({
-        content: "Invalid URL.",
+        content: "Invalid Form. Please correct the errors and resubmit.",
         title: "Validation Error",
       });
     }
@@ -91,6 +94,7 @@ const submit = () => {
 const save = () => {
   loading.value = true;
   response.url = model.url;
+  response.title = model.title;
   axios.post("/api/features/crawler/save", response).then(
     (result: AxiosResponse<string>) => {
       router.push({ name: "savedRecipe", params: { url: result.data } });
@@ -120,6 +124,9 @@ const save = () => {
                 :rules="rules"
                 v-on:submit.prevent
               >
+                <n-form-item path="title" label="Title">
+                  <n-input placeholder="Title" v-model:value="model.title" />
+                </n-form-item>
                 <n-form-item path="url" label="Url">
                   <n-input placeholder="Url" v-model:value="model.url" />
                 </n-form-item>
@@ -160,43 +167,10 @@ const save = () => {
           </n-grid>
         </n-space>
         <n-divider></n-divider>
-        <n-space vertical justify="center">
-          <n-card
-            style="margin-bottom: 5px"
-            v-for="(item, index) in response.ingredients"
-          >
-            <n-space justify="end">
-              <n-button
-                @click="removeIngredient(index)"
-                type="primary"
-                strong
-                circle
-                secondary
-              >
-                <template #icon>
-                  <Close />
-                </template>
-              </n-button>
-            </n-space>
-            <div v-html="item"></div>
-          </n-card>
-          <n-card v-for="(item, index) in response.steps">
-            <n-space justify="end">
-              <n-button
-                @click="removeStep(index)"
-                type="primary"
-                strong
-                circle
-                secondary
-              >
-                <template #icon>
-                  <Close />
-                </template>
-              </n-button>
-            </n-space>
-            <div v-html="item"></div>
-          </n-card>
-        </n-space>
+        <recipe-details
+          :enable-removal="true"
+          :recipe="response"
+        ></recipe-details>
       </n-layout-content>
     </n-layout>
   </n-spin>
