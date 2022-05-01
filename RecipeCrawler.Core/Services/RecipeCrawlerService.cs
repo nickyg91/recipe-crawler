@@ -72,16 +72,15 @@ namespace RecipeCrawler.Core.Services
             return shortenedUrl;
         }
 
+        public async Task<bool> StoreUnscrapeableUrl(ParsedHtmlRecipeModel url)
+        {
+            await _redisService.StoreListItem(url);
+        }
+
         public Task<bool> UrlUsed(string url)
         {
             return _redisService.KeyExists(url);
         }
 
-        private string GetBase64String(int randomInteger)
-        {
-            var bytes = System.Text.Encoding.UTF8.GetBytes(randomInteger.ToString()); 
-            var shortenedUrl = Convert.ToBase64String(bytes);
-            return shortenedUrl;
-        }
     }
 }

@@ -8,5 +8,6 @@ namespace RecipeCrawler.Core.Services
         Task<string> StoreRecipe(string shortenedUrl, ParsedHtmlRecipeModel recipe);
         Task<ParsedHtmlRecipeModel?> GetRecipeFromUrl(string slugifiedUrl);
         Task<bool> UrlUsed(string url);
+        Task<bool> StoreUnscrapeableUrl(string url);
     }
 }

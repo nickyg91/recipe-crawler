@@ -47,5 +47,11 @@ namespace RecipeCrawler.Web.Controllers.Features
             var recipe = await _recipeCrawlerService.GetRecipeFromUrl(shortenedUrl);
             return Ok(recipe);
         }
+
+        [HttpPost("report")]
+        public async Task<IActionResult> ReportUrlUnscrapeable(string url)
+        {
+            return Ok();
+        }
     }
 }

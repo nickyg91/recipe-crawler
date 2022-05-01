@@ -27,7 +27,7 @@ namespace RecipeCrawler.Data.Redis
             using (var stream = new MemoryStream())
             using (var reader = new StreamReader(stream))
             {
-                await JsonSerializer.SerializeAsync<T>(stream, value);
+                await JsonSerializer.SerializeAsync(stream, value);
                 stream.Seek(0, SeekOrigin.Begin);
                 var json = await reader.ReadToEndAsync();
                 await Database.StringSetAsync(key, json);
@@ -60,6 +60,21 @@ namespace RecipeCrawler.Data.Redis
         public async Task<bool> KeyExists(string key)
         {
             return await Database.KeyExistsAsync(key);
+        }
+
+        public async Task<bool> StoreListItem<T>(T item)
+        {
+            using (var stream = new MemoryStream())
+            using (var reader = new StreamReader(stream))
+            {
+                await JsonSerializer.SerializeAsync(stream, item);
+                stream.Seek(0, SeekOrigin.Begin);
+                var json = await reader.ReadToEndAsync();
+
+                var isAdded = await Database.SetAddAsync("badUrls", json);
+
+                return isAdded;
+            }
         }
     }
 }

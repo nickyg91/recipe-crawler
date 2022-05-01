@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { ParsedResponse } from "../models/parsed-response.model";
-import { NCard, NSpace, NButton } from "naive-ui";
-import { Close } from "@vicons/carbon";
+import { NCard, NSpace, NButton, NH1 } from "naive-ui";
+import { Close, WarningHex } from "@vicons/carbon";
+import { useRecipeStore } from "../recipe-store";
+import { computed } from "@vue/reactivity";
+
+const store = useRecipeStore();
+
 const props = defineProps({
   recipe: ParsedResponse,
   enableRemoval: Boolean,
@@ -11,6 +16,14 @@ const removeIngredient = (index: number) => {
 };
 const removeStep = (index: number) => {
   props.recipe?.steps.splice(index, 1);
+};
+
+const isGhostButton = computed(() => {
+  return !store.getTheme;
+});
+
+const report = () => {
+  console.log(props.recipe?.url);
 };
 </script>
 <template>
@@ -52,5 +65,26 @@ const removeStep = (index: number) => {
       </n-space>
       <div v-html="item"></div>
     </n-card>
+  </n-space>
+  <n-space
+    align="center"
+    vertical
+    v-if="recipe?.steps?.length == 0 && recipe?.ingredients?.length == 0"
+  >
+    <n-h1>
+      Unable to find recipe steps or ingredients. You can report this address in
+      an effort to improve this tool.
+    </n-h1>
+    <n-button
+      size="large"
+      type="warning"
+      :ghost="isGhostButton"
+      @click="report()"
+    >
+      <template #icon>
+        <WarningHex />
+      </template>
+      Report
+    </n-button>
   </n-space>
 </template>

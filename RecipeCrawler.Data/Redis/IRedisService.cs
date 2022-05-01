@@ -8,5 +8,7 @@
         Task<string> GetKey(string key);
         Task<T?> GetKey<T>(string key);
         Task<bool> KeyExists(string key);
+        Task<bool> StoreListItem<T>(T item);
+        Task<List<T>> GetList<T>(string key, int page, int pageSize);
     }
 }
