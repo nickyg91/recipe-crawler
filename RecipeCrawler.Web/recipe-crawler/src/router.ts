@@ -6,16 +6,17 @@ export const routes = [
   {
     path: "/",
     component: RecipeCrawler,
-  } as RouteRecordRaw,
+    name: "crawl",
+  },
   {
     path: "/recipe/:url",
     component: SavedRecipe,
     props: true,
     name: "savedRecipe",
-  } as RouteRecordRaw,
+  },
   {
     path: "/:catchAll(.*)",
     component: NotFound,
     props: true,
-  } as RouteRecordRaw,
+  },
 ] as RouteRecordRaw[];

@@ -24,17 +24,22 @@ import { Checkmark, Save } from "@vicons/carbon";
 import { computed } from "@vue/reactivity";
 import { useRouter } from "vue-router";
 import RecipeDetails from "./RecipeDetails.vue";
+import { useRecipeStore } from "../recipe-store";
 
+const store = useRecipeStore();
 const notificationService = useNotification();
 const router = useRouter();
 let response = reactive(new ParsedResponse());
 let loading = ref(false);
-
+const isGhostButton = computed(() => {
+  return !store.isLightMode;
+});
 const formRef = ref<FormInst | null>(null);
 const model = reactive({
   url: "",
   title: "",
 });
+
 const rules: FormRules = {
   url: {
     required: true,
@@ -48,6 +53,7 @@ const rules: FormRules = {
     trigger: ["input", "blur"],
   },
 };
+
 const submitEnabled = computed(() => {
   return model.url.length > 0 && model.title.length > 0;
 });
@@ -135,7 +141,7 @@ const save = () => {
                     <n-button
                       :disabled="!saveEnabled"
                       size="large"
-                      ghost
+                      :ghost="isGhostButton"
                       @click="save"
                       type="primary"
                     >
@@ -149,7 +155,7 @@ const save = () => {
                     <n-button
                       :disabled="!submitEnabled"
                       size="large"
-                      ghost
+                      :ghost="isGhostButton"
                       @click="submit"
                       type="primary"
                     >
