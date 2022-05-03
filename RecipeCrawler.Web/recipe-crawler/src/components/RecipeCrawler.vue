@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+import { inject, provide, reactive, ref } from "vue";
 import axios, { AxiosResponse } from "axios";
 import { ParsedResponse } from "../models/parsed-response.model";
 import {
@@ -25,7 +25,9 @@ import { computed } from "@vue/reactivity";
 import { useRouter } from "vue-router";
 import RecipeDetails from "./RecipeDetails.vue";
 import { useRecipeStore } from "../recipe-store";
+import { injectionKey, CrawlerApi } from "../services/crawler-api.service";
 
+const crawlerApi: CrawlerApi | undefined = inject(injectionKey);
 const store = useRecipeStore();
 const notificationService = useNotification();
 const router = useRouter();
@@ -66,11 +68,9 @@ const submit = () => {
   formRef.value?.validate((errors) => {
     if (!errors) {
       loading.value = true;
-      axios
-        .post("/api/features/crawler", {
-          url: model.url,
-        })
-        .then((result: AxiosResponse<ParsedResponse>) => {
+      crawlerApi
+        ?.crawlUrl(model.url)
+        .then((result) => {
           loading.value = false;
           response.ingredients = result.data.ingredients;
           response.steps = result.data.steps;
@@ -101,7 +101,7 @@ const save = () => {
   loading.value = true;
   response.url = model.url;
   response.title = model.title;
-  axios.post("/api/features/crawler/save", response).then(
+  crawlerApi?.saveRecipe(response).then(
     (result: AxiosResponse<string>) => {
       router.push({ name: "savedRecipe", params: { url: result.data } });
       loading.value = false;

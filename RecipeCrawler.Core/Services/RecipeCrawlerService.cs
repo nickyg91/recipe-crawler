@@ -66,6 +66,19 @@ namespace RecipeCrawler.Core.Services
             return await _redisService.GetKey<ParsedHtmlRecipeModel?>(url);
         }
 
+        public async Task<long> GetSetLength()
+        {
+            return await _redisService.GetSetCount("badUrls");
+        }
+
+        public async IAsyncEnumerable<ParsedHtmlRecipeModel> GetUnscrapableRecipes(int page, int pageSize)
+        {
+            await foreach (var item in _redisService.GetList<ParsedHtmlRecipeModel>("badUrls", page, pageSize))
+            {
+                yield return item;
+            }
+        }
+
         public async Task<string> StoreRecipe(string shortenedUrl, ParsedHtmlRecipeModel recipe)
         {
             await _redisService.StoreKey(shortenedUrl, recipe);
@@ -74,7 +87,7 @@ namespace RecipeCrawler.Core.Services
 
         public async Task<bool> StoreUnscrapeableUrl(ParsedHtmlRecipeModel url)
         {
-            await _redisService.StoreListItem(url);
+            return await _redisService.AddToSet("badUrls", url);
         }
 
         public Task<bool> UrlUsed(string url)

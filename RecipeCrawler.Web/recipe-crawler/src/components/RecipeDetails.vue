@@ -4,7 +4,6 @@ import { NCard, NSpace, NButton, NH1 } from "naive-ui";
 import { Close, WarningHex } from "@vicons/carbon";
 import { useRecipeStore } from "../recipe-store";
 import { computed } from "@vue/reactivity";
-
 const store = useRecipeStore();
 
 const props = defineProps({

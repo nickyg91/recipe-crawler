@@ -5,6 +5,10 @@ import { useRouter } from "vue-router";
 import { ParsedResponse } from "../models/parsed-response.model";
 import { NSpin, NSpace, NH1 } from "naive-ui";
 import RecipeDetails from "./RecipeDetails.vue";
+import { inject } from "vue";
+import { CrawlerApi, injectionKey } from "../services/crawler-api.service";
+
+const crawlerApi: CrawlerApi | undefined = inject(injectionKey);
 let state = reactive({
   recipe: new ParsedResponse(),
 });
