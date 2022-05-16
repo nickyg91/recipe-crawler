@@ -9,7 +9,7 @@ namespace RecipeCrawler.Core.Services
         Task<ParsedHtmlRecipeModel?> GetRecipeFromUrl(string slugifiedUrl);
         Task<bool> UrlUsed(string url);
         Task<bool> StoreUnscrapeableUrl(ParsedHtmlRecipeModel url);
-        IAsyncEnumerable<ParsedHtmlRecipeModel> GetUnscrapableRecipes(int page, int pageSize);
+        Task<List<ParsedHtmlRecipeModel>> GetUnscrapableRecipes(int page, int pageSize);
         Task<long> GetSetLength();
     }
 }

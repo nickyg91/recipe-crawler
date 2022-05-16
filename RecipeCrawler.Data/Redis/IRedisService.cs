@@ -8,7 +8,7 @@
         Task<string> GetKey(string key);
         Task<T?> GetKey<T>(string key);
         Task<bool> KeyExists(string key);
-        IAsyncEnumerable<T> GetList<T>(string key, int page, int pageSize);
+        Task<List<T>> GetList<T>(string key, int page, int pageSize);
         Task<long> GetSetCount(string key);
         Task<bool> AddToSet<T>(string key, T value);
     }

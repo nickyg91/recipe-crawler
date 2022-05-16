@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import { Home, Moon } from "@vicons/carbon";
+import { Home, Moon, Warning } from "@vicons/carbon";
 import { computed, ref } from "@vue/reactivity";
 import {
   NConfigProvider,
@@ -38,6 +38,23 @@ const menuOptions: MenuOption[] = [
       ),
     key: "home",
     icon: () => h(Home),
+  },
+  {
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: {
+            name: "reportedUrls",
+          },
+          activeClass: "n-menu-item-content--selected",
+        },
+        {
+          default: () => "Reported Urls",
+        }
+      ),
+    key: "report",
+    icon: () => h(Warning),
   },
 ];
 const getTheme = computed(() => {

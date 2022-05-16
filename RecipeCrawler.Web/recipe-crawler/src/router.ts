@@ -2,6 +2,7 @@ import { RouteRecordRaw } from "vue-router";
 import RecipeCrawler from "./components/RecipeCrawler.vue";
 import SavedRecipe from "./components/SavedRecipe.vue";
 import NotFound from "./components/NotFound.vue";
+import ReportedUrls from "./components/ReportedUrls.vue";
 export const routes = [
   {
     path: "/",
@@ -13,6 +14,11 @@ export const routes = [
     component: SavedRecipe,
     props: true,
     name: "savedRecipe",
+  },
+  {
+    path: "/reported-urls",
+    component: ReportedUrls,
+    name: "reportedUrls",
   },
   {
     path: "/:catchAll(.*)",

@@ -51,7 +51,7 @@ namespace RecipeCrawler.Web.Controllers.Features
         [HttpPost("report")]
         public async Task<IActionResult> ReportUrlUnscrapeable(ParsedHtmlRecipeModel url)
         {
-            var response = _recipeCrawlerService.StoreUnscrapeableUrl(url);
+            var response = await _recipeCrawlerService.StoreUnscrapeableUrl(url);
             return Ok(response);
         }
 
@@ -59,7 +59,7 @@ namespace RecipeCrawler.Web.Controllers.Features
         public async Task<IActionResult> GetReportedUrls(int page, int pageSize)
         {
             var totalItems = await _recipeCrawlerService.GetSetLength();
-            var items = _recipeCrawlerService.GetUnscrapableRecipes(page, pageSize);
+            var items = await _recipeCrawlerService.GetUnscrapableRecipes(page, pageSize);
 
             return Ok(new PagedRecipeModel
             {

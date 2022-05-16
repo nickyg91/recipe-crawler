@@ -3,6 +3,6 @@
     public class PagedRecipeModel
     {
         public long TotalItems { get; set; }
-        public IAsyncEnumerable<ParsedHtmlRecipeModel>? Recipes { get; set; }
+        public List<ParsedHtmlRecipeModel>? Recipes { get; set; }
     }
 }

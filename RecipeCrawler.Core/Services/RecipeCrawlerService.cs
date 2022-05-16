@@ -71,12 +71,10 @@ namespace RecipeCrawler.Core.Services
             return await _redisService.GetSetCount("badUrls");
         }
 
-        public async IAsyncEnumerable<ParsedHtmlRecipeModel> GetUnscrapableRecipes(int page, int pageSize)
+        public async Task<List<ParsedHtmlRecipeModel>> GetUnscrapableRecipes(int page, int pageSize)
         {
-            await foreach (var item in _redisService.GetList<ParsedHtmlRecipeModel>("badUrls", page, pageSize))
-            {
-                yield return item;
-            }
+            var items = await _redisService.GetList<ParsedHtmlRecipeModel>("badUrls", page, pageSize);
+            return items;
         }
 
         public async Task<string> StoreRecipe(string shortenedUrl, ParsedHtmlRecipeModel recipe)

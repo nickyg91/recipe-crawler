@@ -71,6 +71,8 @@ const submit = () => {
       crawlerApi
         ?.crawlUrl(model.url)
         .then((result) => {
+          response.url = model.url;
+          response.title = model.title;
           loading.value = false;
           response.ingredients = result.data.ingredients;
           response.steps = result.data.steps;
