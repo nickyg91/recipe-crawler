@@ -64,16 +64,22 @@ namespace RecipeCrawler.Data.Redis
 
         public async Task<List<T>> GetList<T>(string key, int page, int pageSize)
         {
-            var setValues = Database.SetScanAsync(key, default, pageSize, 0, page - 1);
+            var setValues = Database.SetScanAsync(key, pageSize: pageSize, pageOffset: (page - 1) * pageSize);
             var list = new List<T>();
+            var numberOfItems = 0;
             await foreach (var item in setValues)
             {
+                if (numberOfItems == pageSize)
+                {
+                    break;
+                }
                 var value = JsonSerializer.Deserialize<T>(item);
                 if (value != null)
                 {
                     list.Add(value);
+                    numberOfItems++;
                 }
-
+                
             }
             return list;
         }

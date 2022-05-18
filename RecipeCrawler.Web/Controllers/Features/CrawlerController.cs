@@ -67,5 +67,25 @@ namespace RecipeCrawler.Web.Controllers.Features
                 TotalItems = totalItems,
             });
         }
+
+        [HttpGet("populate")]
+        public async Task<IActionResult> PopulatePaginationTest()
+        {
+            var index = 0;
+
+            while (index < 500)
+            {
+                var recipe = new ParsedHtmlRecipeModel
+                {
+                    Url = $"http://test{index}.test",
+                    Title = $"Test{index}"
+                };
+
+                await _recipeCrawlerService.StoreUnscrapeableUrl(recipe);
+
+                index++;
+            }
+            return Ok();
+        }
     }
 }
