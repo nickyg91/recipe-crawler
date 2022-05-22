@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  cheffer-redis:
+    container_name: cheffer-redis
+    restart: unless-stopped
+    image: redis
+  cheffer:
+    container_name: cheffer
+    restart: unless-stopped
+    image: ghcr.io/nickyg91/recipe-crawler:main
+    ports:
+      - "8080:80"
+    volumes:
+      - "/opt:/opt"
+    depends_on:
+      - cheffer-redis
+volumes:
+  raffle_postgres:
