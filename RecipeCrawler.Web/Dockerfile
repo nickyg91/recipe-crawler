@@ -3,7 +3,7 @@
 # set the base image to Debian
 # https://www.brianchristner.io/docker-image-base-os-size-comparison/
 # https://hub.docker.com/_/debian/
-FROM debian:jessie-slim
+FROM debian:buster
 
 # Set debconf to run non-interactively
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
