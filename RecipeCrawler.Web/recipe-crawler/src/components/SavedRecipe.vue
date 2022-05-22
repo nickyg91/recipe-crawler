@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { reactive, ref } from "@vue/reactivity";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { ParsedResponse } from "../models/parsed-response.model";
 import { NSpin, NSpace, NH1 } from "naive-ui";
 import RecipeDetails from "./RecipeDetails.vue";
+import { reactive, ref } from "vue";
 let state = reactive({
   recipe: new ParsedResponse(),
 });

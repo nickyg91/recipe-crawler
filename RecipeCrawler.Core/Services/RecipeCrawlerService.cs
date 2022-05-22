@@ -66,10 +66,26 @@ namespace RecipeCrawler.Core.Services
             return await _redisService.GetKey<ParsedHtmlRecipeModel?>(url);
         }
 
+        public async Task<long> GetSetLength()
+        {
+            return await _redisService.GetSortedSetCount("badUrls");
+        }
+
+        public async Task<List<ParsedHtmlRecipeModel>> GetUnscrapableRecipes(int page, int pageSize)
+        {
+            var items = await _redisService.GetItemsFromSortedSet<ParsedHtmlRecipeModel>("badUrls", page, pageSize);
+            return items;
+        }
+
         public async Task<string> StoreRecipe(string shortenedUrl, ParsedHtmlRecipeModel recipe)
         {
             await _redisService.StoreKey(shortenedUrl, recipe);
             return shortenedUrl;
+        }
+
+        public async Task<bool> StoreUnscrapeableUrl(ParsedHtmlRecipeModel url)
+        {
+            return await _redisService.AddToSortedSet("badUrls", url);
         }
 
         public Task<bool> UrlUsed(string url)
@@ -77,11 +93,5 @@ namespace RecipeCrawler.Core.Services
             return _redisService.KeyExists(url);
         }
 
-        private string GetBase64String(int randomInteger)
-        {
-            var bytes = System.Text.Encoding.UTF8.GetBytes(randomInteger.ToString()); 
-            var shortenedUrl = Convert.ToBase64String(bytes);
-            return shortenedUrl;
-        }
     }
 }

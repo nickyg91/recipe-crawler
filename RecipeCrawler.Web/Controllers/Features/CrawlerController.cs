@@ -47,5 +47,45 @@ namespace RecipeCrawler.Web.Controllers.Features
             var recipe = await _recipeCrawlerService.GetRecipeFromUrl(shortenedUrl);
             return Ok(recipe);
         }
+
+        [HttpPost("report")]
+        public async Task<IActionResult> ReportUrlUnscrapeable(ParsedHtmlRecipeModel url)
+        {
+            var response = await _recipeCrawlerService.StoreUnscrapeableUrl(url);
+            return Ok(response);
+        }
+
+        [HttpGet("recipes/reported/{page:int}/page/{pageSize:int}")]
+        public async Task<IActionResult> GetReportedUrls(int page, int pageSize)
+        {
+            var totalItems = await _recipeCrawlerService.GetSetLength();
+            var items = await _recipeCrawlerService.GetUnscrapableRecipes(page, pageSize);
+
+            return Ok(new PagedRecipeModel
+            {
+                Recipes = items,
+                TotalItems = totalItems,
+            });
+        }
+
+        [HttpGet("populate")]
+        public async Task<IActionResult> PopulatePaginationTest()
+        {
+            var index = 0;
+
+            while (index < 500)
+            {
+                var recipe = new ParsedHtmlRecipeModel
+                {
+                    Url = $"http://test{index}.test",
+                    Title = $"Test{index}"
+                };
+
+                await _recipeCrawlerService.StoreUnscrapeableUrl(recipe);
+
+                index++;
+            }
+            return Ok();
+        }
     }
 }

@@ -27,7 +27,7 @@ namespace RecipeCrawler.Data.Redis
             using (var stream = new MemoryStream())
             using (var reader = new StreamReader(stream))
             {
-                await JsonSerializer.SerializeAsync<T>(stream, value);
+                await JsonSerializer.SerializeAsync(stream, value);
                 stream.Seek(0, SeekOrigin.Begin);
                 var json = await reader.ReadToEndAsync();
                 await Database.StringSetAsync(key, json);
@@ -60,6 +60,84 @@ namespace RecipeCrawler.Data.Redis
         public async Task<bool> KeyExists(string key)
         {
             return await Database.KeyExistsAsync(key);
+        }
+
+        public async Task<List<T>> GetList<T>(string key, int page, int pageSize)
+        {
+            var setValues = Database.SetScanAsync(key, pageSize: pageSize, pageOffset: (page - 1) * pageSize);
+            var list = new List<T>();
+            var numberOfItems = 0;
+            await foreach (var item in setValues)
+            {
+                if (numberOfItems == pageSize)
+                {
+                    break;
+                }
+                var value = JsonSerializer.Deserialize<T>(item);
+                if (value != null)
+                {
+                    list.Add(value);
+                    numberOfItems++;
+                }
+                
+            }
+            return list;
+        }
+
+        public async Task<long> GetSetCount(string key)
+        {
+            return await Database.SetLengthAsync(key);
+        }
+
+        public async Task<bool> AddToSet<T>(string key, T value)
+        {
+            using (var stream = new MemoryStream())
+            using (var reader = new StreamReader(stream))
+            {
+                await JsonSerializer.SerializeAsync(stream, value);
+                stream.Seek(0, SeekOrigin.Begin);
+                var json = await reader.ReadToEndAsync();
+                var added = await Database.SetAddAsync(key, json);
+                return added;
+            }
+        }
+
+        public async Task<bool> AddToSortedSet<T>(string key, T value)
+        {
+            using (var stream = new MemoryStream())
+            using (var reader = new StreamReader(stream))
+            {
+                await JsonSerializer.SerializeAsync(stream, value);
+                stream.Seek(0, SeekOrigin.Begin);
+                var json = await reader.ReadToEndAsync();
+                var added = await Database.SortedSetAddAsync(key, json, json.GetHashCode());
+                return added;
+            }
+        }
+
+        public async Task<long> GetSortedSetCount(string key)
+        {
+            return await Database.SortedSetLengthAsync(key);
+        }
+
+        public async Task<List<T>> GetItemsFromSortedSet<T>(string key, int page, int pagesize)
+        {
+            var items = await Database.SortedSetRangeByRankWithScoresAsync(key, (page - 1) * (pagesize - 1), ((page - 1) * (pagesize - 1)) + (pagesize - 1));
+            var itemsToReturn = new List<T>();
+            using var stream = new MemoryStream();
+            foreach (var item in items)
+            {
+                stream.Write(System.Text.Encoding.UTF8.GetBytes(item.Element.ToString()));
+                stream.Position = 0;
+                var result = await JsonSerializer.DeserializeAsync<T>(stream);
+                if (result != null)
+                {
+                    itemsToReturn.Add(result);
+                }
+                stream.Position = 0;
+                stream.SetLength(0);
+            }
+            return itemsToReturn;
         }
     }
 }

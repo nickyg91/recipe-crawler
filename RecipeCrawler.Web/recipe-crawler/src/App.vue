@@ -1,8 +1,8 @@
 <script setup lang="ts">
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import { Home, Moon } from "@vicons/carbon";
-import { computed, ref } from "@vue/reactivity";
+import { Home, Moon, Sun, Warning } from "@vicons/carbon";
+import { computed, ref } from "vue";
 import {
   NConfigProvider,
   NNotificationProvider,
@@ -17,10 +17,12 @@ import {
   NIcon,
 } from "naive-ui";
 import { h } from "vue";
-import { RouterLink, RouterView } from "vue-router";
+import { RouterLink, RouterView, useRoute } from "vue-router";
 import { useRecipeStore } from "./recipe-store";
-let collapsed = ref(false);
+const route = useRoute();
 const state = useRecipeStore();
+let collapsed = ref(false);
+const selectedKeyRef = ref(route.name?.toString());
 const menuOptions: MenuOption[] = [
   {
     label: () =>
@@ -30,14 +32,29 @@ const menuOptions: MenuOption[] = [
           to: {
             name: "crawl",
           },
-          activeClass: "n-menu-item-content--selected",
         },
         {
           default: () => "Home",
         }
       ),
-    key: "home",
+    key: "crawl",
     icon: () => h(Home),
+  },
+  {
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: {
+            name: "reportedUrls",
+          },
+        },
+        {
+          default: () => "Reported Urls",
+        }
+      ),
+    key: "reportedUrls",
+    icon: () => h(Warning),
   },
 ];
 const getTheme = computed(() => {
@@ -62,12 +79,19 @@ const getTheme = computed(() => {
             :collapsed-width="64"
             :collapsed-icon-size="22"
             :options="menuOptions"
+            v-model:value="selectedKeyRef"
           />
         </n-layout-sider>
         <n-layout-content content-style="padding: 24px;">
           <n-space align="end">
-            <n-icon><moon></moon></n-icon>
-            <n-switch @update:value="state.setTheme($event)"></n-switch>
+            <n-switch @update:value="state.setTheme($event)">
+              <template #icon v-if="!getTheme">
+                <n-icon><moon></moon></n-icon>
+              </template>
+              <template #icon v-if="getTheme">
+                <n-icon><sun></sun></n-icon>
+              </template>
+            </n-switch>
           </n-space>
           <router-view />
         </n-layout-content>
