@@ -9,7 +9,7 @@ services:
     restart: unless-stopped
     image: ghcr.io/nickyg91/recipe-crawler:main
     ports:
-      - "8080:80"
+      - "8084:80"
     volumes:
       - "/opt:/opt"
     depends_on:
