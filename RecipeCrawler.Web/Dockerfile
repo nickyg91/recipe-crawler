@@ -27,7 +27,7 @@ RUN apt-get install -y -q --no-install-recommends \
 
 # update the repository sources list
 # and install dependencies
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt-get install -y nodejs
 
 # confirm installation
