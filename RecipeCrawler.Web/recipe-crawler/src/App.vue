@@ -1,8 +1,8 @@
 <script setup lang="ts">
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import { Home, Moon, Warning } from "@vicons/carbon";
-import { computed, ref } from "@vue/reactivity";
+import { Home, Moon, Sun, Warning } from "@vicons/carbon";
+import { computed, ref } from "vue";
 import {
   NConfigProvider,
   NNotificationProvider,
@@ -17,11 +17,12 @@ import {
   NIcon,
 } from "naive-ui";
 import { h } from "vue";
-import { RouterLink, RouterView } from "vue-router";
+import { RouterLink, RouterView, useRoute } from "vue-router";
 import { useRecipeStore } from "./recipe-store";
-let collapsed = ref(false);
+const route = useRoute();
 const state = useRecipeStore();
-const selectedKeyRef = ref("home");
+let collapsed = ref(false);
+const selectedKeyRef = ref(route.name?.toString());
 const menuOptions: MenuOption[] = [
   {
     label: () =>
@@ -36,7 +37,7 @@ const menuOptions: MenuOption[] = [
           default: () => "Home",
         }
       ),
-    key: "home",
+    key: "crawl",
     icon: () => h(Home),
   },
   {
@@ -52,7 +53,7 @@ const menuOptions: MenuOption[] = [
           default: () => "Reported Urls",
         }
       ),
-    key: "report",
+    key: "reportedUrls",
     icon: () => h(Warning),
   },
 ];
@@ -83,8 +84,14 @@ const getTheme = computed(() => {
         </n-layout-sider>
         <n-layout-content content-style="padding: 24px;">
           <n-space align="end">
-            <n-icon><moon></moon></n-icon>
-            <n-switch @update:value="state.setTheme($event)"></n-switch>
+            <n-switch @update:value="state.setTheme($event)">
+              <template #icon v-if="!getTheme">
+                <n-icon><moon></moon></n-icon>
+              </template>
+              <template #icon v-if="getTheme">
+                <n-icon><sun></sun></n-icon>
+              </template>
+            </n-switch>
           </n-space>
           <router-view />
         </n-layout-content>

@@ -71,9 +71,9 @@ namespace RecipeCrawler.Core.Services
             return await _redisService.GetSortedSetCount("badUrls");
         }
 
-        public async Task<List<ParsedHtmlRecipeModel>> GetUnscrapableRecipes(int page, int pageSize, string? searchBy)
+        public async Task<List<ParsedHtmlRecipeModel>> GetUnscrapableRecipes(int page, int pageSize)
         {
-            var items = await _redisService.GetItemsFromSortedSet<ParsedHtmlRecipeModel>("badUrls", page, pageSize, searchBy);
+            var items = await _redisService.GetItemsFromSortedSet<ParsedHtmlRecipeModel>("badUrls", page, pageSize);
             return items;
         }
 

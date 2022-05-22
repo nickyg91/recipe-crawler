@@ -120,13 +120,9 @@ namespace RecipeCrawler.Data.Redis
             return await Database.SortedSetLengthAsync(key);
         }
 
-        public async Task<List<T>> GetItemsFromSortedSet<T>(string key, int page, int pagesize, string? searchBy)
+        public async Task<List<T>> GetItemsFromSortedSet<T>(string key, int page, int pagesize)
         {
             var items = await Database.SortedSetRangeByRankWithScoresAsync(key, (page - 1) * (pagesize - 1), ((page - 1) * (pagesize - 1)) + (pagesize - 1));
-            if (!string.IsNullOrEmpty(searchBy))
-            {
-                items = items.Where(x => x.ToString().Contains(searchBy, StringComparison.OrdinalIgnoreCase)).ToArray();
-            }
             var itemsToReturn = new List<T>();
             using var stream = new MemoryStream();
             foreach (var item in items)
