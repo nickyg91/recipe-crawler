@@ -101,5 +101,47 @@ namespace RecipeCrawler.Data.Redis
                 return added;
             }
         }
+
+        public async Task<bool> AddToSortedSet<T>(string key, T value)
+        {
+            using (var stream = new MemoryStream())
+            using (var reader = new StreamReader(stream))
+            {
+                await JsonSerializer.SerializeAsync(stream, value);
+                stream.Seek(0, SeekOrigin.Begin);
+                var json = await reader.ReadToEndAsync();
+                var added = await Database.SortedSetAddAsync(key, json, json.GetHashCode());
+                return added;
+            }
+        }
+
+        public async Task<long> GetSortedSetCount(string key)
+        {
+            return await Database.SortedSetLengthAsync(key);
+        }
+
+        public async Task<List<T>> GetItemsFromSortedSet<T>(string key, int page, int pagesize, string? searchBy)
+        {
+            var items = await Database.SortedSetRangeByRankWithScoresAsync(key, (page - 1) * (pagesize - 1), ((page - 1) * (pagesize - 1)) + (pagesize - 1));
+            if (!string.IsNullOrEmpty(searchBy))
+            {
+                items = items.Where(x => x.ToString().Contains(searchBy, StringComparison.OrdinalIgnoreCase)).ToArray();
+            }
+            var itemsToReturn = new List<T>();
+            using var stream = new MemoryStream();
+            foreach (var item in items)
+            {
+                stream.Write(System.Text.Encoding.UTF8.GetBytes(item.Element.ToString()));
+                stream.Position = 0;
+                var result = await JsonSerializer.DeserializeAsync<T>(stream);
+                if (result != null)
+                {
+                    itemsToReturn.Add(result);
+                }
+                stream.Position = 0;
+                stream.SetLength(0);
+            }
+            return itemsToReturn;
+        }
     }
 }

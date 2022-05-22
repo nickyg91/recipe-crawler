@@ -26,6 +26,11 @@ const pagination = reactive({
   itemCount: 0,
   pageSizes: [5, 10, 15, 20],
   showSizePicker: true,
+  onUpdatePageSize: (pageSize: number) => {
+    pagination.pageSize = pageSize;
+    pagination.page = 1;
+    loadTableData(pagination.page);
+  },
 });
 
 const loadTableData = (page: number) => {
@@ -40,7 +45,7 @@ const loadTableData = (page: number) => {
         result.data.totalItems / pagination.pageSize
       );
     })
-    .catch((err) => {
+    .catch(() => {
       notificationService.error({
         title: "Error loading data!",
         content: "Unable to load reported URLs.",

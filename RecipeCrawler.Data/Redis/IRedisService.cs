@@ -11,5 +11,8 @@
         Task<List<T>> GetList<T>(string key, int page, int pageSize);
         Task<long> GetSetCount(string key);
         Task<bool> AddToSet<T>(string key, T value);
+        Task<bool> AddToSortedSet<T>(string key, T value);
+        Task<long> GetSortedSetCount(string key);
+        Task<List<T>> GetItemsFromSortedSet<T>(string key, int page, int pagesize, string searchBy);
     }
 }

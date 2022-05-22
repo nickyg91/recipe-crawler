@@ -56,10 +56,10 @@ namespace RecipeCrawler.Web.Controllers.Features
         }
 
         [HttpGet("recipes/reported/{page:int}/page/{pageSize:int}")]
-        public async Task<IActionResult> GetReportedUrls(int page, int pageSize)
+        public async Task<IActionResult> GetReportedUrls(int page, int pageSize, string? searchBy)
         {
             var totalItems = await _recipeCrawlerService.GetSetLength();
-            var items = await _recipeCrawlerService.GetUnscrapableRecipes(page, pageSize);
+            var items = await _recipeCrawlerService.GetUnscrapableRecipes(page, pageSize, searchBy);
 
             return Ok(new PagedRecipeModel
             {

@@ -21,6 +21,7 @@ import { RouterLink, RouterView } from "vue-router";
 import { useRecipeStore } from "./recipe-store";
 let collapsed = ref(false);
 const state = useRecipeStore();
+const selectedKeyRef = ref("home");
 const menuOptions: MenuOption[] = [
   {
     label: () =>
@@ -30,7 +31,6 @@ const menuOptions: MenuOption[] = [
           to: {
             name: "crawl",
           },
-          activeClass: "n-menu-item-content--selected",
         },
         {
           default: () => "Home",
@@ -47,7 +47,6 @@ const menuOptions: MenuOption[] = [
           to: {
             name: "reportedUrls",
           },
-          activeClass: "n-menu-item-content--selected",
         },
         {
           default: () => "Reported Urls",
@@ -79,6 +78,7 @@ const getTheme = computed(() => {
             :collapsed-width="64"
             :collapsed-icon-size="22"
             :options="menuOptions"
+            v-model:value="selectedKeyRef"
           />
         </n-layout-sider>
         <n-layout-content content-style="padding: 24px;">

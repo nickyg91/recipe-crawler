@@ -68,12 +68,12 @@ namespace RecipeCrawler.Core.Services
 
         public async Task<long> GetSetLength()
         {
-            return await _redisService.GetSetCount("badUrls");
+            return await _redisService.GetSortedSetCount("badUrls");
         }
 
-        public async Task<List<ParsedHtmlRecipeModel>> GetUnscrapableRecipes(int page, int pageSize)
+        public async Task<List<ParsedHtmlRecipeModel>> GetUnscrapableRecipes(int page, int pageSize, string? searchBy)
         {
-            var items = await _redisService.GetList<ParsedHtmlRecipeModel>("badUrls", page, pageSize);
+            var items = await _redisService.GetItemsFromSortedSet<ParsedHtmlRecipeModel>("badUrls", page, pageSize, searchBy);
             return items;
         }
 
@@ -85,7 +85,7 @@ namespace RecipeCrawler.Core.Services
 
         public async Task<bool> StoreUnscrapeableUrl(ParsedHtmlRecipeModel url)
         {
-            return await _redisService.AddToSet("badUrls", url);
+            return await _redisService.AddToSortedSet("badUrls", url);
         }
 
         public Task<bool> UrlUsed(string url)
