@@ -68,24 +68,24 @@ namespace RecipeCrawler.Web.Controllers.Features
             });
         }
 
-        [HttpGet("populate")]
-        public async Task<IActionResult> PopulatePaginationTest()
-        {
-            var index = 0;
+        //[HttpGet("populate")]
+        //public async Task<IActionResult> PopulatePaginationTest()
+        //{
+        //    var index = 0;
 
-            while (index < 500)
-            {
-                var recipe = new ParsedHtmlRecipeModel
-                {
-                    Url = $"http://test{index}.test",
-                    Title = $"Test{index}"
-                };
+        //    while (index < 500)
+        //    {
+        //        var recipe = new ParsedHtmlRecipeModel
+        //        {
+        //            Url = $"http://test{index}.test",
+        //            Title = $"Test{index}"
+        //        };
 
-                await _recipeCrawlerService.StoreUnscrapeableUrl(recipe);
+        //        await _recipeCrawlerService.StoreUnscrapeableUrl(recipe);
 
-                index++;
-            }
-            return Ok();
-        }
+        //        index++;
+        //    }
+        //    return Ok();
+        //}
     }
 }
