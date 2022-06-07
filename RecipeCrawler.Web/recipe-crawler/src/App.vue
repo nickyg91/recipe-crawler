@@ -23,11 +23,10 @@ import { useRecipeStore } from "./recipe-store";
 const route = useRoute();
 const state = useRecipeStore();
 let collapsed = ref(false);
-
-const isMobile = (): boolean => {
+window.addEventListener("resize", (ev) => {
   const isMobile = window.innerWidth <= 760;
-  return isMobile;
-};
+  state.setIsMobile(isMobile);
+});
 const selectedKeyRef = ref(route.name?.toString());
 const menuOptions: MenuOption[] = [
   {
@@ -40,7 +39,7 @@ const menuOptions: MenuOption[] = [
           },
         },
         {
-          default: () => (isMobile() ? "" : "Home"),
+          default: () => "Home",
         }
       ),
     key: "crawl",
@@ -56,7 +55,7 @@ const menuOptions: MenuOption[] = [
           },
         },
         {
-          default: () => (isMobile() ? "" : "Reported Urls"),
+          default: () => "Reported Urls",
         }
       ),
     key: "reportedUrls",
@@ -66,13 +65,23 @@ const menuOptions: MenuOption[] = [
 const getTheme = computed(() => {
   return state.getTheme ? null : darkTheme;
 });
+const isMobile = computed(() => {
+  return state.isMobile;
+});
 </script>
+<style>
+.mobile-menu.n-menu .n-menu-item-content {
+  display: block;
+  text-align: center;
+  line-height: 0.95;
+}
+</style>
 <template>
   <n-config-provider :theme="getTheme">
     <n-notification-provider>
       <n-layout class="full-height" has-sider>
         <n-layout-sider
-          v-if="!isMobile()"
+          v-if="!isMobile"
           collapse-mode="width"
           :collapsed-width="64"
           :width="240"
@@ -103,8 +112,9 @@ const getTheme = computed(() => {
           <router-view />
         </n-layout-content>
       </n-layout>
-      <n-layout-footer position="absolute" v-if="isMobile()">
+      <n-layout-footer position="absolute" v-if="isMobile">
         <n-menu
+          v-bind:class="{ 'mobile-menu': isMobile }"
           :options="menuOptions"
           mode="horizontal"
           v-model:value="selectedKeyRef"
