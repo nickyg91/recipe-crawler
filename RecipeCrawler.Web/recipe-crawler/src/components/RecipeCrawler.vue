@@ -118,47 +118,54 @@ const save = () => {
 </script>
 <template>
   <n-spin :show="loading">
-    <n-space style="margin-top: 15px" justify="center" size="medium">
-      <n-form ref="formRef" :model="model" :rules="rules" v-on:submit.prevent>
-        <n-form-item path="title" label="Title">
-          <n-input placeholder="Title" v-model:value="model.title" />
-        </n-form-item>
-        <n-form-item path="url" label="Url">
-          <n-input placeholder="Url" v-model:value="model.url" />
-        </n-form-item>
-        <div>
-          <n-space size="large" justify="end">
-            <n-button
-              :disabled="!saveEnabled"
-              size="large"
-              :ghost="isGhostButton"
-              @click="save"
-              type="primary"
-            >
-              <template #icon>
-                <n-icon>
-                  <Save />
-                </n-icon>
-              </template>
-              Save
-            </n-button>
-            <n-button
-              :disabled="!submitEnabled"
-              size="large"
-              :ghost="isGhostButton"
-              @click="submit"
-              type="primary"
-            >
-              <template #icon>
-                <n-icon>
-                  <Checkmark />
-                </n-icon>
-              </template>
-              Submit
-            </n-button>
-          </n-space>
-        </div>
-      </n-form>
+    <n-space vertical style="margin-top: 15px" justify="center">
+      <n-grid :cols="!store.getIsMobile ? 3 : 1">
+        <n-gi :offset="!store.getIsMobile ? 1 : 0">
+          <n-form
+            ref="formRef"
+            :model="model"
+            :rules="rules"
+            v-on:submit.prevent
+          >
+            <n-form-item path="title" label="Title">
+              <n-input placeholder="Title" v-model:value="model.title" />
+            </n-form-item>
+            <n-form-item path="url" label="Url">
+              <n-input placeholder="Url" v-model:value="model.url" />
+            </n-form-item>
+            <n-space size="large" justify="end">
+              <n-button
+                :disabled="!saveEnabled"
+                size="large"
+                :ghost="isGhostButton"
+                @click="save"
+                type="primary"
+              >
+                <template #icon>
+                  <n-icon>
+                    <Save />
+                  </n-icon>
+                </template>
+                Save
+              </n-button>
+              <n-button
+                :disabled="!submitEnabled"
+                size="large"
+                :ghost="isGhostButton"
+                @click="submit"
+                type="primary"
+              >
+                <template #icon>
+                  <n-icon>
+                    <Checkmark />
+                  </n-icon>
+                </template>
+                Submit
+              </n-button>
+            </n-space>
+          </n-form>
+        </n-gi>
+      </n-grid>
     </n-space>
     <n-divider></n-divider>
     <recipe-details :enable-removal="true" :recipe="response"></recipe-details>
