@@ -2,7 +2,7 @@
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
 import { Home, Moon, Sun, Warning } from "@vicons/carbon";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import {
   NConfigProvider,
   NNotificationProvider,
@@ -10,6 +10,7 @@ import {
   darkTheme,
   NLayoutContent,
   NLayoutSider,
+  NLayoutFooter,
   NMenu,
   MenuOption,
   NSwitch,
@@ -20,9 +21,22 @@ import { h } from "vue";
 import { RouterLink, RouterView, useRoute } from "vue-router";
 import { useRecipeStore } from "./recipe-store";
 const route = useRoute();
+const selectedKeyRef = ref();
+watch(
+  () => route.name,
+  (val) => {
+    selectedKeyRef.value = val?.valueOf();
+  }
+);
+
 const state = useRecipeStore();
 let collapsed = ref(false);
-const selectedKeyRef = ref(route.name?.toString());
+const isMobileSize = window.innerWidth <= 760;
+state.setIsMobile(isMobileSize);
+window.addEventListener("resize", () => {
+  const isMobile = window.innerWidth <= 760;
+  state.setIsMobile(isMobile);
+});
 const menuOptions: MenuOption[] = [
   {
     label: () =>
@@ -60,12 +74,26 @@ const menuOptions: MenuOption[] = [
 const getTheme = computed(() => {
   return state.getTheme ? null : darkTheme;
 });
+const isMobile = computed(() => {
+  return state.isMobile;
+});
 </script>
+<style>
+.mobile-menu.n-menu .n-menu-item-content {
+  display: block;
+  text-align: center;
+  line-height: 0.95;
+}
+.mobile-menu.n-menu .n-menu-item-content .n-menu-item-content__icon {
+  margin-right: 0 !important;
+}
+</style>
 <template>
   <n-config-provider :theme="getTheme">
     <n-notification-provider>
       <n-layout class="full-height" has-sider>
         <n-layout-sider
+          v-if="!isMobile"
           collapse-mode="width"
           :collapsed-width="64"
           :width="240"
@@ -96,6 +124,18 @@ const getTheme = computed(() => {
           <router-view />
         </n-layout-content>
       </n-layout>
+      <n-layout-footer
+        style="padding-top: 5px; padding-bottom: 5px"
+        position="absolute"
+        v-if="isMobile"
+      >
+        <n-menu
+          v-bind:class="{ 'mobile-menu': isMobile }"
+          :options="menuOptions"
+          mode="horizontal"
+          v-model:value="selectedKeyRef"
+        />
+      </n-layout-footer>
     </n-notification-provider>
   </n-config-provider>
 </template>

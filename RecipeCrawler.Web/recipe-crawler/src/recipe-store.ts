@@ -5,6 +5,7 @@ export const useRecipeStore = defineStore("recipeStore", {
   state: () => ({
     recipes: new Array<ParsedResponse>(),
     isLightMode: false,
+    isMobile: false,
   }),
   getters: {
     getRecipes(state) {
@@ -13,6 +14,9 @@ export const useRecipeStore = defineStore("recipeStore", {
     getTheme(state) {
       return state.isLightMode;
     },
+    getIsMobile(state) {
+      return state.isMobile;
+    },
   },
   actions: {
     addRecipe(recipe: ParsedResponse) {
@@ -20,6 +24,9 @@ export const useRecipeStore = defineStore("recipeStore", {
     },
     setTheme(isLightMode: boolean) {
       this.isLightMode = isLightMode;
+    },
+    setIsMobile(isMobile: boolean) {
+      this.isMobile = isMobile;
     },
   },
 });
