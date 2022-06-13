@@ -3,6 +3,8 @@ services:
   cheffer-redis:
     container_name: cheffer-redis
     restart: unless-stopped
+    volumes:
+      - "cheffer-store:/var/lib/redis/data"
     image: redis
   cheffer:
     container_name: cheffer
@@ -15,4 +17,4 @@ services:
     depends_on:
       - cheffer-redis
 volumes:
-  raffle_postgres:
+  cheffer-store:
