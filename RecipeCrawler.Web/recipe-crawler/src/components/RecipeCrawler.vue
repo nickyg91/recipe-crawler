@@ -133,7 +133,10 @@ const save = () => {
             <n-form-item path="url" label="Url">
               <n-input placeholder="Url" v-model:value="model.url" />
             </n-form-item>
-            <n-space size="large" justify="end">
+            <n-space
+              size="large"
+              :justify="store.getIsMobile ? 'center' : 'end'"
+            >
               <n-button
                 :disabled="!saveEnabled"
                 size="large"
