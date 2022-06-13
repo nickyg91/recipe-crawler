@@ -4,7 +4,7 @@ services:
     container_name: cheffer-redis
     restart: unless-stopped
     volumes:
-      - "cheffer-store:/var/lib/redis/data"
+      - "cheffer-store:/data"
     image: redis
   cheffer:
     container_name: cheffer
