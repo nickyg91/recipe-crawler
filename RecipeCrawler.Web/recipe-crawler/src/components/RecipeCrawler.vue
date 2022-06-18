@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { inject, provide, reactive, ref } from "vue";
-import axios, { AxiosResponse } from "axios";
+import { inject, reactive, ref } from "vue";
+import { AxiosResponse } from "axios";
 import { ParsedResponse } from "../models/parsed-response.model";
 import {
   NButton,

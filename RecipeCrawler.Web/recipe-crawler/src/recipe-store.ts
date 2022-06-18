@@ -11,7 +11,7 @@ export const useRecipeStore = defineStore("recipeStore", {
     getRecipes(state) {
       return state.recipes;
     },
-    getTheme(state) {
+    getIsLightMode(state) {
       return state.isLightMode;
     },
     getIsMobile(state) {

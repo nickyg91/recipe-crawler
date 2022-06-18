@@ -21,7 +21,7 @@ const removeStep = (index: number) => {
 const isReportButtonDisabled = ref(false);
 const loading = ref(false);
 const isGhostButton = computed(() => {
-  return !store.getTheme;
+  return !store.getIsLightMode;
 });
 
 const notificationService = useNotification();
@@ -30,7 +30,7 @@ const report = () => {
     loading.value = true;
     crawlerApi
       ?.reportUrl(props.recipe)
-      .then((result) => {
+      .then(() => {
         isReportButtonDisabled.value = true;
         notificationService.success({
           title: "Success!",
@@ -38,7 +38,7 @@ const report = () => {
             "The URL has been reported. We will look into what went wrong..",
         });
       })
-      .catch((err) => {
+      .catch(() => {
         notificationService.error({
           title: "Error reporting Url",
           content: "Unable to report URL. Please try again.",

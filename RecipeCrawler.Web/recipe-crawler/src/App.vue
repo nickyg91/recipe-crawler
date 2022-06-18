@@ -72,7 +72,7 @@ const menuOptions: MenuOption[] = [
   },
 ];
 const getTheme = computed(() => {
-  return state.getTheme ? null : darkTheme;
+  return state.getIsLightMode ? null : darkTheme;
 });
 const isMobile = computed(() => {
   return state.isMobile;
