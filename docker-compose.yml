@@ -1,5 +1,11 @@
 version: "3.8"
 services:
+  cookbookr-db:
+    container_name: cookbookr-db
+    restart: unless-stopped
+    volumes:
+      - "cookbookr-store:/postgres"
+    image: "postgres"
   cheffer-redis:
     container_name: cheffer-redis
     restart: unless-stopped
@@ -16,5 +22,7 @@ services:
       - "/opt:/opt"
     depends_on:
       - cheffer-redis
+      - cookbookr-db
 volumes:
   cheffer-store:
+  cookbookr-store:
