@@ -1,9 +1,10 @@
 ﻿namespace RecipeCrawler.Entities
 {
-    public class Cookbook
+    public class Cookbook : BaseEntity
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public Chef Chef { get; set; }
+        public int ChefId { get; set; }
+        public IEnumerable<Recipe> Recipes { get; set; }
     }
 }
