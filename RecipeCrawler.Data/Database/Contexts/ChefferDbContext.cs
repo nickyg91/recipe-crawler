@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RecipeCrawler.Data.EntityConfigurations;
+using RecipeCrawler.Entities;
 
 namespace RecipeCrawler.Data.Database.Contexts
 {
@@ -50,11 +51,11 @@ namespace RecipeCrawler.Data.Database.Contexts
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.HasDefaultSchema("cheffer");
-            _chefConfiguration.CreateEntityModel(builder);
-            _cookbookConfiguration.CreateEntityModel(builder);
-            _recipeConfiguration.CreateEntityModel(builder);
-            _stepConfiguration.CreateEntityModel(builder);
-            _ingredientConfiguration.CreateEntityModel(builder);
+            _chefConfiguration.Configure(builder.Entity<Chef>());
+            _cookbookConfiguration.Configure(builder.Entity<Cookbook>());
+            _recipeConfiguration.Configure(builder.Entity<Recipe>());
+            _stepConfiguration.Configure(builder.Entity<Step>());
+            _ingredientConfiguration.Configure(builder.Entity<Ingredient>());
         }
     }
 }

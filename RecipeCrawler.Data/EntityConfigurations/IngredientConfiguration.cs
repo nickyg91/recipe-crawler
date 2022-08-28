@@ -1,34 +1,32 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RecipeCrawler.Entities;
 
 namespace RecipeCrawler.Data.EntityConfigurations
 {
-    public class IngredientConfiguration : BaseConfiguration
+    public class IngredientConfiguration : IEntityTypeConfiguration<Ingredient>
     {
-        public override void CreateEntityModel(ModelBuilder builder)
+        public void Configure(EntityTypeBuilder<Ingredient> builder)
         {
-            builder.Entity<Ingredient>(ingredient =>
-            {
-                ingredient.ToTable("ingredient");
-                ingredient
-                    .Property(x => x.Id)
-                    .HasColumnName("id");
+            builder.ToTable("ingredient");
+            builder
+                .Property(x => x.Id)
+                .HasColumnName("id");
 
-                ingredient.HasKey(x => x.Id).HasName("pk_ingredient_id");
+            builder.HasKey(x => x.Id).HasName("pk_ingredient_id");
 
-                ingredient.Property(x => x.RecipeId).HasColumnName("recipe_id");
+            builder.Property(x => x.RecipeId).HasColumnName("recipe_id");
 
-                ingredient.Property(x => x.Measurement).IsRequired();
+            builder.Property(x => x.Measurement).IsRequired();
 
-                ingredient.Property(x => x.CreatedAtUtc)
-                    .HasColumnName("created_at_utc")
-                    .IsRequired()
-                    .HasDefaultValueSql("now()");
+            builder.Property(x => x.CreatedAtUtc)
+                .HasColumnName("created_at_utc")
+                .IsRequired()
+                .HasDefaultValueSql("now()");
 
-                ingredient.Property(x => x.Name).IsRequired().HasMaxLength(256);
+            builder.Property(x => x.Name).IsRequired().HasMaxLength(256);
 
-                ingredient.HasOne(x => x.Recipe).WithMany(x => x.Ingredients).HasForeignKey(x => x.RecipeId);
-            });
+            builder.HasOne(x => x.Recipe).WithMany(x => x.Ingredients).HasForeignKey(x => x.RecipeId);
         }
     }
 }

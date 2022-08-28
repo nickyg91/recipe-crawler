@@ -1,33 +1,31 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RecipeCrawler.Entities;
 
 namespace RecipeCrawler.Data.EntityConfigurations
 {
-    public class StepConfiguration : BaseConfiguration
+    public class StepConfiguration : IEntityTypeConfiguration<Step>
     {
-        public override void CreateEntityModel(ModelBuilder builder)
+        public void Configure(EntityTypeBuilder<Step> builder)
         {
-            builder.Entity<Step>(step =>
-            {
-                step.ToTable("step");
+            builder.ToTable("step");
 
-                step.HasKey(x => x.Id).HasName("pk_step_id");
+            builder.HasKey(x => x.Id).HasName("pk_step_id");
 
-                step
-                    .Property(x => x.Id)
-                    .HasColumnName("id");
+            builder
+                .Property(x => x.Id)
+                .HasColumnName("id");
 
-                step.Property(x => x.RecipeId).HasColumnName("recipe_id");
+            builder.Property(x => x.RecipeId).HasColumnName("recipe_id");
 
-                step.Property(x => x.CreatedAtUtc)
-                    .HasColumnName("created_at_utc")
-                    .IsRequired()
-                    .HasDefaultValueSql("now()");
+            builder.Property(x => x.CreatedAtUtc)
+                .HasColumnName("created_at_utc")
+                .IsRequired()
+                .HasDefaultValueSql("now()");
 
-                step.Property(x => x.Description).IsRequired().HasMaxLength(256);
+            builder.Property(x => x.Description).IsRequired().HasMaxLength(256);
 
-                step.HasOne(x => x.Recipe).WithMany(x => x.Steps).HasForeignKey(x => x.RecipeId);
-            });
+            builder.HasOne(x => x.Recipe).WithMany(x => x.Steps).HasForeignKey(x => x.RecipeId);
         }
     }
 }
