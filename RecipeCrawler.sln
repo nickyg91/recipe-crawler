@@ -5,9 +5,13 @@ VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeCrawler.Web", "RecipeCrawler.Web\RecipeCrawler.Web.csproj", "{D99D9D63-88A6-48EB-A257-93B01D4C38CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeCrawler.Core", "RecipeCrawler.Core\RecipeCrawler.Core.csproj", "{5D07CC0A-2508-4D16-A98C-2A1C657200FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeCrawler.Core", "RecipeCrawler.Core\RecipeCrawler.Core.csproj", "{5D07CC0A-2508-4D16-A98C-2A1C657200FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeCrawler.Data", "RecipeCrawler.Data\RecipeCrawler.Data.csproj", "{F49D5F7E-7840-4BDA-85FE-D8DE2F5992E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeCrawler.Data", "RecipeCrawler.Data\RecipeCrawler.Data.csproj", "{F49D5F7E-7840-4BDA-85FE-D8DE2F5992E7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeCrawler.Entities", "RecipeCrawler.Entities\RecipeCrawler.Entities.csproj", "{6285CD37-5596-451C-B58E-A61E62AB851A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeCrawler.DatabaseMigrator", "RecipeCrawler.DatabaseMigrator\RecipeCrawler.DatabaseMigrator.csproj", "{AB54E4DA-B622-4688-BA29-1319E419F28E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{F49D5F7E-7840-4BDA-85FE-D8DE2F5992E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F49D5F7E-7840-4BDA-85FE-D8DE2F5992E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F49D5F7E-7840-4BDA-85FE-D8DE2F5992E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6285CD37-5596-451C-B58E-A61E62AB851A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6285CD37-5596-451C-B58E-A61E62AB851A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6285CD37-5596-451C-B58E-A61E62AB851A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6285CD37-5596-451C-B58E-A61E62AB851A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB54E4DA-B622-4688-BA29-1319E419F28E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB54E4DA-B622-4688-BA29-1319E419F28E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB54E4DA-B622-4688-BA29-1319E419F28E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB54E4DA-B622-4688-BA29-1319E419F28E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

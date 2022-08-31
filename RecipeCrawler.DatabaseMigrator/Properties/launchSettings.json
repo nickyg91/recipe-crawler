@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "RecipeCrawler.DatabaseMigrator": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "\"Development\""
+      }
+    }
+  }
+}
