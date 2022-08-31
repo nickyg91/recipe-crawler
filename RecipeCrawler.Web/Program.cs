@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
+builder.Configuration.AddEnvironmentVariables();
 var connection = builder.Configuration["redis"];
 
 
@@ -19,7 +20,15 @@ builder.Services.AddSingleton<IRedisService, RedisService>((provider) =>
     return redisService;
 });
 
-var connectionString = builder.Configuration.GetConnectionString("cheffer");
+string connectionString = "";
+if (builder.Environment.IsDevelopment())
+{
+    connectionString = builder.Configuration.GetConnectionString("cheffer");
+}
+else
+{
+    connectionString = builder.Configuration.GetValue<string>("CHEFFER_CONNECTION_STRING");
+}
 
 builder.Services.AddSingleton<ChefConfiguration>();
 builder.Services.AddSingleton<CookbookConfiguration>();
