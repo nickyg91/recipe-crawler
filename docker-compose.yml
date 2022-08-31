@@ -6,6 +6,8 @@ services:
     volumes:
       - "cookbookr-store:/postgres"
     image: "postgres"
+    env_file:
+        - "/opt/env/cheffer/.env"
   cheffer-redis:
     container_name: cheffer-redis
     restart: unless-stopped
@@ -16,6 +18,8 @@ services:
     container_name: cheffer
     restart: unless-stopped
     image: ghcr.io/nickyg91/recipe-crawler:main
+    env_file:
+        - "/opt/env/cheffer/.env"
     ports:
       - "8084:80"
     volumes:

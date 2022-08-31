@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using RecipeCrawler.Core.Services;
 using RecipeCrawler.Data.Database.Contexts;
 using RecipeCrawler.Data.EntityConfigurations;
@@ -59,4 +60,22 @@ app.MapControllerRoute(
 
 app.MapFallbackToFile("index.html");;
 
-app.Run();
+try
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        var context = services.GetRequiredService<ChefferDbContext>();
+        Console.WriteLine("Running db migrations...");
+        context.Database.Migrate();
+    }
+
+    app.Run();
+}
+catch(Exception ex)
+{
+    Console.WriteLine(ex.Message);
+    Console.WriteLine(ex.StackTrace);
+    return;
+}
+
