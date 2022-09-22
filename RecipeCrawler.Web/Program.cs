@@ -1,8 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using RecipeCrawler.Core.Mappers.Profiles;
 using RecipeCrawler.Core.Services;
+using RecipeCrawler.Core.Services.Accounts;
 using RecipeCrawler.Data.Database.Contexts;
 using RecipeCrawler.Data.EntityConfigurations;
 using RecipeCrawler.Data.Redis;
+using RecipeCrawler.Data.Repositories;
+using RecipeCrawler.Data.Repositories.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,11 +34,15 @@ else
     connectionString = builder.Configuration.GetValue<string>("CHEFFER_CONNECTION_STRING");
 }
 
+builder.Services.AddAutoMapper(typeof(ChefProfile));
 builder.Services.AddSingleton<ChefConfiguration>();
 builder.Services.AddSingleton<CookbookConfiguration>();
 builder.Services.AddSingleton<RecipeConfiguration>();
 builder.Services.AddSingleton<StepConfiguration>();
 builder.Services.AddSingleton<IngredientConfiguration>();
+builder.Services.AddScoped<IChefRepository, ChefRepository>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+
 
 builder.Services.AddScoped((provider) =>
 {

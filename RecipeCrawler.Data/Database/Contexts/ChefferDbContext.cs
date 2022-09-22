@@ -13,6 +13,12 @@ namespace RecipeCrawler.Data.Database.Contexts
         private readonly StepConfiguration _stepConfiguration;
         private readonly IngredientConfiguration _ingredientConfiguration;
 
+        public DbSet<Chef> Chefs { get; set; }
+        public DbSet<Cookbook> Cookbooks { get; set; }
+        public DbSet<Recipe> Recipes { get; set; }
+        public DbSet<Step> Steps { get; set; }
+        public DbSet<Ingredient> Ingredients { get; set; }
+
         //explicitly used for ef migrations
         public ChefferDbContext(DbContextOptions<ChefferDbContext> options)
         : base(options)
