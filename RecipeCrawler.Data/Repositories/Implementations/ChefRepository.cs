@@ -1,4 +1,5 @@
-﻿using RecipeCrawler.Data.Database.Contexts;
+﻿using Microsoft.EntityFrameworkCore;
+using RecipeCrawler.Data.Database.Contexts;
 using RecipeCrawler.Entities;
 
 namespace RecipeCrawler.Data.Repositories.Implementations
@@ -9,6 +10,16 @@ namespace RecipeCrawler.Data.Repositories.Implementations
         public ChefRepository(ChefferDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<Chef?> CheckIfUsernameOrEmailAlreadyExists(string username, string email)
+        {
+            var chef = await _context.Chefs.FirstOrDefaultAsync(x => x.Username == username);
+            if (chef == null)
+            {
+                chef = await _context.Chefs.FirstOrDefaultAsync(x => x.Email == email);
+            }
+            return chef;
         }
 
         public async Task<Chef> InsertChef(Chef chefToCreate)

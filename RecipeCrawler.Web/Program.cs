@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using RecipeCrawler.Core.Mappers.Profiles;
 using RecipeCrawler.Core.Services;
@@ -23,15 +24,17 @@ builder.Services.AddSingleton<IRedisService, RedisService>((provider) =>
     redisService.Connect();
     return redisService;
 });
-
+string oauthSecret = "";
 string connectionString = "";
 if (builder.Environment.IsDevelopment())
 {
     connectionString = builder.Configuration.GetConnectionString("cheffer");
+    oauthSecret = builder.Configuration.GetValue<string>("OAuthSecret").ToString();
 }
 else
 {
     connectionString = builder.Configuration.GetValue<string>("CHEFFER_CONNECTION_STRING");
+    oauthSecret = builder.Configuration.GetValue<string>("OAUTH_SECRET");
 }
 
 builder.Services.AddAutoMapper(typeof(ChefProfile));
@@ -42,7 +45,10 @@ builder.Services.AddSingleton<StepConfiguration>();
 builder.Services.AddSingleton<IngredientConfiguration>();
 builder.Services.AddScoped<IChefRepository, ChefRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
-
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.
+});
 
 builder.Services.AddScoped((provider) =>
 {
@@ -69,7 +75,8 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",

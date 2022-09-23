@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using RecipeCrawler.Core.Exceptions;
 using RecipeCrawler.Data.Repositories;
 using RecipeCrawler.Entities;
 using RecipeCrawler.Entities.Models;
@@ -15,13 +16,20 @@ namespace RecipeCrawler.Core.Services.Accounts
             _mapper = mapper;
         }
 
-        public Task ChangePassword(string oldPassword, string newPassword)
+        public Task ChangePassword(int chefId, string oldPassword, string newPassword)
         {
             throw new NotImplementedException();
         }
 
         public async Task<Chef> Create(CreateAccountModel model)
         {
+            var doesAccountExist = await _chefRepository.CheckIfUsernameOrEmailAlreadyExists(model.Username, model.Email);
+
+            if (doesAccountExist != null)
+            {
+                throw new AccountAlreadyExistsException("An account already exists with this user name or email.");
+            }
+
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.Password, BCrypt.Net.BCrypt.GenerateSalt());
             model.Password = hashedPassword;
             var chef = _mapper.Map<Chef>(model);
@@ -30,7 +38,7 @@ namespace RecipeCrawler.Core.Services.Accounts
             return createdChef;
         }
 
-        public Task ResetPassword(string newPassword)
+        public Task ResetPassword(int chefId, string newPassword)
         {
             throw new NotImplementedException();
         }
