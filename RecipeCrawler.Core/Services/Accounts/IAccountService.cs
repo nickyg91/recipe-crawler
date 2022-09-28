@@ -8,5 +8,6 @@ namespace RecipeCrawler.Core.Services.Accounts
         Task<Chef> Create(CreateAccountModel model);
         Task ChangePassword(int chefId, string oldPassword, string newPassword);
         Task ResetPassword(int chefId, string newPassword);
+        Task<Chef> Authenticate(string email, string password);
     }
 }

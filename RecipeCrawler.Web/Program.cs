@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using RecipeCrawler.Core.Mappers.Profiles;
 using RecipeCrawler.Core.Services;
 using RecipeCrawler.Core.Services.Accounts;
@@ -8,6 +9,8 @@ using RecipeCrawler.Data.EntityConfigurations;
 using RecipeCrawler.Data.Redis;
 using RecipeCrawler.Data.Repositories;
 using RecipeCrawler.Data.Repositories.Implementations;
+using RecipeCrawler.Web.Configuration;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,14 +27,15 @@ builder.Services.AddSingleton<IRedisService, RedisService>((provider) =>
     redisService.Connect();
     return redisService;
 });
-string oauthSecret = "";
-string connectionString = "";
-if (builder.Environment.IsDevelopment())
-{
-    connectionString = builder.Configuration.GetConnectionString("cheffer");
-    oauthSecret = builder.Configuration.GetValue<string>("OAuthSecret").ToString();
-}
-else
+var jwtSettings = builder.Configuration.Get<JwtSettings>();
+
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.JwtSettingsOptions));
+string oauthSecret = jwtSettings.Key;
+string connectionString = builder.Configuration.GetConnectionString("cheffer"); ;
+string authorityUrl = jwtSettings.AuthorityUrl;
+string audience = jwtSettings.Audience;
+
+if (!builder.Environment.IsDevelopment())
 {
     connectionString = builder.Configuration.GetValue<string>("CHEFFER_CONNECTION_STRING");
     oauthSecret = builder.Configuration.GetValue<string>("OAUTH_SECRET");
@@ -47,7 +51,16 @@ builder.Services.AddScoped<IChefRepository, ChefRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
-    options.
+    options.Audience = audience;
+    options.Authority = authorityUrl;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF32.GetBytes(oauthSecret)),
+        ValidAudience = audience,
+        ValidIssuer = authorityUrl,
+        ValidateLifetime = true,
+        ValidateAudience = true,
+    };
 });
 
 builder.Services.AddScoped((provider) =>

@@ -16,6 +16,14 @@ namespace RecipeCrawler.Core.Services.Accounts
             _mapper = mapper;
         }
 
+        public async Task<Chef> Authenticate(string email, string password)
+        {
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, BCrypt.Net.BCrypt.GenerateSalt());
+            var chef = await _chefRepository.FindChefByEmailAndPassword(email, hashedPassword);
+
+            return chef;
+        }
+
         public Task ChangePassword(int chefId, string oldPassword, string newPassword)
         {
             throw new NotImplementedException();

@@ -22,6 +22,11 @@ namespace RecipeCrawler.Data.Repositories.Implementations
             return chef;
         }
 
+        public async Task<Chef?> FindChefByEmailAndPassword(string email, string password)
+        {
+            return await _context.Chefs.FirstOrDefaultAsync(x => x.Email == email && x.PasswordHash == password);
+        }
+
         public async Task<Chef> InsertChef(Chef chefToCreate)
         {
             await _context.Chefs.AddAsync(chefToCreate);
