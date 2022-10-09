@@ -9,6 +9,7 @@ using RecipeCrawler.Data.EntityConfigurations;
 using RecipeCrawler.Data.Redis;
 using RecipeCrawler.Data.Repositories;
 using RecipeCrawler.Data.Repositories.Implementations;
+using RecipeCrawler.Web.Authentication;
 using RecipeCrawler.Web.Configuration;
 using System.Text;
 
@@ -19,7 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Configuration.AddEnvironmentVariables();
 var connection = builder.Configuration["redis"];
-
+builder.Services.AddOptions();
 
 builder.Services.AddSingleton<IRedisService, RedisService>((provider) =>
 {
@@ -27,13 +28,13 @@ builder.Services.AddSingleton<IRedisService, RedisService>((provider) =>
     redisService.Connect();
     return redisService;
 });
-var jwtSettings = builder.Configuration.Get<JwtSettings>();
+builder.Services.Configure<JwtSettingsOptions>(builder.Configuration.GetSection(JwtSettingsOptions.JwtSettingsSection));
 
-builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.JwtSettingsOptions));
-string oauthSecret = jwtSettings.Key;
-string connectionString = builder.Configuration.GetConnectionString("cheffer"); ;
-string authorityUrl = jwtSettings.AuthorityUrl;
-string audience = jwtSettings.Audience;
+var jwtSettings = builder.Configuration.Get<RecipeCrawlerConfiguration>();
+string oauthSecret = jwtSettings.JwtSettings.Key;
+string connectionString = builder.Configuration.GetConnectionString("cheffer");
+string authorityUrl = jwtSettings.JwtSettings.AuthorityUrl;
+string audience = jwtSettings.JwtSettings.Audience;
 
 if (!builder.Environment.IsDevelopment())
 {
@@ -49,6 +50,7 @@ builder.Services.AddSingleton<StepConfiguration>();
 builder.Services.AddSingleton<IngredientConfiguration>();
 builder.Services.AddScoped<IChefRepository, ChefRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddTransient<TokenGenerator>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.Audience = audience;
