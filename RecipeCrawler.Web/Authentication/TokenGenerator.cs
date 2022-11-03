@@ -27,7 +27,7 @@ namespace RecipeCrawler.Web.Authentication
             return chef;
         }
 
-        public async Task<JwtSecurityToken> GenerateToken(LoginModel model)
+        public async Task<JwtTokenModel> GenerateToken(LoginModel model)
         {
             var chef = await Authenticate(model);
             if (chef == null)
@@ -49,8 +49,16 @@ namespace RecipeCrawler.Web.Authentication
                 DateTime.UtcNow.AddMinutes(30),
                 signingCredentials
             );
-                        
-            return jwtToken;
+
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(jwtToken);
+            var refreshToken = Guid.NewGuid();
+
+            return new JwtTokenModel
+            {
+                Token = tokenString,
+                Claims = jwtToken.Claims.ToList(),
+                RefreshToken = refreshToken.ToString(),
+            };
         }
     }
 }
