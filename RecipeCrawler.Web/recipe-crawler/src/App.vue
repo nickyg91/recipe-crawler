@@ -150,7 +150,7 @@ const openAccountModal = () => {
       </n-layout-footer>
     </n-notification-provider>
     <n-modal :show="showAccountModal">
-      <template #title>
+      <template #header>
         <n-space align="end">
           <n-button strong tertiary circle type="tertiary" @click="closeModal">
             <n-icon>
