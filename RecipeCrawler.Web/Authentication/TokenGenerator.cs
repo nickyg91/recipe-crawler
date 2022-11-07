@@ -44,6 +44,8 @@ namespace RecipeCrawler.Web.Authentication
                 new List<Claim>
                 {
                     new Claim("chefId", chef.Id.ToString()),
+                    new Claim("email", chef.Email),
+                    new Claim("username", chef.Username)
                 },
                 null,
                 DateTime.UtcNow.AddMinutes(30),

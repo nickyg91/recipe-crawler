@@ -16,7 +16,7 @@ import { computed, inject, reactive, ref } from "vue";
 import { useRecipeStore } from "../recipe-store";
 import { Share, Copy } from "@vicons/carbon";
 import { CrawlerApi, injectionKey } from "../services/crawler-api.service";
-let recipe = reactive(new ParsedResponse());
+const recipe = reactive(new ParsedResponse());
 const store = useRecipeStore();
 const loading = ref(true);
 const router = useRouter();

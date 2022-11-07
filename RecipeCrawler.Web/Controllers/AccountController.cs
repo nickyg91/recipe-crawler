@@ -3,7 +3,6 @@ using RecipeCrawler.Core.Services.Accounts;
 using RecipeCrawler.Entities;
 using RecipeCrawler.Entities.Models;
 using RecipeCrawler.Web.Authentication;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace RecipeCrawler.Web.Controllers
 {
@@ -26,7 +25,7 @@ namespace RecipeCrawler.Web.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<JwtSecurityToken> Login(LoginModel model)
+        public async Task<JwtTokenModel> Login(LoginModel model)
         {
             var token = await _tokenGenerator.GenerateToken(model);
             return token;
