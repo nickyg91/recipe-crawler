@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import { Home, Moon, Sun, Warning, User, Close } from "@vicons/carbon";
+import { Home, Moon, Sun, Warning, User } from "@vicons/carbon";
 import { computed, ref, watch } from "vue";
 import {
   NConfigProvider,
@@ -150,16 +150,7 @@ const openAccountModal = () => {
       </n-layout-footer>
     </n-notification-provider>
     <n-modal :show="showAccountModal">
-      <template #header>
-        <n-space align="end">
-          <n-button strong tertiary circle type="tertiary" @click="closeModal">
-            <n-icon>
-              <close></close>
-            </n-icon>
-          </n-button>
-        </n-space>
-      </template>
-      <AccountModal />
+      <AccountModal @close-clicked="closeModal" />
     </n-modal>
   </n-config-provider>
 </template>
