@@ -3,6 +3,7 @@ import { NCard, NSpace, NButton } from "naive-ui";
 import { computed, ref } from "vue";
 import { useRecipeStore } from "../recipe-store";
 import { User, LogoGoogle, Close } from "@vicons/carbon";
+import AccountSignupForm from "./AccountSignupForm.vue";
 const showSignupForm = ref(false);
 const store = useRecipeStore();
 const userInfo = computed(() => store.getUserInfo);
@@ -25,29 +26,52 @@ const onCloseClicked = () => {
         </n-button>
       </n-space>
     </template>
-    <n-space
-      v-if="!userInfo"
-      style="min-height: 450px"
-      justify="center"
-      vertical
-      align="center"
-    >
-      <n-button
-        style="width: 225px"
-        type="primary"
-        @click="onCreateAccountClicked"
+    <transition>
+      <n-space
+        v-if="!userInfo && !showSignupForm"
+        style="min-height: 450px"
+        justify="center"
+        vertical
+        align="center"
       >
-        <template #icon>
-          <user></user>
-        </template>
-        Create Account
-      </n-button>
-      <n-button style="width: 225px" type="primary" disabled>
-        <template #icon>
-          <logo-google></logo-google>
-        </template>
-        Sign-in with Google
-      </n-button>
-    </n-space>
+        <n-button
+          style="width: 225px"
+          type="primary"
+          @click="onCreateAccountClicked"
+        >
+          <template #icon>
+            <user></user>
+          </template>
+          Create Account
+        </n-button>
+        <n-button style="width: 225px" type="primary" disabled>
+          <template #icon>
+            <logo-google></logo-google>
+          </template>
+          Sign-in with Google
+        </n-button>
+      </n-space>
+    </transition>
+    <transition>
+      <account-signup-form
+        v-if="showSignupForm"
+        @close-clicked="showSignupForm = false"
+      ></account-signup-form>
+    </transition>
   </n-card>
 </template>
+<style scoped lang="scss">
+.v-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.v-fade-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.v-fade-enter-from,
+.v-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+</style>
