@@ -26,7 +26,7 @@ const onCloseClicked = () => {
         </n-button>
       </n-space>
     </template>
-    <transition>
+    <section>
       <n-space
         v-if="!userInfo && !showSignupForm"
         style="min-height: 450px"
@@ -51,27 +51,11 @@ const onCloseClicked = () => {
           Sign-in with Google
         </n-button>
       </n-space>
-    </transition>
-    <transition>
       <account-signup-form
         v-if="showSignupForm"
         @close-clicked="showSignupForm = false"
       ></account-signup-form>
-    </transition>
+    </section>
   </n-card>
 </template>
-<style scoped lang="scss">
-.v-fade-enter-active {
-  transition: all 0.3s ease-out;
-}
-
-.v-fade-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-}
-
-.v-fade-enter-from,
-.v-fade-leave-to {
-  transform: translateX(20px);
-  opacity: 0;
-}
-</style>
+<style scoped lang="scss"></style>
