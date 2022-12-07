@@ -18,7 +18,7 @@ import {
   NDivider,
 } from "naive-ui";
 import { Checkmark, Save } from "@vicons/carbon";
-import { computed } from "@vue/reactivity";
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 import RecipeDetails from "./RecipeDetails.vue";
 import { useRecipeStore } from "../recipe-store";
@@ -28,8 +28,8 @@ const crawlerApi: CrawlerApi | undefined = inject(injectionKey);
 const store = useRecipeStore();
 const notificationService = useNotification();
 const router = useRouter();
-let response = reactive(new ParsedResponse());
-let loading = ref(false);
+const response = reactive(new ParsedResponse());
+const loading = ref(false);
 const isGhostButton = computed(() => {
   return !store.isLightMode;
 });
@@ -42,7 +42,7 @@ const model = reactive({
 const rules: FormRules = {
   url: {
     required: true,
-    pattern: /(https?:\/\/)?([\da-z\.-]+)\.([a-z]{2,6})([\/\w\.-]*)*\/?/,
+    pattern: /(https?:\/\/)?([\da-z.-]+)\.([a-z]{2,6})([\w.-]*)*\/?/,
     message: "A valid URL must be supplied.",
     trigger: ["input", "blur"],
   },
@@ -79,7 +79,7 @@ const submit = () => {
             duration: 3000,
           });
         })
-        .catch((error) => {
+        .catch(() => {
           loading.value = false;
           notificationService.error({
             content: "An error occurred attempting to scrape the recipe.",
@@ -105,7 +105,7 @@ const save = () => {
       router.push({ name: "savedRecipe", params: { url: result.data } });
       loading.value = false;
     },
-    (error) => {
+    () => {
       loading.value = false;
       notificationService.error({
         content: "An error occurred attempting to save the recipe.",
@@ -121,17 +121,12 @@ const save = () => {
     <n-space vertical style="margin-top: 15px" justify="center">
       <n-grid :cols="!store.getIsMobile ? 3 : 1">
         <n-gi :offset="!store.getIsMobile ? 1 : 0">
-          <n-form
-            ref="formRef"
-            :model="model"
-            :rules="rules"
-            v-on:submit.prevent
-          >
+          <n-form ref="formRef" :model="model" :rules="rules" @submit.prevent>
             <n-form-item path="title" label="Title">
-              <n-input placeholder="Title" v-model:value="model.title" />
+              <n-input v-model:value="model.title" placeholder="Title" />
             </n-form-item>
             <n-form-item path="url" label="Url">
-              <n-input placeholder="Url" v-model:value="model.url" />
+              <n-input v-model:value="model.url" placeholder="Url" />
             </n-form-item>
             <n-space
               size="large"
@@ -141,8 +136,8 @@ const save = () => {
                 :disabled="!saveEnabled"
                 size="large"
                 :ghost="isGhostButton"
-                @click="save"
                 type="primary"
+                @click="save"
               >
                 <template #icon>
                   <n-icon>
@@ -155,8 +150,8 @@ const save = () => {
                 :disabled="!submitEnabled"
                 size="large"
                 :ghost="isGhostButton"
-                @click="submit"
                 type="primary"
+                @click="submit"
               >
                 <template #icon>
                   <n-icon>
