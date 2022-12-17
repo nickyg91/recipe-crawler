@@ -15,6 +15,7 @@ namespace RecipeCrawler.Web.Controllers
         public AccountController(IAccountService accountService, TokenGenerator tokenGenerator)
         {
             _accountService = accountService;
+            _tokenGenerator = tokenGenerator;
         }
 
         [HttpPost("create")]
