@@ -25,7 +25,8 @@ const signupFormRules = accountSignupFormRules(formModel);
 
 const handlePasswordInput = () => {
   if (formModel.password) {
-    passwordFormItemRef.value?.validate({ trigger: "password-input" });
+    console.log(passwordFormItemRef.value?.validate);
+    // passwordFormItemRef.value?.validate("password-input");
   }
 };
 
