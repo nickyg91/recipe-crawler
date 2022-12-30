@@ -15,12 +15,11 @@ import { inject, reactive, ref } from "vue";
 import { Account } from "../models/account.model";
 import { accountSignupFormRules } from "../services/form-validation.constants";
 import { Save, Close } from "@vicons/carbon";
-import {
-  AuthenticationService,
-  injectionKey,
-} from "../services/authentication.service";
+import { AuthenticationService } from "../services/authentication.service";
 const notificationService = useNotification();
-const accountService: AuthenticationService | undefined = inject(injectionKey);
+const accountService: AuthenticationService | undefined = inject(
+  AuthenticationService.injectionKey
+);
 const emit = defineEmits(["closeClicked"]);
 const formRef = ref<FormInst | null>(null);
 const loading = ref<boolean>(false);

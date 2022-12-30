@@ -23,7 +23,7 @@ namespace RecipeCrawler.Web.Authentication
 
         private async Task<Chef> Authenticate(LoginModel model)
         {
-            var chef = await _accountService.Authenticate(model.Email, model.Password);
+            var chef = await _accountService.Authenticate(model.Username, model.Password);
             return chef;
         }
 

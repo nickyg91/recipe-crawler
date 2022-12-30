@@ -17,6 +17,14 @@
       },
       "applicationUrl": "https://localhost:7215;http://localhost:5141"
     },
+    "RecipeCrawler.Web:NoVite": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+      },
+      "applicationUrl": "https://localhost:7215;http://localhost:5141"
+    },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
