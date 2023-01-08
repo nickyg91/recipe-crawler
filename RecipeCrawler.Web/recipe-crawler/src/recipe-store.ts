@@ -1,10 +1,8 @@
-import { AxiosInstance } from "axios";
 import { defineStore } from "pinia";
-import { inject } from "vue";
 import { ParsedResponse } from "./models/parsed-response.model";
 import { IRecipeStore } from "./models/recipe-store.interface";
 import { TokenResponse } from "./models/token-response.model";
-
+import { axiosInstance } from "./main";
 export const useRecipeStore = defineStore("recipeStore", {
   state: () =>
     ({
@@ -39,8 +37,6 @@ export const useRecipeStore = defineStore("recipeStore", {
     },
     setUserInfo(response: TokenResponse) {
       this.userInfo = response;
-      const axiosInstance: AxiosInstance | null | undefined =
-        inject("axiosInsance");
       axiosInstance?.interceptors.request.use((instance) => {
         if (instance) {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

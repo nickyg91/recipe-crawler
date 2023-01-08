@@ -21,7 +21,7 @@ namespace RecipeCrawler.Web.Authentication
             _jwtSettings = jwtSettings.Value;
         }
 
-        private async Task<Chef> Authenticate(LoginModel model)
+        private async Task<Chef?> Authenticate(LoginModel model)
         {
             var chef = await _accountService.Authenticate(model.Username, model.Password);
             return chef;

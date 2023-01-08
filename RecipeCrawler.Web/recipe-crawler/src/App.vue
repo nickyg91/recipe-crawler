@@ -103,6 +103,9 @@ const openAccountModal = () => {
           @collapse="collapsed = true"
           @expand="collapsed = false"
         >
+          <p v-if="state.getUserInfo">
+            Welcome {{ state.getUserInfo.username }}!
+          </p>
           <n-menu
             :collapsed="collapsed"
             :collapsed-width="64"
@@ -148,10 +151,10 @@ const openAccountModal = () => {
           mode="horizontal"
         />
       </n-layout-footer>
+      <n-modal :show="showAccountModal">
+        <AccountModal @close-clicked="closeModal" />
+      </n-modal>
     </n-notification-provider>
-    <n-modal :show="showAccountModal">
-      <AccountModal @close-clicked="closeModal" />
-    </n-modal>
   </n-config-provider>
 </template>
 <style>

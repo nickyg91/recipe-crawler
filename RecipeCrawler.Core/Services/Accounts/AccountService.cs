@@ -16,15 +16,15 @@ namespace RecipeCrawler.Core.Services.Accounts
             _mapper = mapper;
         }
 
-        public async Task<Chef> Authenticate(string username, string password)
+        public async Task<Chef?> Authenticate(string username, string password)
         {
             var chef = await _chefRepository.FindChefByUsername(username);
 
             if (BCrypt.Net.BCrypt.Verify(password, chef.PasswordHash))
-
-            BCrypt.Net.BCrypt.Verify(password, chef.Password);
-
-            return chef;
+            {
+                return chef;
+            }
+            return null;
         }
 
         public Task ChangePassword(int chefId, string oldPassword, string newPassword)

@@ -14,7 +14,7 @@ const router = createRouter({
   history: createWebHistory(),
 });
 
-const axiosInstance = axios.create();
+export const axiosInstance = axios.create();
 
 const app = createApp(App).use(router).use(createPinia());
 app.provide("crawlerApi", new CrawlerApi());

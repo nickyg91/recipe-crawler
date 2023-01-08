@@ -9,10 +9,9 @@ namespace RecipeCrawler.DatabaseMigrator
     {
         public ChefferDbContext CreateDbContext(string[] args)
         {
-            var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             var builder = new ConfigurationBuilder()
-                       .AddJsonFile($"appsettings.json", true, true)
-                       .AddJsonFile($"appsettings.{environmentName}.json", true, true)
+                       .AddJsonFile($"appsettings.json", false)
+                       .AddJsonFile($"appsettings.Development.json", false)
                        .AddEnvironmentVariables();
             var configuration = builder.Build();
             var connectionString = configuration.GetConnectionString("cheffer");

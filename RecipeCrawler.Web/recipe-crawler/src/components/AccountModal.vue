@@ -1,10 +1,17 @@
 <script setup lang="ts">
-import { NCard, NSpace, NButton, NNotificationProvider } from "naive-ui";
+import {
+  NCard,
+  NSpace,
+  NButton,
+  NNotificationProvider,
+  useNotification,
+} from "naive-ui";
 import { computed, ref } from "vue";
 import { useRecipeStore } from "../recipe-store";
 import { User, LogoGoogle, Close } from "@vicons/carbon";
 import AccountSignupForm from "./AccountSignupForm.vue";
 import LogInForm from "./LogInForm.vue";
+const notificationService = useNotification();
 const showSignupForm = ref(false);
 const store = useRecipeStore();
 const userInfo = computed(() => store.getUserInfo);
@@ -28,6 +35,14 @@ const title = computed(() => {
   }
   return "Account";
 });
+function onLoginSuccessful() {
+  showLoginForm.value = false;
+  notificationService.success({
+    content: "You have logged in successfully!",
+    title: "Logged in!",
+  });
+  emit("closeClicked", true);
+}
 </script>
 <template>
   <n-card style="width: 750px" :title="title">
@@ -81,6 +96,7 @@ const title = computed(() => {
         <log-in-form
           v-if="showLoginForm"
           @cancel-clicked="showLoginForm = false"
+          @successful-submit="onLoginSuccessful()"
         ></log-in-form>
       </section>
     </n-notification-provider>

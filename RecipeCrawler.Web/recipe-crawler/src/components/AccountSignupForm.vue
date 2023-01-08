@@ -96,7 +96,7 @@ function cancel() {
             placeholder="confirm password"
           />
         </n-form-item>
-        <n-space v-if="showEmailAlert" :size="12">
+        <n-space v-if="showEmailAlert" style="margin-bottom: 5px" :size="12">
           <n-alert type="success" title="Success!">
             Your account has been created successfully! A confirmation email
             will be sent to the email address provided. Please use this email to

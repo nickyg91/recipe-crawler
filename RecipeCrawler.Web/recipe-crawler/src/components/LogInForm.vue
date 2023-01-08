@@ -46,15 +46,17 @@ async function submitLogin() {
 
   //     }
   //   });
-  try {
-    const result = await authService?.login(loginModel);
-    if (result) {
-      store.setUserInfo(result);
-      emits("successfulSubmit");
-    }
-  } catch (error) {
-    console.error(error);
-  }
+  authService
+    ?.login(loginModel)
+    .then((result) => {
+      if (result.data) {
+        store.setUserInfo(result.data);
+        emits("successfulSubmit");
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 }
 
 function cancel() {
@@ -73,6 +75,8 @@ function cancel() {
     <n-form-item path="password" label="Password">
       <n-input
         v-model:value="loginModel.password"
+        type="password"
+        :show-password-toggle="true"
         placeholder="Password"
         @keydown.enter.prevent
       />
@@ -82,7 +86,7 @@ function cancel() {
         <n-button
           type="primary"
           style="margin-right: 5px"
-          @click="submitLogin()"
+          @click.prevent="submitLogin()"
         >
           Submit
         </n-button>
