@@ -12,6 +12,8 @@ using RecipeCrawler.Data.Repositories.Implementations;
 using RecipeCrawler.Web.Authentication;
 using RecipeCrawler.Web.Configuration;
 using System.Text;
+using RecipeCrawler.Core.Configuration;
+using RecipeCrawler.Core.Services.Email;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,13 +30,18 @@ builder.Services.AddSingleton<IRedisService, RedisService>((provider) =>
     redisService.Connect();
     return redisService;
 });
-builder.Services.Configure<JwtSettingsOptions>(builder.Configuration.GetSection(JwtSettingsOptions.JwtSettingsSection));
+var jwtSettingsSection = builder.Configuration.GetSection(JwtSettingsOptions.JwtSettingsSection);
+var emailConfigSettingsSection = builder.Configuration.GetSection(EmailConfigurationOptions.EmailConfigurationSection);
+builder.Services.Configure<JwtSettingsOptions>(jwtSettingsSection);
+builder.Services.Configure<EmailConfigurationOptions>(emailConfigSettingsSection);
 
-var jwtSettings = builder.Configuration.Get<RecipeCrawlerConfiguration>();
-string oauthSecret = jwtSettings.JwtSettings.Key;
+var settings = builder.Configuration.Get<RecipeCrawlerConfiguration>();
+string oauthSecret = settings.JwtSettings.Key;
 string connectionString = builder.Configuration.GetConnectionString("cheffer");
-string authorityUrl = jwtSettings.JwtSettings.AuthorityUrl;
-string audience = jwtSettings.JwtSettings.Audience;
+string authorityUrl = settings.JwtSettings.AuthorityUrl;
+string audience = settings.JwtSettings.Audience;
+
+string url = builder.Environment.IsDevelopment() ? "https://localhost:7215" : "https://cheffer.nickganter.dev";
 
 if (!builder.Environment.IsDevelopment())
 {
@@ -50,6 +57,7 @@ builder.Services.AddSingleton<StepConfiguration>();
 builder.Services.AddSingleton<IngredientConfiguration>();
 builder.Services.AddScoped<IChefRepository, ChefRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddTransient<IEmailService, EmailService>((provider) => new EmailService(settings.EmailConfiguration, url));
 builder.Services.AddTransient<TokenGenerator>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {

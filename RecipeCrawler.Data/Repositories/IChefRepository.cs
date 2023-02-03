@@ -7,5 +7,7 @@ namespace RecipeCrawler.Data.Repositories
         Task<Chef> InsertChef(Chef chefToCreate);
         Task<Chef?> CheckIfUsernameOrEmailAlreadyExists(string username, string email);
         Task<Chef?> FindChefByUsername(string username);
+        Task<Chef?> FindChefByVerificationGuid(Guid verificationGuid);
+        Task<bool> VerifyChef(Chef chef);
     }
 }

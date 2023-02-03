@@ -9,12 +9,13 @@ import { createPinia } from "pinia";
 import { CrawlerApi } from "./services/crawler-api.service";
 import axios from "axios";
 import { AuthenticationService } from "./services/authentication.service";
+
+export const axiosInstance = axios.create();
 const router = createRouter({
   routes: routes,
   history: createWebHistory(),
 });
 
-export const axiosInstance = axios.create();
 
 const app = createApp(App).use(router).use(createPinia());
 app.provide("crawlerApi", new CrawlerApi());

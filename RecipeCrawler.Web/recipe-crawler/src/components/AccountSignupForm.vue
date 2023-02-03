@@ -35,8 +35,7 @@ const signupFormRules = accountSignupFormRules(formModel);
 
 const handlePasswordInput = () => {
   if (formModel.password) {
-    console.log(passwordFormItemRef.value?.validate);
-    // passwordFormItemRef.value?.validate("password-input");
+    passwordFormItemRef.value?.validate("password-input");
   }
 };
 
@@ -104,11 +103,13 @@ function cancel() {
           </n-alert>
         </n-space>
         <n-space stlyle="top: 5px" align="end" justify="end">
-          <n-button type="primary" @click="submit">
+          <n-button v-if="!showEmailAlert" type="primary" @click="submit">
             <template #icon><save /></template>Confirm
           </n-button>
           <n-button type="warning" @click="cancel">
-            <template #icon><close /></template>Cancel
+            <template #icon><close /></template>
+
+            {{ showEmailAlert ? 'Close' : 'Cancel' }}
           </n-button>
         </n-space>
       </n-form>

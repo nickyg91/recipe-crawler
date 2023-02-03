@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using RecipeCrawler.Core.Exceptions;
+using RecipeCrawler.Core.Services.Email;
 using RecipeCrawler.Data.Repositories;
 using RecipeCrawler.Entities;
 using RecipeCrawler.Entities.Models;
@@ -8,23 +9,43 @@ namespace RecipeCrawler.Core.Services.Accounts
 {
     public class AccountService : IAccountService
     {
-        private IChefRepository _chefRepository;
-        private IMapper _mapper;
-        public AccountService(IChefRepository chefRepository, IMapper mapper) 
+        private readonly IChefRepository _chefRepository;
+        private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
+        public AccountService(IChefRepository chefRepository, IMapper mapper, IEmailService emailService) 
         {
             _chefRepository = chefRepository;
             _mapper = mapper;
+            _emailService = emailService;
+        }
+
+        public async Task VerifyAccount(Guid verificationGuid)
+        {
+            var chef = await _chefRepository.FindChefByVerificationGuid(verificationGuid);
+            if (chef == null)
+            {
+                throw new AccountNotFoundFromVerificationEmailException(
+                    "Account was not found via verification email.");
+            }
+            var isVerified = await _chefRepository.VerifyChef(chef);
+
+            if (!isVerified)
+            {
+                throw new AccountVerificationException(
+                    "Unable to verify account. Please request a new verification email.");
+            }
         }
 
         public async Task<Chef?> Authenticate(string username, string password)
         {
             var chef = await _chefRepository.FindChefByUsername(username);
 
-            if (BCrypt.Net.BCrypt.Verify(password, chef.PasswordHash))
+            if (chef != null && !chef.IsEmailVerified)
             {
-                return chef;
+                return null;
             }
-            return null;
+
+            return BCrypt.Net.BCrypt.Verify(password, chef?.PasswordHash) ? chef : null;
         }
 
         public Task ChangePassword(int chefId, string oldPassword, string newPassword)
@@ -46,6 +67,9 @@ namespace RecipeCrawler.Core.Services.Accounts
             var chef = _mapper.Map<Chef>(model);
             //need logic to check for duplicate
             var createdChef = await _chefRepository.InsertChef(chef);
+
+            await _emailService.SendVerificationEmail(createdChef.Email, createdChef.EmailVerificationGuid!.Value);
+            
             return createdChef;
         }
 

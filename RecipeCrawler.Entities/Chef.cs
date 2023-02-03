@@ -9,6 +9,8 @@ namespace RecipeCrawler.Entities
         public string PasswordHash { get; set; }
         [NotMapped]
         public string Password { get; set; }
+        public Guid? EmailVerificationGuid { get; set; }
+        public bool IsEmailVerified { get; set; }
         public List<Cookbook> Cookbooks { get; set; }
     }
 }

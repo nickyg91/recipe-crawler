@@ -1,8 +1,8 @@
 <script setup lang="ts">
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import { Home, Moon, Sun, Warning, User } from "@vicons/carbon";
-import { computed, ref, watch } from "vue";
+import { Home, Moon, Sun, Warning, User, Catalog } from "@vicons/carbon";
+import { computed, reactive, ref, watch } from "vue";
 import {
   NConfigProvider,
   NNotificationProvider,
@@ -33,6 +33,7 @@ watch(
 );
 
 const state = useRecipeStore();
+
 const collapsed = ref(false);
 const isMobileSize = window.innerWidth <= 760;
 state.setIsMobile(isMobileSize);
@@ -40,7 +41,7 @@ window.addEventListener("resize", () => {
   const isMobile = window.innerWidth <= 760;
   state.setIsMobile(isMobile);
 });
-const menuOptions: MenuOption[] = [
+const menuOptions: MenuOption[] = reactive([
   {
     label: () =>
       h(
@@ -73,7 +74,33 @@ const menuOptions: MenuOption[] = [
     key: "reportedUrls",
     icon: () => h(Warning),
   },
-];
+]);
+
+state.$onAction(
+  ({
+    name,
+    // after  
+  }) => {
+    if (name === "setUserInfo") {
+      menuOptions.push({
+        label: () => h(
+          RouterLink,
+          {
+            to: {
+              name: "recipeBooks"
+            }
+          },
+          {
+            default: () => "Recipe Books"
+          }
+        ),
+        key: "recipeBooks",
+        icon: () => h(Catalog)
+      })
+    }
+  }
+);
+
 const getTheme = computed(() => {
   return state.getIsLightMode ? null : darkTheme;
 });
@@ -103,9 +130,6 @@ const openAccountModal = () => {
           @collapse="collapsed = true"
           @expand="collapsed = false"
         >
-          <p v-if="state.getUserInfo">
-            Welcome {{ state.getUserInfo.username }}!
-          </p>
           <n-menu
             :collapsed="collapsed"
             :collapsed-width="64"
@@ -131,7 +155,7 @@ const openAccountModal = () => {
             >
               <template #icon>
                 <n-icon>
-                  <user></user>
+                  <User />
                 </n-icon>
               </template>
             </n-button>
