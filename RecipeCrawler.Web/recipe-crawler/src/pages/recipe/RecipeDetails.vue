@@ -1,11 +1,10 @@
-<!-- eslint-disable-next-line vue/no-v-html -->
 <script setup lang="ts">
-import { ParsedResponse } from "../models/parsed-response.model";
+import { ParsedResponse } from "./models/parsed-response.model";
 import { NCard, NSpace, NButton, NH1, useNotification, NSpin } from "naive-ui";
 import { Close, WarningHex } from "@vicons/carbon";
-import { useRecipeStore } from "../recipe-store";
+import { useRecipeStore } from "../../recipe-store";
 import { computed, ref } from "vue";
-import { CrawlerApi, injectionKey } from "../services/crawler-api.service";
+import { CrawlerApi, injectionKey } from "../../services/crawler-api.service";
 import { inject } from "vue";
 const store = useRecipeStore();
 const crawlerApi: CrawlerApi | undefined = inject(injectionKey);

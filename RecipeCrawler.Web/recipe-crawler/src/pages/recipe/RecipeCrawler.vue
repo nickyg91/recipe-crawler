@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { inject, reactive, ref } from "vue";
 import { AxiosResponse } from "axios";
-import { ParsedResponse } from "../models/parsed-response.model";
 import {
   NButton,
   NGrid,
@@ -21,8 +20,9 @@ import { Checkmark, Save } from "@vicons/carbon";
 import { computed } from "vue";
 import { useRouter } from "vue-router";
 import RecipeDetails from "./RecipeDetails.vue";
-import { useRecipeStore } from "../recipe-store";
-import { injectionKey, CrawlerApi } from "../services/crawler-api.service";
+import { useRecipeStore } from "../../recipe-store";
+import { injectionKey, CrawlerApi } from "../../services/crawler-api.service";
+import { ParsedResponse } from "./models/parsed-response.model";
 
 const crawlerApi: CrawlerApi | undefined = inject(injectionKey);
 const store = useRecipeStore();

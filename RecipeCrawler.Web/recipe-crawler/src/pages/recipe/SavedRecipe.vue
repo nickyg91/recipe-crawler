@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useRouter } from "vue-router";
-import { ParsedResponse } from "../models/parsed-response.model";
+import { ParsedResponse } from "./models/parsed-response.model";
 import {
   NSpin,
   NSpace,
@@ -13,9 +13,9 @@ import {
 } from "naive-ui";
 import RecipeDetails from "./RecipeDetails.vue";
 import { computed, inject, reactive, ref } from "vue";
-import { useRecipeStore } from "../recipe-store";
+import { useRecipeStore } from "../../recipe-store";
 import { Share, Copy } from "@vicons/carbon";
-import { CrawlerApi, injectionKey } from "../services/crawler-api.service";
+import { CrawlerApi, injectionKey } from "../../services/crawler-api.service";
 const recipe = reactive(new ParsedResponse());
 const store = useRecipeStore();
 const loading = ref(true);

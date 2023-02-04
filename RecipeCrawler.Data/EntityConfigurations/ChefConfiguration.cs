@@ -37,12 +37,7 @@ namespace RecipeCrawler.Data.EntityConfigurations
                 .IsUnicode(true);
 
             builder.Property(x => x.EmailVerificationGuid)
-                .HasColumnName("email_verifiaction_guid")
-                .HasMaxLength(64)
-                .HasDefaultValue(Guid.NewGuid());
-            
-            builder.Property(x => x.EmailVerificationGuid)
-                .HasColumnName("email_verifiaction_guid")
+                .HasColumnName("email_verification_guid")
                 .HasMaxLength(64)
                 .HasDefaultValue(Guid.NewGuid());
 

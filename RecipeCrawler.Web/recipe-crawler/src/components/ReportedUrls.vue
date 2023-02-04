@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { NSpace, NDataTable, DataTableColumn, useNotification } from "naive-ui";
 import { inject, reactive, ref } from "vue";
-import { ParsedResponse } from "../models/parsed-response.model";
+import { ParsedResponse } from "../pages/recipe/models/parsed-response.model";
 import { CrawlerApi, injectionKey } from "../services/crawler-api.service";
 const crawlerApi: CrawlerApi | undefined = inject(injectionKey);
 

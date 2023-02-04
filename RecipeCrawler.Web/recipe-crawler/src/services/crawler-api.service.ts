@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
-import { PagedRecipes } from "../models/paged-recipes.model";
-import { ParsedResponse } from "../models/parsed-response.model";
+import { PagedRecipes } from "../pages/recipe/models/paged-recipes.model";
+import { ParsedResponse } from "../pages/recipe/models/parsed-response.model";
 export const injectionKey = "crawlerApi";
 export class CrawlerApi {
   private readonly baseUrl = "/api/features/crawler";

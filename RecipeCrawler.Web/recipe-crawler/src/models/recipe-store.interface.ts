@@ -1,4 +1,4 @@
-import { ParsedResponse } from "./parsed-response.model";
+import { ParsedResponse } from "../pages/recipe/models/parsed-response.model";
 import { TokenResponse } from "./token-response.model";
 
 export interface IRecipeStore {

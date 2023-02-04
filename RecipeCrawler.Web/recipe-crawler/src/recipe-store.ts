@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ParsedResponse } from "./models/parsed-response.model";
+import { ParsedResponse } from "./pages/recipe/models/parsed-response.model";
 import { IRecipeStore } from "./models/recipe-store.interface";
 import { TokenResponse } from "./models/token-response.model";
 import { axiosInstance } from "./main";

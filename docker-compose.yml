@@ -14,6 +14,12 @@ services:
     volumes:
       - "cheffer-store:/data"
     image: redis
+  cheffer-email:
+    container_name: cheffer-email
+    restart: unless-stopped
+    image: namshi/smtp
+    ports:
+      - 6025:25
   cheffer:
     container_name: cheffer
     restart: unless-stopped

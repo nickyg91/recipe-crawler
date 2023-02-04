@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Mail;
 using RecipeCrawler.Core.Configuration;
 using RecipeCrawler.Core.Exceptions;
@@ -25,7 +26,7 @@ public class EmailService : IEmailService
                 This URL will expire within 3 days of your account creation.
                 To request another one, please log in and request verification.
             ";
-            var email = new MailMessage("cheffer@no-reply.com", to, "Verify your Cheffer Account!" ,body);
+            var email = new MailMessage("noreply@nickganter.dev", to, "Verify your Cheffer Account!" ,body);
             
             using var smtpClient = new SmtpClient(_emailConfigurationOptions.SmtpUrl, _emailConfigurationOptions.Port);
             await smtpClient.SendMailAsync(email);
