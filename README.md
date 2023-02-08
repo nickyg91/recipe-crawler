@@ -15,6 +15,8 @@ Crawler for recipe websites because I don't want to hear the life story I just w
 ## Dotnet commands to run
 - dotnet tool install --global dotnet-ef
 - dotnet ef migrations add <migration name>
+- dotnet tool install -g dotnet-aspnet-codegenerator
 
 ## Set your environment variable if not on windows
 - export ASPNETCORE_ENVIRONMENT='Development'
+-
