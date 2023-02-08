@@ -31,5 +31,12 @@ namespace RecipeCrawler.Web.Controllers
             var token = await _tokenGenerator.GenerateToken(model);
             return token;
         }
+
+        [HttpGet("{guid}/verify")]
+        public async Task<IActionResult> Verify(Guid guid)
+        {
+            await _accountService.VerifyAccount(guid);
+            return Ok();
+        }
     }
 }

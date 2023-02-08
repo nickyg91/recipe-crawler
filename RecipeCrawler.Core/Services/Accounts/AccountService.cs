@@ -27,6 +27,7 @@ namespace RecipeCrawler.Core.Services.Accounts
                 throw new AccountNotFoundFromVerificationEmailException(
                     "Account was not found via verification email.");
             }
+            
             var isVerified = await _chefRepository.VerifyChef(chef);
 
             if (!isVerified)
