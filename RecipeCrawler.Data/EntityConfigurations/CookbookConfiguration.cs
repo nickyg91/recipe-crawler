@@ -30,6 +30,9 @@ namespace RecipeCrawler.Data.EntityConfigurations
                     .WithMany(x => x.Cookbooks)
                     .HasConstraintName("fk_cookbook_chef")
                     .HasForeignKey(x => x.ChefId);
+            builder
+                .Property(x => x.CoverImage)
+                .HasColumnName("cover_image");
         }
     }
 }

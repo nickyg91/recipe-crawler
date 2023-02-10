@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace RecipeCrawler.Web.Controllers.Cookbook
+namespace RecipeCrawler.Web.Controllers.Chef
 {
-    [Route("api/[controller]")]
+    [Route("api/chef/[controller]")]
     [ApiController]
     public class CookbookController : ControllerBase
     {

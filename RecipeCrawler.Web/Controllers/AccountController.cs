@@ -19,7 +19,7 @@ namespace RecipeCrawler.Web.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<Chef> CreateAccount(CreateAccountModel model)
+        public async Task<Entities.Chef> CreateAccount(CreateAccountModel model)
         {
             var createdChef = await _accountService.Create(model);
             return createdChef;
