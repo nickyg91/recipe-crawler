@@ -37,7 +37,7 @@ namespace RecipeCrawler.Core.Services.Accounts
             }
         }
 
-        public async Task<Chef?> Authenticate(string username, string password)
+        public async Task<Entities.Chef?> Authenticate(string username, string password)
         {
             var chef = await _chefRepository.FindChefByUsername(username);
 
@@ -54,7 +54,7 @@ namespace RecipeCrawler.Core.Services.Accounts
             throw new NotImplementedException();
         }
 
-        public async Task<Chef> Create(CreateAccountModel model)
+        public async Task<Entities.Chef> Create(CreateAccountModel model)
         {
             var doesAccountExist = await _chefRepository.CheckIfUsernameOrEmailAlreadyExists(model.Username, model.Email);
 
@@ -65,7 +65,7 @@ namespace RecipeCrawler.Core.Services.Accounts
 
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.Password, BCrypt.Net.BCrypt.GenerateSalt());
             model.Password = hashedPassword;
-            var chef = _mapper.Map<Chef>(model);
+            var chef = _mapper.Map<Entities.Chef>(model);
             //need logic to check for duplicate
             var createdChef = await _chefRepository.InsertChef(chef);
 
