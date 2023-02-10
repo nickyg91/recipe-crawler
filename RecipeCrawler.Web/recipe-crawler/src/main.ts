@@ -7,11 +7,18 @@ import { routes } from "./router";
 import { createRouter, createWebHistory } from "vue-router";
 import { createPinia } from "pinia";
 import { CrawlerApi } from "./services/crawler-api.service";
-var router = createRouter({
+import axios from "axios";
+import { AuthenticationService } from "./services/authentication.service";
+
+export const axiosInstance = axios.create();
+const router = createRouter({
   routes: routes,
   history: createWebHistory(),
 });
 
+
 const app = createApp(App).use(router).use(createPinia());
 app.provide("crawlerApi", new CrawlerApi());
+app.provide("authenticationService", new AuthenticationService());
+app.provide("axiosInstance", axiosInstance);
 app.mount("#app");

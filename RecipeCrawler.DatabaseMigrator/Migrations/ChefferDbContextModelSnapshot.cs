@@ -18,7 +18,7 @@ namespace RecipeCrawler.DatabaseMigrator.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("cheffer")
-                .HasAnnotation("ProductVersion", "6.0.7")
+                .HasAnnotation("ProductVersion", "6.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -45,9 +45,18 @@ namespace RecipeCrawler.DatabaseMigrator.Migrations
                         .HasColumnType("character varying(512)")
                         .HasColumnName("email");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid?>("EmailVerificationGuid")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(64)
+                        .HasColumnType("uuid")
+                        .HasDefaultValue(new Guid("6c1e2196-7ab5-4be4-ac7e-abe7098e3ad4"))
+                        .HasColumnName("email_verification_guid");
+
+                    b.Property<bool>("IsEmailVerified")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_email_verified");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()

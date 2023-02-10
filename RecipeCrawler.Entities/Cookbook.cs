@@ -6,5 +6,6 @@
         public Chef Chef { get; set; }
         public int ChefId { get; set; }
         public IEnumerable<Recipe> Recipes { get; set; }
+        public byte[]? CoverImage { get; set; }
     }
 }
