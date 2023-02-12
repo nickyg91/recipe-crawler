@@ -41,7 +41,7 @@ namespace RecipeCrawler.Core.Services.Accounts
         {
             var chef = await _chefRepository.FindChefByUsername(username);
 
-            if (chef != null && !chef.IsEmailVerified)
+            if (chef == null || (!chef?.IsEmailVerified ?? false))
             {
                 return null;
             }

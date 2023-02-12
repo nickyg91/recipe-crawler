@@ -12,9 +12,9 @@ import {
   NIcon,
   FormRules,
   FormInst,
-  useNotification,
   NSpin,
   NDivider,
+  useMessage,
 } from "naive-ui";
 import { Checkmark, Save } from "@vicons/carbon";
 import { computed } from "vue";
@@ -26,7 +26,7 @@ import { ParsedResponse } from "./models/parsed-response.model";
 
 const crawlerApi: CrawlerApi | undefined = inject(injectionKey);
 const store = useRecipeStore();
-const notificationService = useNotification();
+const messageService = useMessage();
 const router = useRouter();
 const response = reactive(new ParsedResponse());
 const loading = ref(false);
@@ -73,25 +73,26 @@ const submit = () => {
           loading.value = false;
           response.ingredients = result.data.ingredients;
           response.steps = result.data.steps;
-          notificationService.success({
-            title: "Success!",
-            content: "The recipe has been scraped.",
-            duration: 3000,
+          messageService.success("The recipe has been scraped.", {
+            closable: true,
           });
         })
         .catch(() => {
           loading.value = false;
-          notificationService.error({
-            content: "An error occurred attempting to scrape the recipe.",
-            title: "Error",
-            duration: 3000,
-          });
+          messageService.error(
+            "An error occurred while attempting to scrape the recipe.",
+            {
+              closable: true,
+            }
+          );
         });
     } else {
-      notificationService.error({
-        content: "Invalid Form. Please correct the errors and resubmit.",
-        title: "Validation Error",
-      });
+      messageService.error(
+        "Invalid Form. Please correct the errors and resubmit.",
+        {
+          closable: true,
+        }
+      );
     }
   });
 };
@@ -107,11 +108,7 @@ const save = () => {
     },
     () => {
       loading.value = false;
-      notificationService.error({
-        content: "An error occurred attempting to save the recipe.",
-        title: "Error",
-        duration: 3000,
-      });
+      messageService.error("An error occurred attempting to save the recipe.");
     }
   );
 };

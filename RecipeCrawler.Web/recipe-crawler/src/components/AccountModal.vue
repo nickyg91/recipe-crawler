@@ -1,17 +1,11 @@
 <script setup lang="ts">
-import {
-  NCard,
-  NSpace,
-  NButton,
-  NNotificationProvider,
-  useNotification,
-} from "naive-ui";
+import { NCard, NSpace, NButton, NMessageProvider, useMessage } from "naive-ui";
 import { computed, ref } from "vue";
 import { useRecipeStore } from "../recipe-store";
 import { User, LogoGoogle, Close } from "@vicons/carbon";
 import AccountSignupForm from "./AccountSignupForm.vue";
 import LogInForm from "./LogInForm.vue";
-const notificationService = useNotification();
+const messageService = useMessage();
 const showSignupForm = ref(false);
 const store = useRecipeStore();
 const userInfo = computed(() => store.getUserInfo);
@@ -37,9 +31,8 @@ const title = computed(() => {
 });
 function onLoginSuccessful() {
   showLoginForm.value = false;
-  notificationService.success({
-    content: "You have logged in successfully!",
-    title: "Logged in!",
+  messageService.success("You have logged in successfully!", {
+    closable: true,
   });
   emit("closeClicked", true);
 }
@@ -55,7 +48,7 @@ function onLoginSuccessful() {
         </n-button>
       </n-space>
     </template>
-    <n-notification-provider>
+    <n-message-provider>
       <section>
         <n-space
           v-if="!userInfo && !showSignupForm && !showLoginForm"
@@ -99,7 +92,7 @@ function onLoginSuccessful() {
           @successful-submit="onLoginSuccessful()"
         ></log-in-form>
       </section>
-    </n-notification-provider>
+    </n-message-provider>
   </n-card>
 </template>
 <style scoped lang="scss"></style>

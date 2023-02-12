@@ -46,17 +46,12 @@ async function submitLogin() {
 
   //     }
   //   });
-  authService
-    ?.login(loginModel)
-    .then((result) => {
-      if (result.data) {
-        store.setUserInfo(result.data);
-        emits("successfulSubmit");
-      }
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+  authService?.login(loginModel).then((result) => {
+    if (result.data) {
+      store.setUserInfo(result.data);
+      emits("successfulSubmit");
+    }
+  });
 }
 
 function cancel() {

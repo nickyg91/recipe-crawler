@@ -1,12 +1,11 @@
 <script lang="ts" setup>
-import { NSpace, NDataTable, DataTableColumn, useNotification } from "naive-ui";
+import { NSpace, NDataTable, DataTableColumn, useMessage } from "naive-ui";
 import { inject, reactive, ref } from "vue";
 import { ParsedResponse } from "../pages/recipe/models/parsed-response.model";
 import { CrawlerApi, injectionKey } from "../services/crawler-api.service";
 const crawlerApi: CrawlerApi | undefined = inject(injectionKey);
-
-let loading = ref(false);
-const notificationService = useNotification();
+const messageService = useMessage();
+const loading = ref(false);
 const data = ref(new Array<ParsedResponse>());
 const columns: Array<DataTableColumn> = [
   {
@@ -46,9 +45,8 @@ const loadTableData = (page: number) => {
       );
     })
     .catch(() => {
-      notificationService.error({
-        title: "Error loading data!",
-        content: "Unable to load reported URLs.",
+      messageService.error("Error loading data!", {
+        closable: true,
       });
     })
     .finally(() => {

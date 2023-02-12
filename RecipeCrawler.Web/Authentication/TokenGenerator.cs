@@ -13,7 +13,7 @@ namespace RecipeCrawler.Web.Authentication
 {
     public class TokenGenerator
     {
-        public readonly IAccountService _accountService;
+        private readonly IAccountService _accountService;
         private readonly JwtSettingsOptions _jwtSettings;
         public TokenGenerator(IOptions<JwtSettingsOptions> jwtSettings, IAccountService accountService)
         {

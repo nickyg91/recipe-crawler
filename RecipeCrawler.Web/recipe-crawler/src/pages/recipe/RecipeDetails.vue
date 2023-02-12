@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ParsedResponse } from "./models/parsed-response.model";
-import { NCard, NSpace, NButton, NH1, useNotification, NSpin } from "naive-ui";
+import { NCard, NSpace, NButton, NH1, NSpin, useMessage } from "naive-ui";
 import { Close, WarningHex } from "@vicons/carbon";
 import { useRecipeStore } from "../../recipe-store";
 import { computed, ref } from "vue";
@@ -27,7 +27,7 @@ const isGhostButton = computed(() => {
   return !store.getIsLightMode;
 });
 
-const notificationService = useNotification();
+const messageService = useMessage();
 const report = () => {
   if (props.recipe) {
     loading.value = true;
@@ -35,16 +35,16 @@ const report = () => {
       ?.reportUrl(props.recipe)
       .then(() => {
         isReportButtonDisabled.value = true;
-        notificationService.success({
-          title: "Success!",
-          content:
-            "The URL has been reported. We will look into what went wrong..",
-        });
+        messageService.success(
+          "The URL has been reported. We will look into what went wrong.",
+          {
+            closable: true,
+          }
+        );
       })
       .catch(() => {
-        notificationService.error({
-          title: "Error reporting Url",
-          content: "Unable to report URL. Please try again.",
+        messageService.error("Unable to report URL. Please try again.", {
+          closable: true,
         });
       })
       .finally(() => {

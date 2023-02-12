@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RecipeCrawler.Core.Services.Accounts;
-using RecipeCrawler.Entities;
 using RecipeCrawler.Entities.Models;
 using RecipeCrawler.Web.Authentication;
 
