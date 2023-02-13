@@ -17,4 +17,8 @@ export class AuthenticationService {
   public async verifyAccount(guid: string): Promise<void> {
     return await axiosInstance.get(`${baseUrl}/${guid}/verify`);
   }
+
+  public async resendVerificationEmail(guid: string): Promise<void> {
+    return await axiosInstance.get(`${baseUrl}/${guid}/resend/verify`);
+  }
 }

@@ -37,5 +37,12 @@ namespace RecipeCrawler.Web.Controllers
             await _accountService.VerifyAccount(guid);
             return Ok();
         }
+        
+        [HttpGet("{guid}/resend/verify")]
+        public async Task<IActionResult> Resend(Guid guid)
+        {
+            await _accountService.SendNewVerificationEmail(guid);
+            return Ok();
+        }
     }
 }

@@ -54,6 +54,12 @@ namespace RecipeCrawler.Data.Repositories.Implementations
             return chef;
         }
 
+        public async Task<Chef?> GetChefByVerificationGuid(Guid guid)
+        {
+            var chef = await _context.Chefs.SingleOrDefaultAsync(x => x.EmailVerificationGuid == guid);
+            return chef;
+        }
+
         public async Task<Chef> InsertChef(Chef chefToCreate)
         {
             await _context.Chefs.AddAsync(chefToCreate);
