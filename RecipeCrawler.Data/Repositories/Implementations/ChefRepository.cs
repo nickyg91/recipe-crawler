@@ -43,6 +43,17 @@ namespace RecipeCrawler.Data.Repositories.Implementations
             return chef.IsEmailVerified;
         }
 
+        public async Task<Chef?> ResetVerificationGuid(Guid guid, string email)
+        {
+            var chef = await _context.Chefs.SingleOrDefaultAsync(x =>
+                x.Email == email && x.EmailVerificationGuid == guid);
+            if (chef == null) return chef;
+            chef.EmailVerificationGuid = Guid.NewGuid();
+            await _context.SaveChangesAsync();
+
+            return chef;
+        }
+
         public async Task<Chef> InsertChef(Chef chefToCreate)
         {
             await _context.Chefs.AddAsync(chefToCreate);

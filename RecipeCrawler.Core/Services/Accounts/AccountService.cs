@@ -49,6 +49,16 @@ namespace RecipeCrawler.Core.Services.Accounts
             return BCrypt.Net.BCrypt.Verify(password, chef?.PasswordHash) ? chef : null;
         }
 
+        public async Task SendNewVerificationEmail(Guid oldGuid, string email)
+        {
+            var chef = await _chefRepository.ResetVerificationGuid(oldGuid, email);
+
+            if (chef != null)
+            {
+                await _emailService.SendVerificationEmail(chef.Email, chef.EmailVerificationGuid!.Value);
+            }
+        }
+
         public Task ChangePassword(int chefId, string oldPassword, string newPassword)
         {
             throw new NotImplementedException();
