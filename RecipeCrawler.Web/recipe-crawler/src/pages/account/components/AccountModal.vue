@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { NCard, NSpace, NButton, NMessageProvider, useMessage } from "naive-ui";
 import { computed, ref } from "vue";
-import { useRecipeStore } from "../recipe-store";
+import { useRecipeStore } from "../../../recipe-store";
 import { User, LogoGoogle, Close } from "@vicons/carbon";
 import AccountSignupForm from "./AccountSignupForm.vue";
 import LogInForm from "./LogInForm.vue";

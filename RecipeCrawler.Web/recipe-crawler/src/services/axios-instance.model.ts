@@ -1,7 +1,9 @@
 import axios, { AxiosError } from "axios";
 import { ChefferWindow } from "../models/window.extension";
 
-const axiosInstance = axios.create();
+const axiosInstance = axios.create({
+  baseURL: "/",
+});
 
 function determineErrorMessage(trace: string): string {
   if (trace.length < 1) {

@@ -41,7 +41,7 @@ string connectionString = builder.Configuration.GetConnectionString("cheffer");
 string authorityUrl = settings.JwtSettings.AuthorityUrl;
 string audience = settings.JwtSettings.Audience;
 
-string url = builder.Environment.IsDevelopment() ? "https://localhost:7215" : "https://cheffer.nickganter.dev";
+string url = builder.Environment.IsDevelopment() ? "https://localhost:5002" : "https://cheffer.nickganter.dev";
 
 if (!builder.Environment.IsDevelopment())
 {

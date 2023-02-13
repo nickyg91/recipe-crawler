@@ -11,9 +11,9 @@ import {
   NCol,
 } from "naive-ui";
 import { inject, reactive, ref } from "vue";
-import { Login } from "../models/login.model";
-import { useRecipeStore } from "../recipe-store";
-import { AuthenticationService } from "../services/authentication.service";
+import { Login } from "../../../models/login.model";
+import { useRecipeStore } from "../../../recipe-store";
+import { AuthenticationService } from "../../../services/authentication.service";
 const authService: AuthenticationService | null = inject(
   AuthenticationService.injectionKey,
   new AuthenticationService()
@@ -46,12 +46,11 @@ async function submitLogin() {
 
   //     }
   //   });
-  authService?.login(loginModel).then((result) => {
-    if (result.data) {
-      store.setUserInfo(result.data);
-      emits("successfulSubmit");
-    }
-  });
+  const response = await authService?.login(loginModel);
+  if (response) {
+    store.setUserInfo(response);
+    emits("successfulSubmit");
+  }
 }
 
 function cancel() {

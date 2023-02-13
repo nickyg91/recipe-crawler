@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ParsedResponse } from "./pages/recipe/models/parsed-response.model";
 import { IRecipeStore } from "./models/recipe-store.interface";
 import { TokenResponse } from "./models/token-response.model";
-import { axiosInstance } from "./main";
+import axiosInstance from "./services/axios-instance.model";
 export const useRecipeStore = defineStore("recipeStore", {
   state: () =>
     ({

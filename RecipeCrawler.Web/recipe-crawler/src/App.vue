@@ -21,7 +21,7 @@ import {
 import { h } from "vue";
 import { RouterLink, RouterView, useRoute } from "vue-router";
 import { useRecipeStore } from "./recipe-store";
-import AccountModal from "./components/AccountModal.vue";
+import AccountModal from "./pages/account/components/AccountModal.vue";
 import { ChefferWindow } from "./models/window.extension";
 const route = useRoute();
 const selectedKeyRef = ref();
@@ -164,7 +164,9 @@ const openAccountModal = () => {
           </template>
         </n-button>
       </n-space>
-      <router-view />
+      <Suspense>
+        <router-view />
+      </Suspense>
     </n-layout-content>
   </n-layout>
   <n-layout-footer

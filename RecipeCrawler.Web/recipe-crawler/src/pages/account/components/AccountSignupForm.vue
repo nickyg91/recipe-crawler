@@ -12,10 +12,10 @@ import {
   useMessage,
 } from "naive-ui";
 import { inject, reactive, ref } from "vue";
-import { Account } from "../models/account.model";
-import { accountSignupFormRules } from "../services/form-validation.constants";
+import { Account } from "../../../models/account.model";
+import { accountSignupFormRules } from "../../../services/form-validation.constants";
 import { Save, Close } from "@vicons/carbon";
-import { AuthenticationService } from "../services/authentication.service";
+import { AuthenticationService } from "../../../services/authentication.service";
 const messageService = useMessage();
 const accountService: AuthenticationService | undefined = inject(
   AuthenticationService.injectionKey

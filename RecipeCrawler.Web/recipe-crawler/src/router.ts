@@ -4,6 +4,8 @@ import SavedRecipe from "./pages/recipe/SavedRecipe.vue";
 import NotFound from "./components/NotFound.vue";
 import ReportedUrls from "./components/ReportedUrls.vue";
 import RecipeBooks from "./pages/recipe-books/RecipeBooks.vue";
+import EmailVerification from "./pages/account/EmailVerification.vue";
+
 export const routes = [
   {
     path: "/",
@@ -17,6 +19,12 @@ export const routes = [
     name: "savedRecipe",
   },
   {
+    path: "/account/verify/:guid",
+    component: EmailVerification,
+    name: "verifyAccount",
+    props: true,
+  },
+  {
     path: "/reported-urls",
     component: ReportedUrls,
     name: "reportedUrls",
@@ -24,7 +32,7 @@ export const routes = [
   {
     path: "/recipe-books",
     component: RecipeBooks,
-    name: "recipeBooks"
+    name: "recipeBooks",
   },
   {
     path: "/:catchAll(.*)",
