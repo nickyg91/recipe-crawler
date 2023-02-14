@@ -4,10 +4,7 @@
 import { Home, Moon, Sun, Warning, User, Catalog } from "@vicons/carbon";
 import { computed, reactive, ref, watch } from "vue";
 import {
-  NConfigProvider,
-  NNotificationProvider,
   NLayout,
-  darkTheme,
   NLayoutContent,
   NLayoutSider,
   NLayoutFooter,
@@ -18,11 +15,14 @@ import {
   NIcon,
   NButton,
   NModal,
+  darkTheme,
+  useMessage,
 } from "naive-ui";
 import { h } from "vue";
 import { RouterLink, RouterView, useRoute } from "vue-router";
 import { useRecipeStore } from "./recipe-store";
-import AccountModal from "./components/AccountModal.vue";
+import AccountModal from "./pages/account/components/AccountModal.vue";
+import { ChefferWindow } from "./models/window.extension";
 const route = useRoute();
 const selectedKeyRef = ref();
 watch(
@@ -32,8 +32,12 @@ watch(
   }
 );
 
+const messageApi = useMessage();
+(window as ChefferWindow).$message = messageApi;
 const state = useRecipeStore();
-
+const getTheme = computed(() => {
+  return state.getIsLightMode ? null : darkTheme;
+});
 const collapsed = ref(false);
 const isMobileSize = window.innerWidth <= 760;
 state.setIsMobile(isMobileSize);
@@ -79,31 +83,29 @@ const menuOptions: MenuOption[] = reactive([
 state.$onAction(
   ({
     name,
-    // after  
+    // after
   }) => {
     if (name === "setUserInfo") {
       menuOptions.push({
-        label: () => h(
-          RouterLink,
-          {
-            to: {
-              name: "recipeBooks"
+        label: () =>
+          h(
+            RouterLink,
+            {
+              to: {
+                name: "recipeBooks",
+              },
+            },
+            {
+              default: () => "Recipe Books",
             }
-          },
-          {
-            default: () => "Recipe Books"
-          }
-        ),
+          ),
         key: "recipeBooks",
-        icon: () => h(Catalog)
-      })
+        icon: () => h(Catalog),
+      });
     }
   }
 );
 
-const getTheme = computed(() => {
-  return state.getIsLightMode ? null : darkTheme;
-});
 const isMobile = computed(() => {
   return state.isMobile;
 });
@@ -117,69 +119,71 @@ const openAccountModal = () => {
 };
 </script>
 <template>
-  <n-config-provider :theme="getTheme">
-    <n-notification-provider>
-      <n-layout class="full-height" has-sider>
-        <n-layout-sider
-          v-if="!isMobile"
-          collapse-mode="width"
-          :collapsed-width="64"
-          :width="240"
-          show-trigger="bar"
-          bordered
-          @collapse="collapsed = true"
-          @expand="collapsed = false"
+  <n-layout class="full-height" has-sider>
+    <n-layout-sider
+      v-if="!isMobile"
+      collapse-mode="width"
+      :collapsed-width="64"
+      :width="240"
+      show-trigger="bar"
+      bordered
+      @collapse="collapsed = true"
+      @expand="collapsed = false"
+    >
+      <n-menu
+        :collapsed="collapsed"
+        :collapsed-width="64"
+        :collapsed-icon-size="22"
+        :options="menuOptions"
+        :value="selectedKeyRef"
+      />
+    </n-layout-sider>
+    <n-layout-content content-style="padding: 24px;">
+      <n-space justify="end" align="center">
+        <n-switch @update:value="state.setTheme($event)">
+          <template #icon>
+            <n-icon v-if="!getTheme">
+              <moon></moon>
+            </n-icon>
+            <n-icon v-if="getTheme">
+              <sun></sun>
+            </n-icon>
+          </template>
+        </n-switch>
+        <n-button
+          strong
+          primary
+          circle
+          type="primary"
+          @click="openAccountModal"
         >
-          <n-menu
-            :collapsed="collapsed"
-            :collapsed-width="64"
-            :collapsed-icon-size="22"
-            :options="menuOptions"
-            :value="selectedKeyRef"
-          />
-        </n-layout-sider>
-        <n-layout-content content-style="padding: 24px;">
-          <n-space justify="end" align="center">
-            <n-switch @update:value="state.setTheme($event)">
-              <template #icon>
-                <n-icon v-if="!getTheme"><moon></moon></n-icon>
-                <n-icon v-if="getTheme"><sun></sun></n-icon>
-              </template>
-            </n-switch>
-            <n-button
-              strong
-              primary
-              circle
-              type="primary"
-              @click="openAccountModal"
-            >
-              <template #icon>
-                <n-icon>
-                  <User />
-                </n-icon>
-              </template>
-            </n-button>
-          </n-space>
-          <router-view />
-        </n-layout-content>
-      </n-layout>
-      <n-layout-footer
-        v-if="isMobile"
-        style="padding-top: 5px; padding-bottom: 5px"
-        position="absolute"
-      >
-        <n-menu
-          v-model:value="selectedKeyRef"
-          :class="{ 'mobile-menu': isMobile }"
-          :options="menuOptions"
-          mode="horizontal"
-        />
-      </n-layout-footer>
-      <n-modal :show="showAccountModal">
-        <AccountModal @close-clicked="closeModal" />
-      </n-modal>
-    </n-notification-provider>
-  </n-config-provider>
+          <template #icon>
+            <n-icon>
+              <User />
+            </n-icon>
+          </template>
+        </n-button>
+      </n-space>
+      <Suspense>
+        <router-view />
+      </Suspense>
+    </n-layout-content>
+  </n-layout>
+  <n-layout-footer
+    v-if="isMobile"
+    style="padding-top: 5px; padding-bottom: 5px"
+    position="absolute"
+  >
+    <n-menu
+      v-model:value="selectedKeyRef"
+      :class="{ 'mobile-menu': isMobile }"
+      :options="menuOptions"
+      mode="horizontal"
+    />
+  </n-layout-footer>
+  <n-modal :show="showAccountModal">
+    <AccountModal @close-clicked="closeModal" />
+  </n-modal>
 </template>
 <style>
 .mobile-menu.n-menu .n-menu-item-content {
@@ -187,6 +191,7 @@ const openAccountModal = () => {
   text-align: center;
   line-height: 0.95;
 }
+
 .mobile-menu.n-menu .n-menu-item-content .n-menu-item-content__icon {
   margin-right: 0 !important;
 }

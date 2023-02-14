@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RecipeCrawler.Core.Services.Accounts;
-using RecipeCrawler.Entities;
 using RecipeCrawler.Entities.Models;
 using RecipeCrawler.Web.Authentication;
 
@@ -36,6 +35,13 @@ namespace RecipeCrawler.Web.Controllers
         public async Task<IActionResult> Verify(Guid guid)
         {
             await _accountService.VerifyAccount(guid);
+            return Ok();
+        }
+        
+        [HttpGet("{guid}/resend/verify")]
+        public async Task<IActionResult> Resend(Guid guid)
+        {
+            await _accountService.SendNewVerificationEmail(guid);
             return Ok();
         }
     }

@@ -10,5 +10,6 @@ namespace RecipeCrawler.Core.Services.Accounts
         Task ResetPassword(int chefId, string newPassword);
         Task VerifyAccount(Guid verificationGuid);
         Task<Entities.Chef?> Authenticate(string username, string password);
+        Task SendNewVerificationEmail(Guid oldGuid);
     }
 }

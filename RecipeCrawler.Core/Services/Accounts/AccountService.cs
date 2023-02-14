@@ -2,7 +2,6 @@
 using RecipeCrawler.Core.Exceptions;
 using RecipeCrawler.Core.Services.Email;
 using RecipeCrawler.Data.Repositories;
-using RecipeCrawler.Entities;
 using RecipeCrawler.Entities.Models;
 
 namespace RecipeCrawler.Core.Services.Accounts
@@ -41,12 +40,29 @@ namespace RecipeCrawler.Core.Services.Accounts
         {
             var chef = await _chefRepository.FindChefByUsername(username);
 
-            if (chef != null && !chef.IsEmailVerified)
+            if (chef == null)
             {
                 return null;
             }
 
-            return BCrypt.Net.BCrypt.Verify(password, chef?.PasswordHash) ? chef : null;
+            return BCrypt.Net.BCrypt.Verify(password, chef.PasswordHash) ? chef : null;
+        }
+
+        public async Task SendNewVerificationEmail(Guid oldGuid)
+        {
+            var chefByGuid = await _chefRepository.FindChefByVerificationGuid(oldGuid);
+
+            if (chefByGuid == null)
+            {
+                return;
+            }
+            
+            var chef = await _chefRepository.ResetVerificationGuid(oldGuid, chefByGuid.Email);
+
+            if (chef != null)
+            {
+                await _emailService.SendVerificationEmail(chef.Email, chef.EmailVerificationGuid!.Value);
+            }
         }
 
         public Task ChangePassword(int chefId, string oldPassword, string newPassword)

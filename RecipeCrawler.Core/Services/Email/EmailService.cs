@@ -22,7 +22,7 @@ public class EmailService : IEmailService
             var body = 
             @$"
                 Please click the following link to verify your Cheffer account!
-                {_environmentUrl}/verify/{verificationGuid.ToString()}
+                {_environmentUrl}/account/verify/{verificationGuid.ToString()}
                 This URL will expire within 3 days of your account creation.
                 To request another one, please log in and request verification.
             ";

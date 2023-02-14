@@ -8,15 +8,15 @@ import {
   NButton,
   FormItemInst,
   NAlert,
-  useNotification,
   NSpin,
+  useMessage,
 } from "naive-ui";
 import { inject, reactive, ref } from "vue";
-import { Account } from "../models/account.model";
-import { accountSignupFormRules } from "../services/form-validation.constants";
+import { Account } from "../../../models/account.model";
+import { accountSignupFormRules } from "../../../services/form-validation.constants";
 import { Save, Close } from "@vicons/carbon";
-import { AuthenticationService } from "../services/authentication.service";
-const notificationService = useNotification();
+import { AuthenticationService } from "../../../services/authentication.service";
+const messageService = useMessage();
 const accountService: AuthenticationService | undefined = inject(
   AuthenticationService.injectionKey
 );
@@ -45,16 +45,17 @@ async function submit() {
       loading.value = true;
       try {
         await accountService?.createAccount(formModel);
-        notificationService.success({
-          content: "Your account has been created successfully!",
-          title: "Success!",
+        messageService.success("Your account has been created successfully!", {
+          closable: true,
         });
         showEmailAlert.value = true;
       } catch (error) {
-        notificationService.error({
-          content: "An error occurred attempting to create your account.",
-          title: "Error Creating Account",
-        });
+        messageService.error(
+          "An error occurred attempting to create your account.",
+          {
+            closable: true,
+          }
+        );
       } finally {
         loading.value = false;
       }
@@ -109,7 +110,7 @@ function cancel() {
           <n-button type="warning" @click="cancel">
             <template #icon><close /></template>
 
-            {{ showEmailAlert ? 'Close' : 'Cancel' }}
+            {{ showEmailAlert ? "Close" : "Cancel" }}
           </n-button>
         </n-space>
       </n-form>

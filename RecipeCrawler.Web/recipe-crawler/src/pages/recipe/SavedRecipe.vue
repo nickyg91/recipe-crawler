@@ -9,7 +9,7 @@ import {
   NModal,
   NInput,
   NInputGroup,
-  useNotification,
+  useMessage,
 } from "naive-ui";
 import RecipeDetails from "./RecipeDetails.vue";
 import { computed, inject, reactive, ref } from "vue";
@@ -22,16 +22,15 @@ const loading = ref(true);
 const router = useRouter();
 const url: string = router.currentRoute.value.params.url as string;
 const crawlerService: CrawlerApi | undefined = inject(injectionKey);
-const notificationService = useNotification();
+const messageService = useMessage();
 crawlerService?.getRecipe(url).then(
   (result) => {
     loading.value = false;
     Object.assign(recipe, result.data);
   },
   () => {
-    notificationService.error({
-      content: "Error loading recipe!",
-      title: "Error",
+    messageService.error("Error loading recipe.", {
+      closable: true,
     });
   }
 );
@@ -51,7 +50,7 @@ const isGhostButton = computed(() => {
   <n-spin :show="loading">
     <n-space vertical justify="center">
       <n-space justify="end">
-        <n-button @click="showShareModal = true" :ghost="isGhostButton">
+        <n-button :ghost="isGhostButton" @click="showShareModal = true">
           <template #icon><Share /></template>
         </n-button>
       </n-space>
@@ -64,7 +63,7 @@ const isGhostButton = computed(() => {
       <div>
         <n-input-group>
           <n-input v-model:value="link" />
-          <n-button @click="copyUrl" :ghost="isGhostButton">
+          <n-button :ghost="isGhostButton" @click="copyUrl">
             <template #icon>
               <Copy />
             </template>

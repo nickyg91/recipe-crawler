@@ -13,7 +13,7 @@ namespace RecipeCrawler.Web.Authentication
 {
     public class TokenGenerator
     {
-        public readonly IAccountService _accountService;
+        private readonly IAccountService _accountService;
         private readonly JwtSettingsOptions _jwtSettings;
         public TokenGenerator(IOptions<JwtSettingsOptions> jwtSettings, IAccountService accountService)
         {
@@ -35,6 +35,12 @@ namespace RecipeCrawler.Web.Authentication
                 throw new AuthenticationException("Account not found.");
             }
 
+            if (!chef.IsEmailVerified)
+            {
+                throw new AccountNotVerifiedException(
+                    "This account is not verified! Please check your email for a verification message or resend one.");
+            }
+            
             var key = Encoding.UTF8.GetBytes(_jwtSettings.Key);
 
             var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature);
