@@ -13,6 +13,8 @@ using RecipeCrawler.Web.Authentication;
 using RecipeCrawler.Web.Configuration;
 using System.Text;
 using RecipeCrawler.Core.Configuration;
+using RecipeCrawler.Core.Services.Chef;
+using RecipeCrawler.Core.Services.Chef.Interfaces;
 using RecipeCrawler.Core.Services.Email;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -59,6 +61,8 @@ builder.Services.AddScoped<IChefRepository, ChefRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddTransient<IEmailService, EmailService>((provider) => new EmailService(settings.EmailConfiguration, url));
 builder.Services.AddTransient<TokenGenerator>();
+builder.Services.AddScoped<IChefService, ChefService>();
+builder.Services.AddScoped<ICookbookRepository, CookbookRepository>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.Audience = audience;
