@@ -10,6 +10,5 @@ namespace RecipeCrawler.Data.Repositories
         Task<Chef?> FindChefByVerificationGuid(Guid verificationGuid);
         Task<bool> VerifyChef(Chef chef);
         Task<Chef?> ResetVerificationGuid(Guid guid, string email);
-        Task<Chef?> GetChefByVerificationGuid(Guid guid);
     }
 }

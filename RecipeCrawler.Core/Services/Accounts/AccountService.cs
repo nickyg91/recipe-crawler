@@ -50,7 +50,7 @@ namespace RecipeCrawler.Core.Services.Accounts
 
         public async Task SendNewVerificationEmail(Guid oldGuid)
         {
-            var chefByGuid = await _chefRepository.GetChefByVerificationGuid(oldGuid);
+            var chefByGuid = await _chefRepository.FindChefByVerificationGuid(oldGuid);
 
             if (chefByGuid == null)
             {

@@ -23,9 +23,3 @@ app.provide("crawlerApi", new CrawlerApi());
 app.provide("authenticationService", new AuthenticationService());
 app.provide("axiosInstance", axiosInstance);
 app.mount("#app");
-// app.config.errorHandler = (err) => {
-//   console.log("err");
-//   if (err instanceof AxiosError) {
-//     console.log(err);
-//   }
-// };
