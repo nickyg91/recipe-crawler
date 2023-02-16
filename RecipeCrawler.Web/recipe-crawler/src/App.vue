@@ -80,31 +80,26 @@ const menuOptions: MenuOption[] = reactive([
   },
 ]);
 
-state.$onAction(
-  ({
-    name,
-    // after
-  }) => {
-    if (name === "setUserInfo") {
-      menuOptions.push({
-        label: () =>
-          h(
-            RouterLink,
-            {
-              to: {
-                name: "recipeBooks",
-              },
+state.$onAction(({ name }) => {
+  if (name === "setUserInfo") {
+    menuOptions.push({
+      label: () =>
+        h(
+          RouterLink,
+          {
+            to: {
+              name: "cookBooks",
             },
-            {
-              default: () => "Recipe Books",
-            }
-          ),
-        key: "recipeBooks",
-        icon: () => h(Catalog),
-      });
-    }
+          },
+          {
+            default: () => "Cook Books",
+          }
+        ),
+      key: "cookBooks",
+      icon: () => h(Catalog),
+    });
   }
-);
+});
 
 const isMobile = computed(() => {
   return state.isMobile;

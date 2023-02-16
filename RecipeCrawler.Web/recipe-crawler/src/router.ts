@@ -3,7 +3,7 @@ import RecipeCrawler from "./pages/recipe/RecipeCrawler.vue";
 import SavedRecipe from "./pages/recipe/SavedRecipe.vue";
 import NotFound from "./components/NotFound.vue";
 import ReportedUrls from "./components/ReportedUrls.vue";
-import RecipeBooks from "./pages/recipe-books/RecipeBooks.vue";
+import CookBooks from "./pages/recipe-books/CookBooks.vue";
 import EmailVerification from "./pages/account/EmailVerification.vue";
 
 export const routes = [
@@ -30,9 +30,9 @@ export const routes = [
     name: "reportedUrls",
   },
   {
-    path: "/recipe-books",
-    component: RecipeBooks,
-    name: "recipeBooks",
+    path: "/cook-books",
+    component: CookBooks,
+    name: "cookBooks",
   },
   {
     path: "/:catchAll(.*)",
