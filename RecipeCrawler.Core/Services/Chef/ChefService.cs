@@ -43,4 +43,21 @@ public class ChefService : IChefService
         
         return results > 0;
     }
+
+    public async Task<Cookbook?> GetCookbookById(int cookbookId, int chefId)
+    {
+        var cookbook = await _cookbookRepository.GetCookbookById(cookbookId);
+        if (cookbook != null && cookbook.ChefId != chefId)
+        {
+            throw new ChefCookbookAccessViolationException("This chef does not have access to this cookbook.");
+        }
+
+        return cookbook;
+    }
+
+    public async Task<Cookbook?> CreateCookbook(Cookbook cookbook)
+    {
+        var id = await _cookbookRepository.CreateCookbook(cookbook);
+        return await _cookbookRepository.GetCookbookById(id);
+    }
 }

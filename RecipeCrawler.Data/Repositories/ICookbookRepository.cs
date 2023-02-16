@@ -10,4 +10,5 @@ public interface ICookbookRepository
     Task<int> UpdateCookbook(Cookbook cookbook);
     Task<int> AddRecipeToCookbook(int cookbookId, Recipe recipe);
     Task<Cookbook?> GetCookbookById(int cookbookId);
+    
 }

@@ -12,6 +12,7 @@ using RecipeCrawler.Data.Repositories.Implementations;
 using RecipeCrawler.Web.Authentication;
 using RecipeCrawler.Web.Configuration;
 using System.Text;
+using RecipeCrawler.Core.Authentication;
 using RecipeCrawler.Core.Configuration;
 using RecipeCrawler.Core.Services.Chef;
 using RecipeCrawler.Core.Services.Chef.Interfaces;
@@ -42,7 +43,6 @@ string oauthSecret = settings.JwtSettings.Key;
 string connectionString = builder.Configuration.GetConnectionString("cheffer");
 string authorityUrl = settings.JwtSettings.AuthorityUrl;
 string audience = settings.JwtSettings.Audience;
-
 string url = builder.Environment.IsDevelopment() ? "https://localhost:5002" : "https://cheffer.nickganter.dev";
 
 if (!builder.Environment.IsDevelopment())
@@ -63,6 +63,13 @@ builder.Services.AddTransient<IEmailService, EmailService>((provider) => new Ema
 builder.Services.AddTransient<TokenGenerator>();
 builder.Services.AddScoped<IChefService, ChefService>();
 builder.Services.AddScoped<ICookbookRepository, CookbookRepository>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<IAuthenticatedChef, AuthenticatedChef>(provider =>
+{
+    var user =
+        provider.GetService<IHttpContextAccessor>()!.HttpContext!.User;
+    return new AuthenticatedChef(user);
+});
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.Audience = audience;
