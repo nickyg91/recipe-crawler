@@ -3,6 +3,7 @@ import { ParsedResponse } from "./pages/recipe/models/parsed-response.model";
 import { IRecipeStore } from "./models/recipe-store.interface";
 import { TokenResponse } from "./models/token-response.model";
 import axiosInstance from "./services/axios-instance.model";
+import { Cookbook } from "./models/shared/cookbook.model";
 export const useRecipeStore = defineStore("recipeStore", {
   state: () =>
     ({
@@ -10,6 +11,7 @@ export const useRecipeStore = defineStore("recipeStore", {
       isLightMode: false,
       isMobile: false,
       userInfo: null,
+      cookbooks: new Array<Cookbook>(),
     } as IRecipeStore),
   getters: {
     getRecipes(state) {
@@ -23,6 +25,9 @@ export const useRecipeStore = defineStore("recipeStore", {
     },
     getUserInfo(state): TokenResponse | null {
       return state.userInfo;
+    },
+    getChefCookbooks(state): Array<Cookbook> {
+      return state.cookbooks;
     },
   },
   actions: {
@@ -45,5 +50,8 @@ export const useRecipeStore = defineStore("recipeStore", {
         return instance;
       });
     },
+    // async setCookbooks() {
+
+    // }
   },
 });

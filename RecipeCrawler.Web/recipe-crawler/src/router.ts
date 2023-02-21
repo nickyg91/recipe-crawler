@@ -3,8 +3,8 @@ import RecipeCrawler from "./pages/recipe/RecipeCrawler.vue";
 import SavedRecipe from "./pages/recipe/SavedRecipe.vue";
 import NotFound from "./components/NotFound.vue";
 import ReportedUrls from "./components/ReportedUrls.vue";
-import CookBooks from "./pages/recipe-books/CookBooks.vue";
 import EmailVerification from "./pages/account/EmailVerification.vue";
+import CookBooks from "./pages/cook-books/CookBooks.vue";
 
 export const routes = [
   {

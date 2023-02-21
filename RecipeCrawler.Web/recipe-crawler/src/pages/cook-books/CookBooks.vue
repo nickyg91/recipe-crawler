@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-
+import NoCookbooks from "./components/NoCookbooks.vue";
 </script>
 <template>
-    <p>test</p>    
+  <NoCookbooks />
 </template>
