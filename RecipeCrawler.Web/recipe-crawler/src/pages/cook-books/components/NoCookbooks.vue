@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { NSpace, NButton, NIcon, NH1 } from "naive-ui";
 import { Add } from "@vicons/carbon";
+
+const emit = defineEmits(["createClicked"]);
 </script>
 <template>
   <n-space justify="center">
@@ -10,10 +12,9 @@ import { Add } from "@vicons/carbon";
       </n-h1>
     </section>
   </n-space>
-
   <n-space justify="center" class="my-5">
     <section>
-      <n-button dashed size="large" type="default">
+      <n-button size="large" type="default" @click="emit('createClicked')">
         <template #icon>
           <n-icon>
             <Add />
