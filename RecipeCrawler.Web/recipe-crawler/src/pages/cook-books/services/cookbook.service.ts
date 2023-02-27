@@ -5,7 +5,11 @@ const baseUrl = "api/chef/cookbook";
 export class CookbookService {
   static injectionKey = "cookbookService";
 
-  public async getCookbooksForChef(): Promise<Cookbook> {
+  public getCookbooksForChef(): Promise<Cookbook[]> {
     return axiosInstance.get(`${baseUrl}`);
+  }
+
+  public saveCookbook(cookbook: Cookbook): Promise<Cookbook> {
+    return axiosInstance.post(`${baseUrl}`, cookbook);
   }
 }

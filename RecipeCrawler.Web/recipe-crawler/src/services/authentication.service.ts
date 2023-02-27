@@ -1,3 +1,4 @@
+import { AxiosResponse } from "axios";
 import { Account } from "../models/account.model";
 import { Login } from "../models/login.model";
 import { TokenResponse } from "../models/token-response.model";
@@ -7,7 +8,12 @@ export class AuthenticationService {
   static injectionKey = "authenticationService";
 
   public async login(loginModel: Login): Promise<TokenResponse> {
-    return axiosInstance.post(`${baseUrl}/login`, loginModel);
+    return (
+      await axiosInstance.post<TokenResponse, AxiosResponse<TokenResponse>>(
+        `${baseUrl}/login`,
+        loginModel
+      )
+    ).data;
   }
 
   public async createAccount(model: Account): Promise<void> {

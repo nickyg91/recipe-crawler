@@ -80,7 +80,7 @@ function cancel() {
         <n-button
           type="primary"
           style="margin-right: 5px"
-          @click.prevent="submitLogin()"
+          @click="submitLogin()"
         >
           Submit
         </n-button>
