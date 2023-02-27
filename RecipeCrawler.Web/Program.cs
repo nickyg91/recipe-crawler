@@ -72,17 +72,17 @@ builder.Services.AddTransient<IAuthenticatedChef, AuthenticatedChef>(provider =>
 });
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
-    options.Audience = audience;
-    options.Authority = authorityUrl;
     options.TokenValidationParameters = new TokenValidationParameters
     {
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF32.GetBytes(oauthSecret)),
         ValidAudience = audience,
-        ValidIssuer = authorityUrl,
         ValidateLifetime = true,
         ValidateAudience = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = authorityUrl
     };
 });
+builder.Services.AddAuthorization();
 
 builder.Services.AddScoped((provider) =>
 {
