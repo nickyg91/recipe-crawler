@@ -77,7 +77,6 @@ async function submit(e: MouseEvent): Promise<void> {
     if (!errors) {
       try {
         const createdCookbook = await cookbookService.saveCookbook(cookbook);
-        debugger;
         store.addCookbook(createdCookbook);
       } catch (error) {
         (window as ChefferWindow)?.$message?.error(

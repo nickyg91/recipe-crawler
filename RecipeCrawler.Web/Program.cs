@@ -41,7 +41,7 @@ builder.Services.Configure<EmailConfigurationOptions>(emailConfigSettingsSection
 var settings = builder.Configuration.Get<RecipeCrawlerConfiguration>();
 string oauthSecret = settings.JwtSettings.Key;
 string connectionString = builder.Configuration.GetConnectionString("cheffer");
-string authorityUrl = settings.JwtSettings.AuthorityUrl;
+string issuer = settings.JwtSettings.Issuer;
 string audience = settings.JwtSettings.Audience;
 string url = builder.Environment.IsDevelopment() ? "https://localhost:5002" : "https://cheffer.nickganter.dev";
 
@@ -74,12 +74,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF32.GetBytes(oauthSecret)),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(oauthSecret)),
+        ValidIssuer = issuer,
         ValidAudience = audience,
-        ValidateLifetime = true,
+        ValidateIssuer = true,
         ValidateAudience = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = authorityUrl
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true
     };
 });
 builder.Services.AddAuthorization();
