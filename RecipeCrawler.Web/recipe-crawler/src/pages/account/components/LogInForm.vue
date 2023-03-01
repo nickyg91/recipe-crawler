@@ -41,16 +41,15 @@ const rules: FormRules = {
   },
 };
 async function submitLogin() {
-  //   formRef.value?.validate(async (errors) => {
-  //     if (!errors) {
-
-  //     }
-  //   });
-  const response = await authService?.login(loginModel);
-  if (response) {
-    store.setUserInfo(response);
-    emits("successfulSubmit");
-  }
+  formRef.value?.validate(async (errors) => {
+    if (!errors) {
+      const response = await authService?.login(loginModel);
+      if (response) {
+        store.setUserInfo(response);
+        emits("successfulSubmit");
+      }
+    }
+  });
 }
 
 function cancel() {
