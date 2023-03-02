@@ -26,7 +26,10 @@ namespace RecipeCrawler.Data.EntityConfigurations
 
             builder.Property(x => x.Name).IsRequired().HasMaxLength(256);
 
-            builder.HasOne(x => x.Recipe).WithMany(x => x.Ingredients).HasForeignKey(x => x.RecipeId);
+            builder
+                .HasOne(x => x.Recipe)
+                .WithMany(x => x.Ingredients)
+                .HasForeignKey(x => x.RecipeId);
         }
     }
 }

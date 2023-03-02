@@ -29,7 +29,7 @@ namespace RecipeCrawler.Data.EntityConfigurations
 
             builder.Property(x => x.CookbookId).HasColumnName("cookbook_id");
 
-            builder.HasOne<Cookbook>()
+            builder.HasOne(x => x.Cookbook)
                 .WithMany(x => x.Recipes)
                 .HasConstraintName("fk_recipe_cookbook")
                 .HasForeignKey(x => x.CookbookId);
