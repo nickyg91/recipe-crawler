@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeCrawler.Entities", "R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeCrawler.DatabaseMigrator", "RecipeCrawler.DatabaseMigrator\RecipeCrawler.DatabaseMigrator.csproj", "{AB54E4DA-B622-4688-BA29-1319E419F28E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeCrawler.DatabaseMigrator.App", "RecipeCrawler.DatabaseMigrator.App\RecipeCrawler.DatabaseMigrator.App.csproj", "{20EF4F2D-E179-46EC-BF84-7D777B9026A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{AB54E4DA-B622-4688-BA29-1319E419F28E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB54E4DA-B622-4688-BA29-1319E419F28E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB54E4DA-B622-4688-BA29-1319E419F28E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20EF4F2D-E179-46EC-BF84-7D777B9026A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20EF4F2D-E179-46EC-BF84-7D777B9026A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20EF4F2D-E179-46EC-BF84-7D777B9026A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20EF4F2D-E179-46EC-BF84-7D777B9026A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
