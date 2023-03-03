@@ -1,12 +1,13 @@
-﻿#nullable disable
-
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace RecipeCrawler.Data.Migrations.Migrations
+#nullable disable
+
+namespace RecipeCrawler.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class AddCoverImage_Recipe : Migration
+    public partial class InitialSchemaCreation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,7 +25,7 @@ namespace RecipeCrawler.Data.Migrations.Migrations
                     username = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     email = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
                     password_hash = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
-                    email_verification_guid = table.Column<Guid>(type: "uuid", maxLength: 64, nullable: true, defaultValue: new Guid("a25f8734-fd57-46df-8e68-cdd732b5c267")),
+                    email_verification_guid = table.Column<Guid>(type: "uuid", maxLength: 64, nullable: true, defaultValue: new Guid("9ba96b93-c864-4f47-ad16-a7505efcd916")),
                     is_email_verified = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     created_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
                 },

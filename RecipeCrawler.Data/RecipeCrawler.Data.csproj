@@ -24,4 +24,8 @@
     <ProjectReference Include="..\RecipeCrawler.Entities\RecipeCrawler.Entities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\Migrations" />
+  </ItemGroup>
+
 </Project>
