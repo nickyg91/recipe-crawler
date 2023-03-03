@@ -16,6 +16,10 @@ namespace RecipeCrawler.Data.Database.Contexts
                        .AddEnvironmentVariables();
             var configuration = builder.Build();
             var connectionString = ConfigurationExtensions.GetConnectionString(configuration, "cheffer");
+            if (environmentName != "Development")
+            {
+                connectionString = Environment.GetEnvironmentVariable("CHEFFER_CONNECTION_STRING");
+            }
             DbContextOptionsBuilder<ChefferDbContext> optionsBuilder = new DbContextOptionsBuilder<ChefferDbContext>()
                 .UseNpgsql(connectionString);
             return new ChefferDbContext(optionsBuilder.Options);
