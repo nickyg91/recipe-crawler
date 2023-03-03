@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿#nullable disable
 
-#nullable disable
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace RecipeCrawler.DatabaseMigrator.Migrations
+namespace RecipeCrawler.Data.Migrations.Migrations
 {
     public partial class RemovePasswordColumn : Migration
     {

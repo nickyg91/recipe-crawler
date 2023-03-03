@@ -1,10 +1,9 @@
-﻿using System;
+﻿#nullable disable
+
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-#nullable disable
-
-namespace RecipeCrawler.DatabaseMigrator.Migrations
+namespace RecipeCrawler.Data.Migrations.Migrations
 {
     /// <inheritdoc />
     public partial class AddCoverImage_Recipe : Migration

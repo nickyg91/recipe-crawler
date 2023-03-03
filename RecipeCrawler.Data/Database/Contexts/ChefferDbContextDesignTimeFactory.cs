@@ -1,23 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using RecipeCrawler.Data.Database.Contexts;
 
-namespace RecipeCrawler.DatabaseMigrator
+namespace RecipeCrawler.Data.Database.Contexts
 {
     public class ChefferDbContextDesignTimeFactory : IDesignTimeDbContextFactory<ChefferDbContext>
     {
         public ChefferDbContext CreateDbContext(string[] args)
         {
+            
+            var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             var builder = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile($"appsettings.{environmentName}.json")
                        .AddEnvironmentVariables();
             var configuration = builder.Build();
-            var connectionString = configuration.GetConnectionString("cheffer");
+            var connectionString = ConfigurationExtensions.GetConnectionString(configuration, "cheffer");
             DbContextOptionsBuilder<ChefferDbContext> optionsBuilder = new DbContextOptionsBuilder<ChefferDbContext>()
-                .UseNpgsql(connectionString, npgsqlBuilder =>
-                {
-                    npgsqlBuilder.MigrationsAssembly("RecipeCrawler.DatabaseMigrator");
-                });
+                .UseNpgsql(connectionString);
             return new ChefferDbContext(optionsBuilder.Options);
         }
     }

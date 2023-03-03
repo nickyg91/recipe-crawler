@@ -35,7 +35,6 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\RecipeCrawler.Core\RecipeCrawler.Core.csproj" />
-	  <ProjectReference Include="..\RecipeCrawler.DatabaseMigrator\RecipeCrawler.DatabaseMigrator.csproj" />
 	  <ProjectReference Include="..\RecipeCrawler.Data\RecipeCrawler.Data.csproj" />
 	</ItemGroup>
 	<ItemGroup>

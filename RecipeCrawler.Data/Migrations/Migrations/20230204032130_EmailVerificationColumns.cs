@@ -1,9 +1,8 @@
-﻿using System;
+﻿#nullable disable
+
 using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
-
-namespace RecipeCrawler.DatabaseMigrator.Migrations
+namespace RecipeCrawler.Data.Migrations.Migrations
 {
     public partial class EmailVerificationColumns : Migration
     {

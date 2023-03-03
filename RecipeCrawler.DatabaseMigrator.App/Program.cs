@@ -1,11 +1,25 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using RecipeCrawler.Data.Database.Contexts;
 
-using Microsoft.Extensions.Configuration;
+namespace RecipeCrawler.DatabaseMigrator.App;
 
-Console.WriteLine("Hello, World!");
+public class Program
+{
+    public static void Main(string[] args)
+        => CreateHostBuilder(args).Build().Run();
 
-var configuration = new ConfigurationBuilder()
-    .AddJsonFile($"");
+    // EF Core uses this method at design time to access the DbContext
+    public static IHostBuilder CreateHostBuilder(string[] args)
+        => Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(
+                webBuilder => webBuilder.UseStartup<Startup>());
+}
 
-configuration.Build();
-    
+public class Startup
+{
+    public void ConfigureServices(IServiceCollection services)
+        => services.AddDbContext<ChefferDbContext>();
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+    }
+}
