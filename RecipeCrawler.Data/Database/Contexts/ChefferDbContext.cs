@@ -48,10 +48,7 @@ namespace RecipeCrawler.Data.Database.Contexts
         {
             if (!options.IsConfigured)
             {
-                options.UseNpgsql(_connectionString, builder =>
-                {
-                    builder.MigrationsAssembly("RecipeCrawler.DatabaseMigrator");
-                });
+                options.UseNpgsql(_connectionString);
             }
         }
         protected override void OnModelCreating(ModelBuilder builder)

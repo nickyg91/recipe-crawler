@@ -17,6 +17,7 @@ using RecipeCrawler.Core.Configuration;
 using RecipeCrawler.Core.Services.Chef;
 using RecipeCrawler.Core.Services.Chef.Interfaces;
 using RecipeCrawler.Core.Services.Email;
+using RecipeCrawler.ViewModels.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +53,10 @@ if (!builder.Environment.IsDevelopment())
 }
 
 builder.Services.AddAutoMapper(typeof(ChefProfile));
+builder.Services.AddAutoMapper(typeof(CookbookProfile));
+builder.Services.AddAutoMapper(typeof(RecipeProfile));
+builder.Services.AddAutoMapper(typeof(StepProfile));
+builder.Services.AddAutoMapper(typeof(IngredientProfile));
 builder.Services.AddSingleton<ChefConfiguration>();
 builder.Services.AddSingleton<CookbookConfiguration>();
 builder.Services.AddSingleton<RecipeConfiguration>();
@@ -121,20 +126,11 @@ app.MapFallbackToFile("index.html");;
 
 try
 {
-    using (var scope = app.Services.CreateScope())
-    {
-        var services = scope.ServiceProvider;
-        var context = services.GetRequiredService<ChefferDbContext>();
-        Console.WriteLine("Running db migrations...");
-        context.Database.Migrate();
-    }
-
     app.Run();
 }
 catch(Exception ex)
 {
     Console.WriteLine(ex.Message);
     Console.WriteLine(ex.StackTrace);
-    return;
 }
 

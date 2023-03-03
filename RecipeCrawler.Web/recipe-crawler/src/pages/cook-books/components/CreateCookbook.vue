@@ -58,7 +58,7 @@ function onUploadFileAdded(options: {
   const isOverMaxSize = (file.file?.size ?? 0) > maxBytes;
   if (allowedFiles.indexOf(file?.type ?? "") < 0 || isOverMaxSize) {
     uploadRef.value?.clear();
-    cookbook.coverImageByteArray = null;
+    cookbook.coverImage = null;
     if (isOverMaxSize) {
       showTooBigOfFileError.value = true;
     } else {
@@ -66,7 +66,7 @@ function onUploadFileAdded(options: {
     }
   } else {
     file?.file?.arrayBuffer().then((data) => {
-      cookbook.coverImageByteArray = new Uint8Array(data);
+      cookbook.coverImage = new Uint8Array(data);
     });
   }
 }

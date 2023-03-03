@@ -10,6 +10,6 @@ namespace RecipeCrawler.Entities
         public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
         public int CookbookId { get; set; }
         [JsonIgnore]
-        public Cookbook Cookbook { get; set; }
+        public Cookbook? Cookbook { get; set; }
     }
 }

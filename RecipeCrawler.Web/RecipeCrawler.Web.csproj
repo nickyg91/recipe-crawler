@@ -36,6 +36,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\RecipeCrawler.Core\RecipeCrawler.Core.csproj" />
 	  <ProjectReference Include="..\RecipeCrawler.Data\RecipeCrawler.Data.csproj" />
+	  <ProjectReference Include="..\RecipeCrawler.ViewModels\RecipeCrawler.ViewModels.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Controllers\Chef" />
