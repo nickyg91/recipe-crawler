@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RecipeCrawler.Core.Authentication;
 using RecipeCrawler.Core.Services.Chef.Interfaces;
 using RecipeCrawler.Entities;
+using RecipeCrawler.ViewModels.ViewModels;
 using RecipeCrawler.Web.Authorization;
 
 namespace RecipeCrawler.Web.Controllers.Chef
@@ -21,26 +22,25 @@ namespace RecipeCrawler.Web.Controllers.Chef
         }
 
         [HttpGet]
-        public List<Cookbook> GetCookbooksByChefId()
+        public List<CookbookViewModel> GetCookbooksByChefId()
         {
             return _chefService.GetCookbooksForChef(_authenticatedChef.ChefId);
         }
 
         [HttpGet("{id}"), ServiceFilter(typeof(HasAccessToCookbookAttribute))]
-        public async Task<Cookbook?> GetCookbookById(int id)
+        public async Task<CookbookViewModel?> GetCookbookById(int id)
         {
             return await _chefService.GetCookbookById(id, _authenticatedChef.ChefId);
         }
 
         [HttpPost]
-        public async Task<Cookbook?> CreateCookbook(Cookbook cookbook)
+        public async Task<CookbookViewModel?> CreateCookbook(CookbookViewModel cookbook)
         {
-            cookbook.ChefId = _authenticatedChef.ChefId;
-            return await _chefService.CreateCookbook(cookbook);
+            return await _chefService.CreateCookbook(cookbook, _authenticatedChef.ChefId);
         }
 
         [HttpPut("{id}"), ServiceFilter(typeof(HasAccessToCookbookAttribute))]
-        public async Task<bool> UpdateCookbook(int id, [FromBody] Cookbook cookbook)
+        public async Task<bool> UpdateCookbook(int id, [FromBody] CookbookViewModel cookbook)
         {
             return await _chefService.UpdateCookbook(cookbook, _authenticatedChef.ChefId);
         }

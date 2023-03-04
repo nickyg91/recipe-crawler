@@ -1,20 +1,28 @@
+using AutoMapper;
 using RecipeCrawler.Core.Exceptions;
 using RecipeCrawler.Core.Services.Chef.Interfaces;
 using RecipeCrawler.Data.Repositories;
 using RecipeCrawler.Entities;
+using RecipeCrawler.ViewModels.ViewModels;
 
 namespace RecipeCrawler.Core.Services.Chef;
 
 public class ChefService : IChefService
 {
     private readonly ICookbookRepository _cookbookRepository;
-    public ChefService(ICookbookRepository cookbookRepository)
+    private readonly IMapper _mapper;
+    public ChefService(ICookbookRepository cookbookRepository, IMapper mapper)
     {
         _cookbookRepository = cookbookRepository;
+        _mapper = mapper;
     }
-    public List<Cookbook> GetCookbooksForChef(int chefId)
+    public List<CookbookViewModel> GetCookbooksForChef(int chefId)
     {
-        return _cookbookRepository.GetCookbooksForChef(chefId).ToList();
+        var cookbooks = _cookbookRepository.GetCookbooksForChef(chefId).ToList();
+
+        return cookbooks.Any() 
+            ? _mapper.Map<List<Cookbook>, List<CookbookViewModel>>(cookbooks) 
+            : new List<CookbookViewModel>();
     }
 
     public async Task<bool> DeleteCookbook(int chefId, int cookbookId)
@@ -30,34 +38,54 @@ public class ChefService : IChefService
         return result > 0;
     }
 
-    public async Task<bool> UpdateCookbook(Cookbook cookbook, int chefId)
+    public async Task<bool> UpdateCookbook(CookbookViewModel cookbook, int chefId)
     {
         var dbCookbook = await _cookbookRepository.GetCookbookById(cookbook.Id);
 
-        if (dbCookbook != null && cookbook.ChefId != chefId)
+        if (dbCookbook == null)
+        {
+            throw new CookbookNotFoundException("Cookbook not found!");
+        }
+        
+        if (dbCookbook != null && dbCookbook.ChefId != chefId)
         {
             throw new ChefCookbookAccessViolationException("This chef does not have access to this cookbook.");
         }
 
-        var results = await _cookbookRepository.UpdateCookbook(cookbook);
+        _mapper.Map(cookbook, dbCookbook);
+        
+        var results = await _cookbookRepository.UpdateCookbook(dbCookbook!);
         
         return results > 0;
     }
 
-    public async Task<Cookbook?> GetCookbookById(int cookbookId, int chefId)
+    public async Task<CookbookViewModel?> GetCookbookById(int cookbookId, int chefId)
     {
         var cookbook = await _cookbookRepository.GetCookbookById(cookbookId);
+
+        if (cookbook == null)
+        {
+            throw new CookbookNotFoundException("Cookbook not found!");
+        }
+        
         if (cookbook != null && cookbook.ChefId != chefId)
         {
             throw new ChefCookbookAccessViolationException("This chef does not have access to this cookbook.");
         }
 
-        return cookbook;
+        return _mapper.Map(cookbook, new CookbookViewModel());
     }
 
-    public async Task<Cookbook?> CreateCookbook(Cookbook cookbook)
+    public async Task<CookbookViewModel?> CreateCookbook(CookbookViewModel cookbook, int chefId)
     {
-        var id = await _cookbookRepository.CreateCookbook(cookbook);
-        return await _cookbookRepository.GetCookbookById(id);
+        var dbCookbook = new Cookbook
+        {
+            ChefId = chefId
+        };
+
+        _mapper.Map(cookbook, dbCookbook);
+        var id = await _cookbookRepository.CreateCookbook(dbCookbook);
+        var newlyCreatedCookbook = await _cookbookRepository.GetCookbookById(id);
+        return _mapper.Map(newlyCreatedCookbook, new CookbookViewModel());
     }
 }

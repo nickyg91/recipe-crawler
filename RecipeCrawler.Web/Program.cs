@@ -30,7 +30,7 @@ builder.Services.AddOptions();
 
 builder.Services.AddSingleton<IRedisService, RedisService>((provider) =>
 {
-    var redisService = new RedisService(connection);
+    var redisService = new RedisService(connection!);
     redisService.Connect();
     return redisService;
 });
@@ -40,8 +40,8 @@ builder.Services.Configure<JwtSettingsOptions>(jwtSettingsSection);
 builder.Services.Configure<EmailConfigurationOptions>(emailConfigSettingsSection);
 
 var settings = builder.Configuration.Get<RecipeCrawlerConfiguration>();
-string oauthSecret = settings.JwtSettings.Key;
-string connectionString = builder.Configuration.GetConnectionString("cheffer");
+string oauthSecret = settings.JwtSettings!.Key;
+string connectionString = builder.Configuration.GetConnectionString("cheffer")!;
 string issuer = settings.JwtSettings.Issuer;
 string audience = settings.JwtSettings.Audience;
 string url = builder.Environment.IsDevelopment() ? "https://localhost:5002" : "https://cheffer.nickganter.dev";
@@ -64,7 +64,7 @@ builder.Services.AddSingleton<StepConfiguration>();
 builder.Services.AddSingleton<IngredientConfiguration>();
 builder.Services.AddScoped<IChefRepository, ChefRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
-builder.Services.AddTransient<IEmailService, EmailService>((provider) => new EmailService(settings.EmailConfiguration, url));
+builder.Services.AddTransient<IEmailService, EmailService>((provider) => new EmailService(settings.EmailConfiguration!, url));
 builder.Services.AddTransient<TokenGenerator>();
 builder.Services.AddScoped<IChefService, ChefService>();
 builder.Services.AddScoped<ICookbookRepository, CookbookRepository>();

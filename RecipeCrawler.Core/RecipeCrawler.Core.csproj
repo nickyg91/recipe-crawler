@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RecipeCrawler.Data\RecipeCrawler.Data.csproj" />
+    <ProjectReference Include="..\RecipeCrawler.ViewModels\RecipeCrawler.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

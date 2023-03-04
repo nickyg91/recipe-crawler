@@ -3,16 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using RecipeCrawler.Core.Exceptions;
 using RecipeCrawler.Core.Services.Chef.Interfaces;
+using RecipeCrawler.Data.Repositories;
 
 namespace RecipeCrawler.Web.Authorization;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class HasAccessToCookbookAttribute : AuthorizeAttribute, IAsyncAuthorizationFilter
 {
-    private readonly IChefService _chefService;
-    public HasAccessToCookbookAttribute(IChefService chefService)
+    private readonly ICookbookRepository _cookbookRepository;
+    public HasAccessToCookbookAttribute(ICookbookRepository cookbookRepository)
     {
-        _chefService = chefService;
+        _cookbookRepository = cookbookRepository;
     }
 
     public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
@@ -42,13 +43,13 @@ public class HasAccessToCookbookAttribute : AuthorizeAttribute, IAsyncAuthorizat
         {
             try
             {
-                var cookbook = await _chefService.GetCookbookById(cookbookId, chefId);
+                var cookbook = await _cookbookRepository.GetCookbookById(cookbookId);
                 if (cookbook?.ChefId != chefId)
                 {
                     context.Result = new ForbidResult();
                 }
             }
-            catch (ChefCookbookAccessViolationException e)
+            catch (ChefCookbookAccessViolationException)
             {
                 context.Result = new ForbidResult();
             }

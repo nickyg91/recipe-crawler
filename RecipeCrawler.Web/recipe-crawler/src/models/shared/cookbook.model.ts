@@ -1,6 +1,6 @@
 export class Cookbook {
+  id!: number;
   name!: string;
-  chefId!: number;
   coverImageBase64?: string | null;
   coverImage?: ArrayBuffer | null;
 }

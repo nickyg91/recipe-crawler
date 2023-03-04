@@ -27,10 +27,9 @@ const store = useRecipeStore();
 const cookbookService: CookbookService =
   inject(CookbookService.injectionKey) ?? new CookbookService();
 const allowedFiles = ["image/png", "image/jpg", "image/gif"];
-const user = store.getUserInfo;
 const cookbook = reactive<Cookbook>({
   name: "",
-  chefId: user?.chefId ?? 0,
+  id: 0
 });
 const formRef = ref<FormInst | null>(null);
 const uploadRef = ref<UploadInst | null>(null);

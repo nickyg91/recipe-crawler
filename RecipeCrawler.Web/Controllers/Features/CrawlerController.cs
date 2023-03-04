@@ -18,7 +18,7 @@ namespace RecipeCrawler.Web.Controllers.Features
         [HttpPost]
         public async Task<IActionResult> CrawlForRecipe(CrawlerRecipeModel model)
         {
-            var response = await _recipeCrawlerService.CrawlUrl(model.Url);
+            var response = await _recipeCrawlerService.CrawlUrl(model?.Url ?? "");
             return Ok(response);
         }
 

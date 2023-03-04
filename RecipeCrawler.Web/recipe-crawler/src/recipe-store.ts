@@ -53,13 +53,15 @@ export const useRecipeStore = defineStore("recipeStore", {
       });
     },
     async setCookbooks() {
-      const service = new CookbookService();
+      if (this.cookbooks.length < 1) {
+        const service = new CookbookService();
       try {
         this.cookbooks = await service.getCookbooksForChef();
       } catch (error) {
         (window as ChefferWindow).$message?.error(
           "An error occurred while retrieving your cook books!"
         );
+      }
       }
     },
     addCookbook(cookbook: Cookbook) {
