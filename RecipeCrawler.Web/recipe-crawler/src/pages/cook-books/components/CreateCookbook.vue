@@ -29,7 +29,7 @@ const cookbookService: CookbookService =
 const allowedFiles = ["image/png", "image/jpg", "image/gif"];
 const cookbook = reactive<Cookbook>({
   name: "",
-  id: 0
+  id: 0,
 });
 const formRef = ref<FormInst | null>(null);
 const uploadRef = ref<UploadInst | null>(null);
@@ -47,26 +47,43 @@ const rules = {
   },
 } as FormRules;
 
-function onUploadFileAdded(options: {
+async function base64Arraybuffer(data: ArrayBuffer): Promise<string | null> {
+  // Use a FileReader to generate a base64 data URI
+  const base64url: string = await new Promise((r) => {
+    const reader = new FileReader();
+    reader.onload = () => r(reader.result?.toString() ?? "");
+    reader.readAsDataURL(new Blob([data]));
+  });
+
+  /*
+    The result looks like 
+    "data:application/octet-stream;base64,<your base64 data>", 
+    so we split off the beginning:
+    */
+  return base64url.length > 0 ? base64url.split(",", 2)[1] : null;
+}
+
+async function onUploadFileAdded(options: {
   file: UploadFileInfo;
   fileList: Array<UploadFileInfo>;
   event?: Event;
-}): void {
+}): Promise<void> {
   const file = options.file;
-  const maxBytes = 5_000_000;
+  const maxBytes = 1_000_000;
   const isOverMaxSize = (file.file?.size ?? 0) > maxBytes;
   if (allowedFiles.indexOf(file?.type ?? "") < 0 || isOverMaxSize) {
     uploadRef.value?.clear();
-    cookbook.coverImage = null;
+    cookbook.coverImageBase64 = null;
     if (isOverMaxSize) {
       showTooBigOfFileError.value = true;
     } else {
       showTooBigOfFileError.value = false;
     }
   } else {
-    file?.file?.arrayBuffer().then((data) => {
-      cookbook.coverImage = new Uint8Array(data);
-    });
+    const data = await file?.file?.arrayBuffer();
+    if (data) {
+      cookbook.coverImageBase64 = await base64Arraybuffer(new Uint8Array(data));
+    }
   }
 }
 
@@ -112,7 +129,7 @@ async function submit(e: MouseEvent): Promise<void> {
               Supported image file formats are .png, .jpg, or .gif.
             </n-p>
             <n-p depth="3" style="margin: 8px 0 0 0">
-              Max file size is 5MB.
+              Max file size is 1MB.
             </n-p>
           </n-upload-dragger>
         </n-upload>

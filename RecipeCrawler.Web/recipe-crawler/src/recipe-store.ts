@@ -55,13 +55,13 @@ export const useRecipeStore = defineStore("recipeStore", {
     },
     async setCookbooks() {
       if (this.cookbooks.length < 1) {
-      try {
-        this.cookbooks = await cookbookService.getCookbooksForChef();
-      } catch (error) {
-        (window as ChefferWindow).$message?.error(
-          "An error occurred while retrieving your cook books!"
-        );
-      }
+        try {
+          this.cookbooks = await cookbookService.getCookbooksForChef();
+        } catch (error) {
+          (window as ChefferWindow).$message?.error(
+            "An error occurred while retrieving your cook books!"
+          );
+        }
       }
     },
     addCookbook(cookbook: Cookbook) {
@@ -71,14 +71,17 @@ export const useRecipeStore = defineStore("recipeStore", {
       try {
         const isDeleted = await cookbookService.deleteCookbook(id);
         if (isDeleted) {
-          const cookbookToRemoveIndex = this.cookbooks.findIndex(x => x.id === id);
+          const cookbookToRemoveIndex = this.cookbooks.findIndex(
+            (x) => x.id === id
+          );
           this.cookbooks.splice(cookbookToRemoveIndex, 1);
+          (window as ChefferWindow).$message?.success("Cookbook deleted!");
         }
-      } catch(error) {
+      } catch (error) {
         (window as ChefferWindow).$message?.error(
           "An error occurred while deleting the cookbook!"
         );
       }
-    }
+    },
   },
 });

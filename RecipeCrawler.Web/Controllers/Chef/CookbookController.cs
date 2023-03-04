@@ -27,7 +27,7 @@ namespace RecipeCrawler.Web.Controllers.Chef
             return _chefService.GetCookbooksForChef(_authenticatedChef.ChefId);
         }
 
-        [HttpGet("{id}"), ServiceFilter(typeof(HasAccessToCookbookAttribute))]
+        [HttpGet("{id}"), TypeFilter(typeof(HasAccessToCookbookAttribute))]
         public async Task<CookbookViewModel?> GetCookbookById(int id)
         {
             return await _chefService.GetCookbookById(id, _authenticatedChef.ChefId);
@@ -39,13 +39,13 @@ namespace RecipeCrawler.Web.Controllers.Chef
             return await _chefService.CreateCookbook(cookbook, _authenticatedChef.ChefId);
         }
 
-        [HttpPut("{id}"), ServiceFilter(typeof(HasAccessToCookbookAttribute))]
+        [HttpPut("{id}"), TypeFilter(typeof(HasAccessToCookbookAttribute))]
         public async Task<bool> UpdateCookbook(int id, [FromBody] CookbookViewModel cookbook)
         {
             return await _chefService.UpdateCookbook(cookbook, _authenticatedChef.ChefId);
         }
 
-        [HttpDelete("{id}"), ServiceFilter(typeof(HasAccessToCookbookAttribute))]
+        [HttpDelete("{id}"), TypeFilter(typeof(HasAccessToCookbookAttribute))]
         public async Task<bool> DeleteCookbook(int id)
         {
             return await _chefService.DeleteCookbook(_authenticatedChef.ChefId, id);

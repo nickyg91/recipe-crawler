@@ -18,7 +18,10 @@ public class CookbookProfile : Profile
             .ForMember(dst => dst.ChefId, x => x.Ignore())
             .ForMember(dst => dst.CoverImage, 
                 x => 
-                    x.MapFrom(src => src.CoverImage))
+                    x.MapFrom(src => src.CoverImageBase64))
+            // .ForMember(dst => dst.CoverImage, 
+            //     x => 
+            //         x.MapFrom(src => src.CoverImageBase64))
             .ForMember(dst => dst.Recipes, 
                 x => 
                     x.MapFrom(src => src.Recipes))

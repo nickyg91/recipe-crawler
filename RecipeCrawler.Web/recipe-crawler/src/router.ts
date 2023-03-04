@@ -1,4 +1,4 @@
-import { RouteRecord, RouteRecordRaw } from "vue-router";
+import { RouteRecordRaw } from "vue-router";
 import RecipeCrawler from "./pages/recipe/RecipeCrawler.vue";
 import SavedRecipe from "./pages/recipe/SavedRecipe.vue";
 import NotFound from "./components/NotFound.vue";
@@ -7,10 +7,10 @@ import EmailVerification from "./pages/account/EmailVerification.vue";
 import CookBooks from "./pages/cook-books/CookbooksPage.vue";
 import { useRecipeStore } from "./recipe-store";
 
-function requiresAuthentication(to: RouteRecord) {
+function requiresAuthentication() {
   const store = useRecipeStore();
   if (store.getUserInfo !== null) {
-    return { path: to.path };
+    return true;
   } else {
     return {
       path: '/'
