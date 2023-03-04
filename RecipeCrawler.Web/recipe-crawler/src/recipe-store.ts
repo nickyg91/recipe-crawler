@@ -6,6 +6,7 @@ import axiosInstance from "./services/axios-instance.model";
 import { Cookbook } from "./models/shared/cookbook.model";
 import { CookbookService } from "./pages/cook-books/services/cookbook.service";
 import { ChefferWindow } from "./models/window.extension";
+const cookbookService = new CookbookService();
 export const useRecipeStore = defineStore("recipeStore", {
   state: () =>
     ({
@@ -54,9 +55,8 @@ export const useRecipeStore = defineStore("recipeStore", {
     },
     async setCookbooks() {
       if (this.cookbooks.length < 1) {
-        const service = new CookbookService();
       try {
-        this.cookbooks = await service.getCookbooksForChef();
+        this.cookbooks = await cookbookService.getCookbooksForChef();
       } catch (error) {
         (window as ChefferWindow).$message?.error(
           "An error occurred while retrieving your cook books!"
@@ -67,5 +67,18 @@ export const useRecipeStore = defineStore("recipeStore", {
     addCookbook(cookbook: Cookbook) {
       this.cookbooks.push(cookbook);
     },
+    async deleteCookbook(id: number) {
+      try {
+        const isDeleted = await cookbookService.deleteCookbook(id);
+        if (isDeleted) {
+          const cookbookToRemoveIndex = this.cookbooks.findIndex(x => x.id === id);
+          this.cookbooks.splice(cookbookToRemoveIndex, 1);
+        }
+      } catch(error) {
+        (window as ChefferWindow).$message?.error(
+          "An error occurred while deleting the cookbook!"
+        );
+      }
+    }
   },
 });

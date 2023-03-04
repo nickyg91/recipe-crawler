@@ -20,10 +20,10 @@ const showAddItemDrawer = ref(false);
     <n-h1>
       Cookbooks
     </n-h1>
-    <NoCookbooks
+    <!-- <NoCookbooks
       v-if="cookbooks?.length < 1"
       @create-clicked="showAddItemDrawer = true"
-    />
+    /> -->
     <CookbookList :cookbooks="cookbooks" @on-add-clicked="showAddItemDrawer = true"/>
     <n-drawer
       v-model:show="showAddItemDrawer"
