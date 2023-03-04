@@ -1,10 +1,13 @@
 using RecipeCrawler.Entities;
+using RecipeCrawler.ViewModels.ViewModels;
 
 namespace RecipeCrawler.Core.Services.Chef.Interfaces;
 
 public interface IChefService
 {
-    Task<List<Cookbook>> GetCookbooksForChef(int chefId);
+    List<CookbookViewModel> GetCookbooksForChef(int chefId);
     Task<bool> DeleteCookbook(int chefId, int cookbookId);
-    //Task<
+    Task<bool> UpdateCookbook(CookbookViewModel cookbook, int chefId);
+    Task<CookbookViewModel?> GetCookbookById(int cookbookId, int chefId);
+    Task<CookbookViewModel?> CreateCookbook(CookbookViewModel cookbook, int chefId);
 }

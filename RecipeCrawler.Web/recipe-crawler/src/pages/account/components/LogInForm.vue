@@ -41,16 +41,15 @@ const rules: FormRules = {
   },
 };
 async function submitLogin() {
-  //   formRef.value?.validate(async (errors) => {
-  //     if (!errors) {
-
-  //     }
-  //   });
-  const response = await authService?.login(loginModel);
-  if (response) {
-    store.setUserInfo(response);
-    emits("successfulSubmit");
-  }
+  formRef.value?.validate(async (errors) => {
+    if (!errors) {
+      const response = await authService?.login(loginModel);
+      if (response) {
+        store.setUserInfo(response);
+        emits("successfulSubmit");
+      }
+    }
+  });
 }
 
 function cancel() {
@@ -80,7 +79,7 @@ function cancel() {
         <n-button
           type="primary"
           style="margin-right: 5px"
-          @click.prevent="submitLogin()"
+          @click="submitLogin()"
         >
           Submit
         </n-button>

@@ -12,8 +12,12 @@ using RecipeCrawler.Data.Repositories.Implementations;
 using RecipeCrawler.Web.Authentication;
 using RecipeCrawler.Web.Configuration;
 using System.Text;
+using RecipeCrawler.Core.Authentication;
 using RecipeCrawler.Core.Configuration;
+using RecipeCrawler.Core.Services.Chef;
+using RecipeCrawler.Core.Services.Chef.Interfaces;
 using RecipeCrawler.Core.Services.Email;
+using RecipeCrawler.ViewModels.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +30,7 @@ builder.Services.AddOptions();
 
 builder.Services.AddSingleton<IRedisService, RedisService>((provider) =>
 {
-    var redisService = new RedisService(connection);
+    var redisService = new RedisService(connection!);
     redisService.Connect();
     return redisService;
 });
@@ -36,11 +40,10 @@ builder.Services.Configure<JwtSettingsOptions>(jwtSettingsSection);
 builder.Services.Configure<EmailConfigurationOptions>(emailConfigSettingsSection);
 
 var settings = builder.Configuration.Get<RecipeCrawlerConfiguration>();
-string oauthSecret = settings.JwtSettings.Key;
-string connectionString = builder.Configuration.GetConnectionString("cheffer");
-string authorityUrl = settings.JwtSettings.AuthorityUrl;
+string oauthSecret = settings.JwtSettings!.Key;
+string connectionString = builder.Configuration.GetConnectionString("cheffer")!;
+string issuer = settings.JwtSettings.Issuer;
 string audience = settings.JwtSettings.Audience;
-
 string url = builder.Environment.IsDevelopment() ? "https://localhost:5002" : "https://cheffer.nickganter.dev";
 
 if (!builder.Environment.IsDevelopment())
@@ -50,6 +53,10 @@ if (!builder.Environment.IsDevelopment())
 }
 
 builder.Services.AddAutoMapper(typeof(ChefProfile));
+builder.Services.AddAutoMapper(typeof(CookbookProfile));
+builder.Services.AddAutoMapper(typeof(RecipeProfile));
+builder.Services.AddAutoMapper(typeof(StepProfile));
+builder.Services.AddAutoMapper(typeof(IngredientProfile));
 builder.Services.AddSingleton<ChefConfiguration>();
 builder.Services.AddSingleton<CookbookConfiguration>();
 builder.Services.AddSingleton<RecipeConfiguration>();
@@ -57,21 +64,31 @@ builder.Services.AddSingleton<StepConfiguration>();
 builder.Services.AddSingleton<IngredientConfiguration>();
 builder.Services.AddScoped<IChefRepository, ChefRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
-builder.Services.AddTransient<IEmailService, EmailService>((provider) => new EmailService(settings.EmailConfiguration, url));
+builder.Services.AddTransient<IEmailService, EmailService>((provider) => new EmailService(settings.EmailConfiguration!, url));
 builder.Services.AddTransient<TokenGenerator>();
+builder.Services.AddScoped<IChefService, ChefService>();
+builder.Services.AddScoped<ICookbookRepository, CookbookRepository>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<IAuthenticatedChef, AuthenticatedChef>(provider =>
+{
+    var user =
+        provider.GetService<IHttpContextAccessor>()!.HttpContext!.User;
+    return new AuthenticatedChef(user);
+});
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
-    options.Audience = audience;
-    options.Authority = authorityUrl;
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF32.GetBytes(oauthSecret)),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(oauthSecret)),
+        ValidIssuer = issuer,
         ValidAudience = audience,
-        ValidIssuer = authorityUrl,
-        ValidateLifetime = true,
+        ValidateIssuer = true,
         ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true
     };
 });
+builder.Services.AddAuthorization();
 
 builder.Services.AddScoped((provider) =>
 {
@@ -109,20 +126,11 @@ app.MapFallbackToFile("index.html");;
 
 try
 {
-    using (var scope = app.Services.CreateScope())
-    {
-        var services = scope.ServiceProvider;
-        var context = services.GetRequiredService<ChefferDbContext>();
-        Console.WriteLine("Running db migrations...");
-        context.Database.Migrate();
-    }
-
     app.Run();
 }
 catch(Exception ex)
 {
     Console.WriteLine(ex.Message);
     Console.WriteLine(ex.StackTrace);
-    return;
 }
 

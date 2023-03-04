@@ -17,7 +17,6 @@ function determine400ErrorMessage(data: ModelStateErrors): string {
   let invalidFields = "";
   for (const [key] of Object.entries(data.errors)) {
     let errorStr = `${key}: `;
-    debugger;
     const errorMessages = data.errors[key];
     errorMessages?.forEach((val) => {
       errorStr += `${val}\n`;

@@ -3,6 +3,9 @@ import { ParsedResponse } from "./pages/recipe/models/parsed-response.model";
 import { IRecipeStore } from "./models/recipe-store.interface";
 import { TokenResponse } from "./models/token-response.model";
 import axiosInstance from "./services/axios-instance.model";
+import { Cookbook } from "./models/shared/cookbook.model";
+import { CookbookService } from "./pages/cook-books/services/cookbook.service";
+import { ChefferWindow } from "./models/window.extension";
 export const useRecipeStore = defineStore("recipeStore", {
   state: () =>
     ({
@@ -10,6 +13,7 @@ export const useRecipeStore = defineStore("recipeStore", {
       isLightMode: false,
       isMobile: false,
       userInfo: null,
+      cookbooks: new Array<Cookbook>(),
     } as IRecipeStore),
   getters: {
     getRecipes(state) {
@@ -23,6 +27,9 @@ export const useRecipeStore = defineStore("recipeStore", {
     },
     getUserInfo(state): TokenResponse | null {
       return state.userInfo;
+    },
+    getChefCookbooks(state): Array<Cookbook> {
+      return state.cookbooks;
     },
   },
   actions: {
@@ -40,10 +47,25 @@ export const useRecipeStore = defineStore("recipeStore", {
       axiosInstance?.interceptors.request.use((instance) => {
         if (instance) {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          instance.headers!.Authorization = `Authorization: ${response.token}`;
+          instance.headers.Authorization = `Bearer ${response.token}`;
         }
         return instance;
       });
+    },
+    async setCookbooks() {
+      if (this.cookbooks.length < 1) {
+        const service = new CookbookService();
+      try {
+        this.cookbooks = await service.getCookbooksForChef();
+      } catch (error) {
+        (window as ChefferWindow).$message?.error(
+          "An error occurred while retrieving your cook books!"
+        );
+      }
+      }
+    },
+    addCookbook(cookbook: Cookbook) {
+      this.cookbooks.push(cookbook);
     },
   },
 });

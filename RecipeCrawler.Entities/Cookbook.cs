@@ -1,11 +1,15 @@
-﻿namespace RecipeCrawler.Entities
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace RecipeCrawler.Entities
 {
     public class Cookbook : BaseEntity
     {
         public string Name { get; set; }
-        public Chef Chef { get; set; }
+        [JsonIgnore]
+        public Chef? Chef { get; set; }
         public int ChefId { get; set; }
-        public IEnumerable<Recipe> Recipes { get; set; }
+        public ICollection<Recipe>? Recipes { get; set; }
         public byte[]? CoverImage { get; set; }
     }
 }

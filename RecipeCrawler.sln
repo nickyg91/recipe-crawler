@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeCrawler.Data", "Recip
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeCrawler.Entities", "RecipeCrawler.Entities\RecipeCrawler.Entities.csproj", "{6285CD37-5596-451C-B58E-A61E62AB851A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeCrawler.DatabaseMigrator", "RecipeCrawler.DatabaseMigrator\RecipeCrawler.DatabaseMigrator.csproj", "{AB54E4DA-B622-4688-BA29-1319E419F28E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeCrawler.DatabaseMigrator.App", "RecipeCrawler.DatabaseMigrator.App\RecipeCrawler.DatabaseMigrator.App.csproj", "{20EF4F2D-E179-46EC-BF84-7D777B9026A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeCrawler.ViewModels", "RecipeCrawler.ViewModels\RecipeCrawler.ViewModels.csproj", "{FB035456-0075-4707-845D-BD4BB720207E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +37,14 @@ Global
 		{6285CD37-5596-451C-B58E-A61E62AB851A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6285CD37-5596-451C-B58E-A61E62AB851A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6285CD37-5596-451C-B58E-A61E62AB851A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AB54E4DA-B622-4688-BA29-1319E419F28E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB54E4DA-B622-4688-BA29-1319E419F28E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AB54E4DA-B622-4688-BA29-1319E419F28E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AB54E4DA-B622-4688-BA29-1319E419F28E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20EF4F2D-E179-46EC-BF84-7D777B9026A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20EF4F2D-E179-46EC-BF84-7D777B9026A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20EF4F2D-E179-46EC-BF84-7D777B9026A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20EF4F2D-E179-46EC-BF84-7D777B9026A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB035456-0075-4707-845D-BD4BB720207E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB035456-0075-4707-845D-BD4BB720207E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB035456-0075-4707-845D-BD4BB720207E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB035456-0075-4707-845D-BD4BB720207E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -22,7 +22,7 @@ public class CookbookRepository : ICookbookRepository
 
     public IEnumerable<Cookbook> GetCookbooksForChef(int chefId)
     {
-        return _context.Cookbooks.Where(x => x.ChefId == chefId);
+        return _context.Cookbooks.AsNoTracking().Where(x => x.ChefId == chefId);
     }
 
     public async Task<int> DeleteCookbook(int cookbookId, int chefId)
@@ -39,11 +39,35 @@ public class CookbookRepository : ICookbookRepository
 
     public async Task<int> UpdateCookbook(Cookbook cookbook)
     {
-        throw new NotImplementedException();
+        var dbCookbook = await _context.Cookbooks.SingleOrDefaultAsync(x => x.Id == cookbook.Id);
+        if (dbCookbook == null)
+        {
+            return 0;
+        }
+
+        dbCookbook.Name = cookbook.Name;
+        dbCookbook.CoverImage = cookbook.CoverImage;
+
+        return await _context.SaveChangesAsync();
     }
 
     public async Task<int> AddRecipeToCookbook(int cookbookId, Recipe recipe)
     {
-        throw new NotImplementedException();
+        var cookbook = await _context.Cookbooks.SingleOrDefaultAsync(x => x.Id == cookbookId);
+        if (cookbook == null)
+        {
+            return 0;
+        }
+
+        recipe.CookbookId = cookbookId;
+        
+        cookbook.Recipes.Add(recipe);
+
+        return await _context.SaveChangesAsync();
+    }
+
+    public async Task<Cookbook?> GetCookbookById(int cookbookId)
+    {
+        return await _context.Cookbooks.AsNoTracking().SingleOrDefaultAsync(x => x.Id == cookbookId);
     }
 }

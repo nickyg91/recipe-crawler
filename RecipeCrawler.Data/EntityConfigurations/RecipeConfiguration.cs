@@ -16,6 +16,12 @@ namespace RecipeCrawler.Data.EntityConfigurations
             builder.HasKey(x => x.Id).HasName("pk_recipe_id");
 
             builder.Property(x => x.CrawledHtml).HasColumnName("crawled_html").HasMaxLength(2048);
+
+            builder.Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(256)
+                .HasColumnName("name");
+            
             builder.Property(x => x.CreatedAtUtc)
                     .HasColumnName("created_at_utc")
                     .IsRequired()
@@ -23,13 +29,10 @@ namespace RecipeCrawler.Data.EntityConfigurations
 
             builder.Property(x => x.CookbookId).HasColumnName("cookbook_id");
 
-            builder.HasOne<Cookbook>()
-            .WithMany(x => x.Recipes)
-            .HasConstraintName("fk_recipe_cookbook")
-            .HasForeignKey(x => x.CookbookId);
-
-            builder.HasMany<Ingredient>().WithOne(x => x.Recipe);
-            builder.HasMany<Step>().WithOne(x => x.Recipe);
+            builder.HasOne(x => x.Cookbook)
+                .WithMany(x => x.Recipes)
+                .HasConstraintName("fk_recipe_cookbook")
+                .HasForeignKey(x => x.CookbookId);
         }
     }
 }

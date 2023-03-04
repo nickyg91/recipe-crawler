@@ -4,10 +4,12 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace RecipeCrawler.DatabaseMigrator.Migrations
+namespace RecipeCrawler.Data.Migrations
 {
-    public partial class InitialCreate : Migration
+    /// <inheritdoc />
+    public partial class InitialSchemaCreation : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
@@ -23,7 +25,8 @@ namespace RecipeCrawler.DatabaseMigrator.Migrations
                     username = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     email = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
                     password_hash = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
-                    Password = table.Column<string>(type: "text", nullable: false),
+                    email_verification_guid = table.Column<Guid>(type: "uuid", maxLength: 64, nullable: true, defaultValue: new Guid("9ba96b93-c864-4f47-ad16-a7505efcd916")),
+                    is_email_verified = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     created_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
                 },
                 constraints: table =>
@@ -40,11 +43,12 @@ namespace RecipeCrawler.DatabaseMigrator.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     chef_id = table.Column<int>(type: "integer", nullable: false),
+                    cover_image = table.Column<byte[]>(type: "bytea", maxLength: 5000000, nullable: true),
                     created_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_cookbook", x => x.id);
+                    table.PrimaryKey("pk_cookbook_id", x => x.id);
                     table.ForeignKey(
                         name: "fk_cookbook_chef",
                         column: x => x.chef_id,
@@ -61,7 +65,7 @@ namespace RecipeCrawler.DatabaseMigrator.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: true),
+                    name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     crawled_html = table.Column<string>(type: "character varying(2048)", maxLength: 2048, nullable: true),
                     cookbook_id = table.Column<int>(type: "integer", nullable: false),
                     created_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
@@ -150,6 +154,7 @@ namespace RecipeCrawler.DatabaseMigrator.Migrations
                 column: "recipe_id");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

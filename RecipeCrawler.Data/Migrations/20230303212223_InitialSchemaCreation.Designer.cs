@@ -2,23 +2,26 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RecipeCrawler.Data.Database.Contexts;
 
 #nullable disable
 
-namespace RecipeCrawler.DatabaseMigrator.Migrations
+namespace RecipeCrawler.Data.Migrations
 {
     [DbContext(typeof(ChefferDbContext))]
-    partial class ChefferDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230303212223_InitialSchemaCreation")]
+    partial class InitialSchemaCreation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("cheffer")
-                .HasAnnotation("ProductVersion", "6.0.9")
+                .HasAnnotation("ProductVersion", "7.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -49,7 +52,7 @@ namespace RecipeCrawler.DatabaseMigrator.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(64)
                         .HasColumnType("uuid")
-                        .HasDefaultValue(new Guid("6c1e2196-7ab5-4be4-ac7e-abe7098e3ad4"))
+                        .HasDefaultValue(new Guid("9ba96b93-c864-4f47-ad16-a7505efcd916"))
                         .HasColumnName("email_verification_guid");
 
                     b.Property<bool>("IsEmailVerified")
@@ -90,6 +93,11 @@ namespace RecipeCrawler.DatabaseMigrator.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("chef_id");
 
+                    b.Property<byte[]>("CoverImage")
+                        .HasMaxLength(5000000)
+                        .HasColumnType("bytea")
+                        .HasColumnName("cover_image");
+
                     b.Property<DateTime>("CreatedAtUtc")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -103,7 +111,8 @@ namespace RecipeCrawler.DatabaseMigrator.Migrations
                         .HasColumnType("character varying(256)")
                         .HasColumnName("name");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_cookbook_id");
 
                     b.HasIndex("ChefId");
 
@@ -170,7 +179,10 @@ namespace RecipeCrawler.DatabaseMigrator.Migrations
                         .HasDefaultValueSql("now()");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("name");
 
                     b.HasKey("Id")
                         .HasName("pk_recipe_id");
@@ -237,12 +249,14 @@ namespace RecipeCrawler.DatabaseMigrator.Migrations
 
             modelBuilder.Entity("RecipeCrawler.Entities.Recipe", b =>
                 {
-                    b.HasOne("RecipeCrawler.Entities.Cookbook", null)
+                    b.HasOne("RecipeCrawler.Entities.Cookbook", "Cookbook")
                         .WithMany("Recipes")
                         .HasForeignKey("CookbookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_recipe_cookbook");
+
+                    b.Navigation("Cookbook");
                 });
 
             modelBuilder.Entity("RecipeCrawler.Entities.Step", b =>

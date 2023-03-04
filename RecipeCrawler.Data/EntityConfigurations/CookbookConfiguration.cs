@@ -11,6 +11,8 @@ namespace RecipeCrawler.Data.EntityConfigurations
             builder.ToTable("cookbook");
             builder.Property(x => x.Id)
                         .HasColumnName("id");
+            
+            builder.HasKey(x => x.Id).HasName("pk_cookbook_id");
 
             builder.Property(x => x.ChefId).HasColumnName("chef_id");
 
@@ -25,13 +27,17 @@ namespace RecipeCrawler.Data.EntityConfigurations
                         .HasColumnName("created_at_utc")
                         .IsRequired()
                         .HasDefaultValueSql("now()");
+            
             builder
                 .HasOne(x => x.Chef)
                     .WithMany(x => x.Cookbooks)
                     .HasConstraintName("fk_cookbook_chef")
                     .HasForeignKey(x => x.ChefId);
+            
+            
             builder
                 .Property(x => x.CoverImage)
+                .HasMaxLength(5_000_000)
                 .HasColumnName("cover_image");
         }
     }
