@@ -12,4 +12,8 @@ export class CookbookService {
   public async saveCookbook(cookbook: Cookbook): Promise<Cookbook> {
     return (await axiosInstance.post(`${baseUrl}`, cookbook)).data;
   }
+
+  public async deleteCookbook(id: number): Promise<boolean> {
+    return (await axiosInstance.delete(`${baseUrl}/${id}`)).data;
+  }
 }

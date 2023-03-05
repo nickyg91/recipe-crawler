@@ -5,6 +5,18 @@ import NotFound from "./components/NotFound.vue";
 import ReportedUrls from "./components/ReportedUrls.vue";
 import EmailVerification from "./pages/account/EmailVerification.vue";
 import CookBooks from "./pages/cook-books/CookbooksPage.vue";
+import { useRecipeStore } from "./recipe-store";
+
+function requiresAuthentication() {
+  const store = useRecipeStore();
+  if (store.getUserInfo !== null) {
+    return true;
+  } else {
+    return {
+      path: '/'
+    }
+  }
+}
 
 export const routes = [
   {
@@ -33,6 +45,7 @@ export const routes = [
     path: "/cook-books",
     component: CookBooks,
     name: "cookBooks",
+    beforeEnter: [requiresAuthentication]
   },
   {
     path: "/:catchAll(.*)",
