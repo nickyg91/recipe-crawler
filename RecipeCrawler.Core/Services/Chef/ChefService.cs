@@ -19,7 +19,7 @@ public class ChefService : IChefService
     public List<CookbookViewModel> GetCookbooksForChef(int chefId)
     {
         var cookbooks = _cookbookRepository.GetCookbooksForChef(chefId).ToList();
-
+        
         return cookbooks.Any() 
             ? _mapper.Map<List<Cookbook>, List<CookbookViewModel>>(cookbooks) 
             : new List<CookbookViewModel>();
@@ -84,6 +84,11 @@ public class ChefService : IChefService
         };
 
         _mapper.Map(cookbook, dbCookbook);
+
+        dbCookbook.CoverImage = !string.IsNullOrEmpty(cookbook.CoverImageBase64)
+            ? Convert.FromBase64String(cookbook.CoverImageBase64)
+            : null;
+        
         var id = await _cookbookRepository.CreateCookbook(dbCookbook);
         var newlyCreatedCookbook = await _cookbookRepository.GetCookbookById(id);
         return _mapper.Map(newlyCreatedCookbook, new CookbookViewModel());

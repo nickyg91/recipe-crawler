@@ -18,10 +18,7 @@ public class CookbookProfile : Profile
             .ForMember(dst => dst.ChefId, x => x.Ignore())
             .ForMember(dst => dst.CoverImage, 
                 x => 
-                    x.MapFrom(src => src.CoverImageBase64))
-            // .ForMember(dst => dst.CoverImage, 
-            //     x => 
-            //         x.MapFrom(src => src.CoverImageBase64))
+                    x.Ignore())
             .ForMember(dst => dst.Recipes, 
                 x => 
                     x.MapFrom(src => src.Recipes))
@@ -30,5 +27,10 @@ public class CookbookProfile : Profile
             .ForMember(dst => dst.CreatedAtUtc, 
                 x => x.Ignore())
             .ReverseMap();
+
+        CreateMap<Cookbook, CookbookViewModel>()
+            .ForMember(dst => dst.CoverImageBase64,
+                x => x.MapFrom(src => src.CoverImage != null ? Convert.ToBase64String(src.CoverImage) : null));
+
     }
 }
