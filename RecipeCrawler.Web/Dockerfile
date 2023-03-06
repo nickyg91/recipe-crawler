@@ -18,7 +18,7 @@ WORKDIR /src
 
 RUN apt-get update -yq 
 RUN apt-get install curl gnupg -yq 
-RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_19.x | bash -
 RUN apt-get install -y nodejs
 
 COPY ["RecipeCrawler.Web/RecipeCrawler.Web.csproj", "RecipeCrawler.Web/"]
