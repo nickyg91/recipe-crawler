@@ -18,7 +18,7 @@ function onAddClicked(): void {
 </script>
 <template>
   <n-grid
-    cols="2 s:3 m:4 l:5 xl:6 2xl:7"
+    cols="xs:1 s:2 m:3 l:4 xl:5 2xl:6"
     responsive="screen"
     :x-gap="15"
     :y-gap="15"
@@ -29,17 +29,14 @@ function onAddClicked(): void {
         embedded
         :bordered="true"
         class="add-cookbook-card"
-        :title="'Create'"
-        size="medium"
+        size="large"
         @click="onAddClicked()"
       >
-        <template #cover>
-          <n-space justify="center">
-            <n-icon size="128">
-              <Add />
-            </n-icon>
-          </n-space>
-        </template>
+        <n-space style="height: 100%" justify="center" align="center">
+          <n-icon size="128">
+            <Add />
+          </n-icon>
+        </n-space>
       </n-card>
     </n-gi>
     <n-gi v-for="cookbook in cookbooks" :key="cookbook.id">
@@ -50,8 +47,8 @@ function onAddClicked(): void {
 <style scoped>
 .add-cookbook-card {
   border-style: dashed;
-  height: 200px;
-  max-height: 200px;
+  height: 300px;
+  max-height: 300px;
 }
 
 .n-card:hover {

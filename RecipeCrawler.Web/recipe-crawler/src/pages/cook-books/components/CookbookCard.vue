@@ -34,7 +34,7 @@ async function deleteClicked(id: number): Promise<void> {
 }
 </script>
 <template>
-  <n-card hoverable size="medium" :title="cookbook?.name">
+  <n-card hoverable size="large" :title="cookbook?.name">
     <template #cover>
       <img
         v-if="cookbook!.coverImageBase64 && cookbook.coverImageBase64.length > 0"
@@ -75,7 +75,7 @@ async function deleteClicked(id: number): Promise<void> {
   padding: 4%;
 }
 .n-card {
-  max-height: 200px;
-  height: 200px;
+  max-height: 300px;
+  height: 300px;
 }
 </style>
