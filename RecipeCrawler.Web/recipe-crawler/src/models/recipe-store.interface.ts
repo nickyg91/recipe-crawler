@@ -8,4 +8,6 @@ export interface IRecipeStore {
   isMobile: boolean;
   userInfo: TokenResponse | null;
   cookbooks: Array<Cookbook>;
+  currentlySelectedCookbookToEdit: Cookbook | null;
+  originalCookbook: Cookbook | null;
 }

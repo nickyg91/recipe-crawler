@@ -6,7 +6,7 @@ import { type PropType } from "vue";
 import { useRecipeStore } from "../../../recipe-store";
 
 const dialog = useDialog();
-defineProps({
+const props = defineProps({
   cookbook: {
     type: Object as PropType<Cookbook>,
     required: true,
@@ -16,7 +16,7 @@ defineProps({
 const store = useRecipeStore();
 
 async function cardClicked(): Promise<void> {
-  //do nothing
+  store.setCurrentlyEditingCookbook(props.cookbook.id);
   return;
 }
 

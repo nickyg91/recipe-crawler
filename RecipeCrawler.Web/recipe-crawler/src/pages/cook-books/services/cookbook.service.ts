@@ -6,11 +6,16 @@ export class CookbookService {
   static injectionKey = "cookbookService";
 
   public async getCookbooksForChef(): Promise<Cookbook[]> {
-    return (await (axiosInstance.get(`${baseUrl}`))).data;
+    return (await axiosInstance.get(`${baseUrl}`)).data;
   }
 
   public async saveCookbook(cookbook: Cookbook): Promise<Cookbook> {
-    return (await axiosInstance.post(`${baseUrl}`, cookbook)).data;
+    if (cookbook.id > 0) {
+      await axiosInstance.put(`${baseUrl}/${cookbook.id}`, cookbook);
+      return cookbook;
+    } else {
+      return (await axiosInstance.post(`${baseUrl}`, cookbook)).data;
+    }
   }
 
   public async deleteCookbook(id: number): Promise<boolean> {

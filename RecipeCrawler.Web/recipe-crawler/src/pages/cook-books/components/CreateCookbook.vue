@@ -27,12 +27,16 @@ const store = useRecipeStore();
 const cookbookService: CookbookService =
   inject(CookbookService.injectionKey) ?? new CookbookService();
 const allowedFiles = ["image/png", "image/jpg", "image/gif"];
-const cookbook = reactive<Cookbook>({
-  name: "",
-  id: 0,
-});
+const editableCookbook = store.getCurrentlyEditedCookbook;
+const cookbook = editableCookbook
+  ? editableCookbook
+  : reactive<Cookbook>({
+      name: "",
+      id: 0,
+    });
 const formRef = ref<FormInst | null>(null);
 const uploadRef = ref<UploadInst | null>(null);
+
 const showTooBigOfFileError = ref(false);
 const rules = {
   cookbook: {
@@ -93,7 +97,9 @@ async function submit(e: MouseEvent): Promise<void> {
     if (!errors) {
       try {
         const createdCookbook = await cookbookService.saveCookbook(cookbook);
-        store.addCookbook(createdCookbook);
+        if (cookbook.id == 0) {
+          store.addCookbook(createdCookbook);
+        }
       } catch (error) {
         (window as ChefferWindow)?.$message?.error(
           "An error occurred while saving your cookbook!"
