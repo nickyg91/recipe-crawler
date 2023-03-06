@@ -40,9 +40,11 @@ async function deleteClicked(id: number): Promise<void> {
         v-if="cookbook!.coverImageBase64 && cookbook.coverImageBase64.length > 0"
         :src="'data:image/png;base64, ' + cookbook.coverImageBase64"
       />
-      <n-icon v-if="!cookbook!.coverImageBase64" size="128">
-        <DocumentHorizontal />
-      </n-icon>
+      <div v-if="!cookbook!.coverImageBase64" style="text-align: center">
+        <n-icon size="128">
+          <DocumentHorizontal />
+        </n-icon>
+      </div>
     </template>
     <template #action>
       <n-space justify="center" align="center">
