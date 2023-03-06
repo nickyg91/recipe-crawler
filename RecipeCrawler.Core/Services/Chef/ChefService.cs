@@ -53,7 +53,9 @@ public class ChefService : IChefService
         }
 
         _mapper.Map(cookbook, dbCookbook);
-        
+        dbCookbook!.CoverImage = string.IsNullOrEmpty(cookbook.CoverImageBase64)
+            ? null
+            : Convert.FromBase64String(cookbook.CoverImageBase64);
         var results = await _cookbookRepository.UpdateCookbook(dbCookbook!);
         
         return results > 0;

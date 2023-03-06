@@ -17,12 +17,13 @@ import {
   UploadFileInfo,
 } from "naive-ui";
 import type { UploadInst } from "naive-ui";
-import { Add, Upload } from "@vicons/carbon";
+import { Add, Upload, Save } from "@vicons/carbon";
 import { inject, reactive, ref } from "vue";
 import { Cookbook } from "../../../models/shared/cookbook.model";
 import { CookbookService } from "../services/cookbook.service";
 import { ChefferWindow } from "../../../models/window.extension";
 import { useRecipeStore } from "../../../recipe-store";
+const emits = defineEmits(["onSave"]);
 const store = useRecipeStore();
 const cookbookService: CookbookService =
   inject(CookbookService.injectionKey) ?? new CookbookService();
@@ -52,18 +53,11 @@ const rules = {
 } as FormRules;
 
 async function base64Arraybuffer(data: ArrayBuffer): Promise<string | null> {
-  // Use a FileReader to generate a base64 data URI
   const base64url: string = await new Promise((r) => {
     const reader = new FileReader();
     reader.onload = () => r(reader.result?.toString() ?? "");
     reader.readAsDataURL(new Blob([data]));
   });
-
-  /*
-    The result looks like 
-    "data:application/octet-stream;base64,<your base64 data>", 
-    so we split off the beginning:
-    */
   return base64url.length > 0 ? base64url.split(",", 2)[1] : null;
 }
 
@@ -100,6 +94,7 @@ async function submit(e: MouseEvent): Promise<void> {
         if (cookbook.id == 0) {
           store.addCookbook(createdCookbook);
         }
+        emits("onSave");
       } catch (error) {
         (window as ChefferWindow)?.$message?.error(
           "An error occurred while saving your cookbook!"
@@ -146,11 +141,27 @@ async function submit(e: MouseEvent): Promise<void> {
       <n-row :gutter="[0, 24]">
         <n-col :span="24">
           <n-space justify="end">
-            <n-button size="large" type="primary" @click="submit($event)">
+            <n-button
+              v-if="cookbook.id < 1"
+              size="large"
+              type="primary"
+              @click="submit($event)"
+            >
               <template #icon>
                 <Add />
               </template>
               Create
+            </n-button>
+            <n-button
+              v-if="cookbook.id > 0"
+              size="large"
+              type="primary"
+              @click="submit($event)"
+            >
+              <template #icon>
+                <Save />
+              </template>
+              Update
             </n-button>
           </n-space>
         </n-col>

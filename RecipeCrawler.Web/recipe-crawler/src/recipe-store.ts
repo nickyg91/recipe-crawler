@@ -97,11 +97,15 @@ export const useRecipeStore = defineStore("recipeStore", {
         this.currentlySelectedCookbookToEdit.coverImageBase64 ?? null
       );
     },
-    removeEditedChanges() {
+    removeEditedChanges(shouldResetToOriginal: boolean) {
       const index = this.cookbooks.findIndex(
         (x) => x.id === this.originalCookbook?.id
       );
-      if (this.originalCookbook && this.currentlySelectedCookbookToEdit) {
+      if (
+        this.originalCookbook &&
+        this.currentlySelectedCookbookToEdit &&
+        shouldResetToOriginal
+      ) {
         this.cookbooks[index] = this.originalCookbook;
       }
       this.originalCookbook = null;

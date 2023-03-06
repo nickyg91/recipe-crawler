@@ -26,16 +26,17 @@ watch(
 );
 
 function afterClose() {
-  store.removeEditedChanges();
+  store.removeEditedChanges(true);
+}
+
+function saved() {
+  store.removeEditedChanges(false);
+  showAddItemDrawer.value = false;
 }
 </script>
 <template>
   <section>
     <n-h1> Cookbooks </n-h1>
-    <!-- <NoCookbooks
-      v-if="cookbooks?.length < 1"
-      @create-clicked="showAddItemDrawer = true"
-    /> -->
     <CookbookList
       :cookbooks="cookbooks"
       @on-add-clicked="showAddItemDrawer = true"
@@ -48,7 +49,7 @@ function afterClose() {
       @after-leave="afterClose()"
     >
       <n-drawer-content title="Create Cookbook" closable>
-        <CreateCookbook />
+        <CreateCookbook @on-save="saved()" />
       </n-drawer-content>
     </n-drawer>
   </section>
