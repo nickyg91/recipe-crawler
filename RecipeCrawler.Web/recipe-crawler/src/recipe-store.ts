@@ -15,6 +15,8 @@ export const useRecipeStore = defineStore("recipeStore", {
       isMobile: false,
       userInfo: null,
       cookbooks: new Array<Cookbook>(),
+      currentlySelectedCookbookToEdit: null,
+      originalCookbook: null,
     } as IRecipeStore),
   getters: {
     getRecipes(state) {
@@ -31,6 +33,9 @@ export const useRecipeStore = defineStore("recipeStore", {
     },
     getChefCookbooks(state): Array<Cookbook> {
       return state.cookbooks;
+    },
+    getCurrentlyEditedCookbook(state): Cookbook | null {
+      return state.currentlySelectedCookbookToEdit;
     },
   },
   actions: {
@@ -82,6 +87,29 @@ export const useRecipeStore = defineStore("recipeStore", {
           "An error occurred while deleting the cookbook!"
         );
       }
+    },
+    setCurrentlyEditingCookbook(id: number) {
+      const index = this.cookbooks.findIndex((x) => x.id === id);
+      this.currentlySelectedCookbookToEdit = this.cookbooks[index];
+      this.originalCookbook = new Cookbook(
+        this.currentlySelectedCookbookToEdit.id,
+        this.currentlySelectedCookbookToEdit.name,
+        this.currentlySelectedCookbookToEdit.coverImageBase64 ?? null
+      );
+    },
+    removeEditedChanges(shouldResetToOriginal: boolean) {
+      const index = this.cookbooks.findIndex(
+        (x) => x.id === this.originalCookbook?.id
+      );
+      if (
+        this.originalCookbook &&
+        this.currentlySelectedCookbookToEdit &&
+        shouldResetToOriginal
+      ) {
+        this.cookbooks[index] = this.originalCookbook;
+      }
+      this.originalCookbook = null;
+      this.currentlySelectedCookbookToEdit = null;
     },
   },
 });

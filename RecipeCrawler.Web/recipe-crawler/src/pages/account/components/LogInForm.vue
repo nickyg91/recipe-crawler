@@ -61,17 +61,16 @@ function cancel() {
     <n-form-item path="username" label="Username">
       <n-input
         v-model:value="loginModel.username"
+        :autofocus="true"
         placeholder="Username"
-        @keydown.enter.prevent
       />
     </n-form-item>
     <n-form-item path="password" label="Password">
       <n-input
         v-model:value="loginModel.password"
         type="password"
-        :show-password-toggle="true"
+        :show-password-on="'click'"
         placeholder="Password"
-        @keydown.enter.prevent
       />
     </n-form-item>
     <n-row :gutter="[0, 24]">

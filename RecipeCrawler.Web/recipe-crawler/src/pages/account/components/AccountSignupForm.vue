@@ -74,6 +74,7 @@ function cancel() {
         <n-form-item path="email" label="Email">
           <n-input
             v-model:value="formModel.email"
+            :autofocus="true"
             placeholder="email@domain.com"
           />
         </n-form-item>
@@ -84,6 +85,7 @@ function cancel() {
           <n-input
             ref="passwordFormItemRef"
             v-model:value="formModel.password"
+            :show-password-on="'click'"
             type="password"
             placeholder="password"
             @input="handlePasswordInput"
@@ -92,6 +94,7 @@ function cancel() {
         <n-form-item path="confirmPassword" label="Confirm Password">
           <n-input
             v-model:value="formModel.confirmPassword"
+            :show-password-on="'click'"
             type="password"
             placeholder="confirm password"
           />

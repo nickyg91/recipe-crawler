@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { NCard, NIcon, NSpace, useDialog } from "naive-ui";
-import { DocumentHorizontal } from "@vicons/carbon";
+import { NCard, NIcon, NSpace, useDialog, NButton } from "naive-ui";
+import { DocumentHorizontal, Close, Edit } from "@vicons/carbon";
 import { Cookbook } from "../../../models/shared/cookbook.model";
 import { type PropType } from "vue";
 import { useRecipeStore } from "../../../recipe-store";
 
 const dialog = useDialog();
-defineProps({
+const props = defineProps({
   cookbook: {
     type: Object as PropType<Cookbook>,
     required: true,
@@ -16,7 +16,7 @@ defineProps({
 const store = useRecipeStore();
 
 async function cardClicked(): Promise<void> {
-  //do nothing
+  store.setCurrentlyEditingCookbook(props.cookbook.id);
   return;
 }
 
@@ -34,23 +34,40 @@ async function deleteClicked(id: number): Promise<void> {
 }
 </script>
 <template>
-  <n-card
-    closable
-    hoverable
-    size="medium"
-    :title="cookbook?.name"
-    @close="deleteClicked(cookbook.id)"
-    @click="cardClicked()"
-  >
+  <n-card hoverable size="large" :title="cookbook?.name">
     <template #cover>
-      <n-space justify="center">
-        <img
-          v-if="cookbook!.coverImageBase64 && cookbook.coverImageBase64.length > 0"
-          :src="'data:image/png;base64, ' + cookbook.coverImageBase64"
-        />
-        <n-icon v-if="!cookbook!.coverImageBase64" size="128">
+      <img
+        v-if="cookbook!.coverImageBase64 && cookbook.coverImageBase64.length > 0"
+        :src="'data:image/png;base64, ' + cookbook.coverImageBase64"
+      />
+      <div v-if="!cookbook!.coverImageBase64" style="text-align: center">
+        <n-icon size="128">
           <DocumentHorizontal />
         </n-icon>
+      </div>
+    </template>
+    <template #action>
+      <n-space justify="center" align="center">
+        <n-button type="info" circle strong secondary @click="cardClicked()">
+          <template #icon>
+            <n-icon>
+              <Edit />
+            </n-icon>
+          </template>
+        </n-button>
+        <n-button
+          type="warning"
+          circle
+          strong
+          secondary
+          @click="deleteClicked(cookbook.id)"
+        >
+          <template #icon>
+            <n-icon>
+              <Close />
+            </n-icon>
+          </template>
+        </n-button>
       </n-space>
     </template>
   </n-card>
@@ -60,7 +77,7 @@ async function deleteClicked(id: number): Promise<void> {
   padding: 4%;
 }
 .n-card {
-  max-height: 200px;
-  height: 200px;
+  max-height: 300px;
+  height: 300px;
 }
 </style>
