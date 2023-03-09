@@ -17,6 +17,8 @@ using RecipeCrawler.Core.Configuration;
 using RecipeCrawler.Core.Services.Chef;
 using RecipeCrawler.Core.Services.Chef.Interfaces;
 using RecipeCrawler.Core.Services.Email;
+using RecipeCrawler.Core.Services.Recipe;
+using RecipeCrawler.Core.Services.Recipe.Interfaces;
 using RecipeCrawler.ViewModels.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -68,6 +70,8 @@ builder.Services.AddTransient<IEmailService, EmailService>((provider) => new Ema
 builder.Services.AddTransient<TokenGenerator>();
 builder.Services.AddScoped<IChefService, ChefService>();
 builder.Services.AddScoped<ICookbookRepository, CookbookRepository>();
+builder.Services.AddScoped<IRecipeService, RecipeService>();
+builder.Services.AddScoped<IRecipeRepository, IRecipeRepository>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<IAuthenticatedChef, AuthenticatedChef>(provider =>
 {
