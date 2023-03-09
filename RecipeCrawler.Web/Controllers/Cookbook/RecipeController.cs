@@ -19,19 +19,19 @@ public class RecipeController : ControllerBase
         _authenticatedChef = authenticatedChef;
     }
 
-    [HttpGet]
+    [HttpGet("recipes")]
     public List<RecipeViewModel> GetRecipesByCookbookId(int cookbookId)
     {
         return _recipeService.GetRecipesByCookbookId(_authenticatedChef.ChefId, cookbookId);
     }
 
-    [HttpGet("{recipeId:int}")]
+    [HttpGet("recipe/{recipeId:int}")]
     public async Task<RecipeViewModel> GetRecipeById(int recipeId)
     {
         return await _recipeService.GetRecipeById(recipeId, _authenticatedChef.ChefId);
     }
 
-    [HttpPut("{recipeId:int}")]
+    [HttpPut("recipe/{recipeId:int}")]
     public async Task<RecipeViewModel?> UpdateRecipe(int recipeId, RecipeViewModel recipe)
     {
         var isUpdated = await _recipeService.UpdateRecipe(_authenticatedChef.ChefId, recipe);
@@ -43,13 +43,13 @@ public class RecipeController : ControllerBase
         return null;
     }
 
-    [HttpPost]
+    [HttpPost("recipe")]
     public async Task<RecipeViewModel> SaveRecipe(RecipeViewModel recipe)
     {
         return await _recipeService.SaveRecipe(recipe);
     }
 
-    [HttpDelete("{recipeId:int}")]
+    [HttpDelete("recipe/{recipeId:int}")]
     public async Task<bool> DeleteRecipe(int recipeId)
     {
         return await _recipeService.DeleteRecipe(_authenticatedChef.ChefId, recipeId);

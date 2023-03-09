@@ -71,7 +71,7 @@ builder.Services.AddTransient<TokenGenerator>();
 builder.Services.AddScoped<IChefService, ChefService>();
 builder.Services.AddScoped<ICookbookRepository, CookbookRepository>();
 builder.Services.AddScoped<IRecipeService, RecipeService>();
-builder.Services.AddScoped<IRecipeRepository, IRecipeRepository>();
+builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<IAuthenticatedChef, AuthenticatedChef>(provider =>
 {
