@@ -4,6 +4,10 @@ import { Add } from "@vicons/carbon";
 import { Cookbook } from "../../../models/shared/cookbook.model";
 import CookbookCard from "./CookbookCard.vue";
 import { type PropType } from "vue";
+import { useRecipeStore } from "../../../recipe-store";
+import { useRouter } from "vue-router";
+const store = useRecipeStore();
+const router = useRouter();
 defineProps({
   cookbooks: {
     default: () => [],
@@ -14,6 +18,19 @@ defineProps({
 const emits = defineEmits(["onAddClicked"]);
 function onAddClicked(): void {
   emits("onAddClicked");
+}
+
+async function onCookbookClicked(cookbook: Cookbook): Promise<void> {
+  await store.setCurrentCookbook(cookbook);
+  const selectedCookbook = store.getCurrentCookbook;
+  if (selectedCookbook) {
+    router.push({
+      name: "recipes",
+      params: {
+        cookbookId: cookbook.id,
+      },
+    });
+  }
 }
 </script>
 <template>
@@ -40,7 +57,7 @@ function onAddClicked(): void {
       </n-card>
     </n-gi>
     <n-gi v-for="cookbook in cookbooks" :key="cookbook.id">
-      <CookbookCard :cookbook="cookbook" />
+      <CookbookCard :cookbook="cookbook" @click="onCookbookClicked(cookbook)" />
     </n-gi>
   </n-grid>
 </template>

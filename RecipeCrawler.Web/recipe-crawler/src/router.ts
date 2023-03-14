@@ -6,6 +6,7 @@ import ReportedUrls from "./components/ReportedUrls.vue";
 import EmailVerification from "./pages/account/EmailVerification.vue";
 import CookBooks from "./pages/cook-books/CookbooksPage.vue";
 import RecipePage from "./pages/recipe/RecipePage.vue";
+import RecipeEditor from "./pages/recipe/components/RecipeEditor.vue";
 import { useRecipeStore } from "./recipe-store";
 
 function requiresAuthentication() {
@@ -58,6 +59,7 @@ export const routes = [
     component: CookBooks,
     name: "cookBooks",
     beforeEnter: [requiresAuthentication],
+    children: [],
   },
   {
     path: "/:catchAll(.*)",
@@ -68,6 +70,12 @@ export const routes = [
     path: "/cook-books/:cookbookId/recipes",
     component: RecipePage,
     name: "recipes",
+    beforeEnter: [requiresAuthentication, requiresCookbookId],
+  },
+  {
+    path: "/cook-books/:cookbookId/recipes/:recipeId/edit",
+    component: RecipeEditor,
+    name: "recipeEditor",
     beforeEnter: [requiresAuthentication, requiresCookbookId],
   },
 ] as RouteRecordRaw[];
