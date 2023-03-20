@@ -11,21 +11,44 @@ const props = defineProps({
   },
 });
 const formRef = ref<FormInst | null>(null);
+const formRules = {
+  name: {
+    required: true,
+    message: "Name is required.",
+  },
+  description: {
+    required: true,
+    message: "Description is required.",
+  },
+};
 const computedModel = computed({
   get() {
-    return props.step;
+    return {
+      ...props.step,
+    };
   },
-  set(step: Step) {
-    emits("stepUpdated", step);
+  set() {
+    emits("stepUpdated", computedModel.value);
   },
 });
 </script>
 <template>
-  <n-form ref="formRef">
-    <n-card size="huge">
-      <template #header>
-        <n-input v-model:value="props.step.name"> </n-input>
-      </template>
-    </n-card>
-  </n-form>
+  <section>
+    <n-form ref="formRef" :rules="formRules">
+      <n-card size="huge">
+        <template #header>
+          <n-input v-model:value="computedModel.name" placeholder="Name">
+          </n-input>
+        </template>
+        <template #content>
+          <n-input
+            v-model:value="computedModel.description"
+            type="textarea"
+            placeholder="Description"
+          >
+          </n-input>
+        </template>
+      </n-card>
+    </n-form>
+  </section>
 </template>
