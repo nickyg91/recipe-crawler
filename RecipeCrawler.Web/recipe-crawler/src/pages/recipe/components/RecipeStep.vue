@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { NCard, NInput, NForm, FormInst } from "naive-ui";
+import { NCard, NInput, NForm, FormInst, NSpace } from "naive-ui";
 import { computed, PropType, ref } from "vue";
 import { Step } from "../../../models/shared/step.model";
 const emits = defineEmits(["stepUpdated"]);
@@ -33,22 +33,21 @@ const computedModel = computed({
 });
 </script>
 <template>
-  <section>
-    <n-form ref="formRef" :rules="formRules">
-      <n-card size="huge">
-        <template #header>
-          <n-input v-model:value="computedModel.name" placeholder="Name">
-          </n-input>
-        </template>
-        <template #content>
+  <n-space>
+    <section>
+      <n-form ref="formRef" :rules="formRules">
+        <n-card size="huge">
+          <template #header>
+            <n-input v-model:value="computedModel.name" placeholder="Name">
+            </n-input>
+          </template>
           <n-input
             v-model:value="computedModel.description"
             type="textarea"
             placeholder="Description"
-          >
-          </n-input>
-        </template>
-      </n-card>
-    </n-form>
-  </section>
+          />
+        </n-card>
+      </n-form>
+    </section>
+  </n-space>
 </template>

@@ -7,7 +7,12 @@ using RecipeCrawler.Web.Authorization;
 
 namespace RecipeCrawler.Web.Controllers.Cookbook;
 
-[Route("api/cookbook/{cookbookId:int}"), Authorize, TypeFilter(typeof(HasAccessToRecipeAttribute))]
+[
+    Route("api/cookbook/{cookbookId:int}"), 
+    Authorize, 
+    TypeFilter(typeof(HasAccessToRecipeAttribute)),
+    ApiController
+]
 public class RecipeController : ControllerBase
 {
     private readonly IRecipeService _recipeService;

@@ -15,7 +15,7 @@ namespace RecipeCrawler.Data.EntityConfigurations
 
             builder.HasKey(x => x.Id).HasName("pk_ingredient_id");
 
-            builder.Property(x => x.RecipeId).HasColumnName("recipe_id");
+            builder.Property(x => x.StepId).HasColumnName("step_id");
 
             builder.Property(x => x.Measurement).IsRequired();
 
@@ -26,10 +26,12 @@ namespace RecipeCrawler.Data.EntityConfigurations
 
             builder.Property(x => x.Name).IsRequired().HasMaxLength(256);
 
+            builder.Property(x => x.Amount).HasColumnName("amount").IsRequired();
+
             builder
-                .HasOne(x => x.Recipe)
+                .HasOne(x => x.Step)
                 .WithMany(x => x.Ingredients)
-                .HasForeignKey(x => x.RecipeId);
+                .HasForeignKey(x => x.StepId);
         }
     }
 }

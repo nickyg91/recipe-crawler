@@ -184,6 +184,10 @@ const openAccountModal = () => {
   </n-modal>
 </template>
 <style>
+.text-center {
+  text-align: center;
+}
+
 .mobile-menu.n-menu .n-menu-item-content {
   display: block;
   text-align: center;

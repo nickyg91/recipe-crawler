@@ -13,6 +13,7 @@ public class StepProfile : Profile
             .ForMember(dst => dst.Description, x => x.MapFrom(src => src.Description))
             .ForMember(dst => dst.RecipeId, x => x.MapFrom(src => src.RecipeId))
             .ForMember(dst => dst.Recipe, x => x.Ignore())
+            .ForMember(dst => dst.Ingredients, x => x.MapFrom(src => src.Ingredients))
             .ForMember(dst => dst.CreatedAtUtc, x => x.Ignore())
             .ReverseMap();
     }

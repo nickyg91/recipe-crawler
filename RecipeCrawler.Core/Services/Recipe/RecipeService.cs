@@ -8,17 +8,26 @@ namespace RecipeCrawler.Core.Services.Recipe;
 public class RecipeService : IRecipeService
 {
     private readonly IRecipeRepository _recipeRepository;
+    private readonly IStepRepository _stepRepository;
     private readonly IMapper _mapper;
-    public RecipeService(IRecipeRepository recipeRepository, IMapper mapper)
+    public RecipeService(
+        IRecipeRepository recipeRepository, 
+        IStepRepository stepRepository, 
+        IMapper mapper)
     {
         _recipeRepository = recipeRepository;
+        _stepRepository = stepRepository;
         _mapper = mapper;
     }
 
     public async Task<RecipeViewModel> SaveRecipe(RecipeViewModel recipe)
     {
-        var mappedRecipeToSave = _mapper.Map<RecipeViewModel, Entities.Recipe>(recipe);
-        var savedRecipe = await _recipeRepository.SaveRecipe(mappedRecipeToSave);
+        var dbRecipe = new Entities.Recipe
+        {
+            CookbookId = recipe.CookbookId,
+        };
+        _mapper.Map(recipe, dbRecipe);
+        var savedRecipe = await _recipeRepository.SaveRecipe(dbRecipe);
         return _mapper.Map<Entities.Recipe, RecipeViewModel>(savedRecipe);
     }
 
