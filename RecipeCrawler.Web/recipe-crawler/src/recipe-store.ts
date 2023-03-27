@@ -123,7 +123,10 @@ export const useRecipeStore = defineStore("recipeStore", {
     },
     async setCurrentCookbook(cookbook: Cookbook) {
       this.currentCookbook = cookbook;
-      if ((this.currentCookbookRecipes?.length ?? 0) < 1) {
+      if (
+        !this.currentCookbookRecipes ||
+        this.currentCookbookRecipes.length === 0
+      ) {
         try {
           this.currentCookbookRecipes =
             await recipeService.getRecipesForCookbook(cookbook.id);
