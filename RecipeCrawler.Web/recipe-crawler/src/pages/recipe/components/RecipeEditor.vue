@@ -19,7 +19,7 @@ function onRemoveClicked(index: number): void {
 const computedStepIndex = computed(() => currentStep.value - 1);
 </script>
 <template>
-  <section style="display: flex; margin-top: 0.75em">
+  <!-- <section style="display: flex; margin-top: 0.75em">
     <div>
       <n-space vertical>
         <n-button
@@ -49,5 +49,31 @@ const computedStepIndex = computed(() => currentStep.value - 1);
         @remove-clicked="onRemoveClicked"
       ></RecipeStep>
     </div>
-  </section>
+  </section> -->
+  <n-space vertical :size="1">
+    <n-button
+      style="margin-bottom: 1.75em"
+      size="small"
+      circle
+      primary
+      @click="addStep()"
+    >
+      <template #icon>
+        <n-icon>
+          <Add />
+        </n-icon>
+      </template>
+    </n-button>
+    <n-steps v-model:current="currentStep" vertical>
+      <n-step v-for="step in steps" :key="step.id" :title="step.name"> </n-step>
+    </n-steps>
+  </n-space>
+  <n-space :size="12">
+    <RecipeStep
+      v-if="steps.length > 0"
+      :step="steps[computedStepIndex]"
+      :index="computedStepIndex"
+      @remove-clicked="onRemoveClicked"
+    ></RecipeStep>
+  </n-space>
 </template>
