@@ -1,13 +1,26 @@
 <script setup lang="ts">
-import { NCard, NInput, NForm, FormInst, NSpace } from "naive-ui";
+import {
+  NCard,
+  NInput,
+  NForm,
+  FormInst,
+  NButton,
+  NFormItem,
+  NSpace,
+} from "naive-ui";
+import { Close } from "@vicons/carbon";
 import { computed, PropType, ref } from "vue";
 import { Step } from "../../../models/shared/step.model";
-const emits = defineEmits(["stepUpdated"]);
+const emits = defineEmits(["stepUpdated", "removeClicked"]);
 const props = defineProps({
   step: {
     default: () => null,
     required: true,
     type: Step as PropType<Step>,
+  },
+  index: {
+    required: true,
+    type: Number,
   },
 });
 const formRef = ref<FormInst | null>(null);
@@ -31,23 +44,32 @@ const computedModel = computed({
     emits("stepUpdated", computedModel.value);
   },
 });
+
+function removeClicked(): void {
+  emits("removeClicked", props.index);
+}
 </script>
 <template>
-  <n-space>
-    <section>
-      <n-form ref="formRef" :rules="formRules">
-        <n-card size="huge">
-          <template #header>
-            <n-input v-model:value="computedModel.name" placeholder="Name">
-            </n-input>
-          </template>
-          <n-input
-            v-model:value="computedModel.description"
-            type="textarea"
-            placeholder="Description"
-          />
-        </n-card>
-      </n-form>
-    </section>
-  </n-space>
+  <n-card>
+    <n-space justify="end">
+      <n-button circle primary @click="removeClicked()">
+        <template #icon>
+          <close></close>
+        </template>
+      </n-button>
+    </n-space>
+    <n-form ref="formRef" :rules="formRules">
+      <n-form-item label="Name">
+        <n-input v-model:value="computedModel.name" placeholder="Name">
+        </n-input>
+      </n-form-item>
+      <n-form-item label="Description">
+        <n-input
+          v-model:value="computedModel.description"
+          type="textarea"
+          placeholder="Description"
+        />
+      </n-form-item>
+    </n-form>
+  </n-card>
 </template>

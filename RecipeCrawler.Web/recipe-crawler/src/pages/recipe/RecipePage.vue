@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { NSpace, NH1 } from "naive-ui";
 import RecipeList from "./components/RecipeList.vue";
-import { computed } from "vue";
 import { useRecipeStore } from "../../recipe-store";
+import { computed } from "vue";
 const store = useRecipeStore();
-const currentCookbook = computed(() => store.getCurrentCookbook);
+const currentCookbook = store.getCurrentCookbook;
 const recipes = computed(() => store.getRecipesForCookbook);
 </script>
 <template>

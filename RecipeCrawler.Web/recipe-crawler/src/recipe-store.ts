@@ -21,6 +21,7 @@ export const useRecipeStore = defineStore("recipeStore", {
       currentlySelectedCookbookToEdit: null,
       originalCookbook: null,
       currentCookbook: null,
+      currentCookbookRecipes: null,
     } as IRecipeStore),
   getters: {
     getRecipes(state) {
@@ -42,7 +43,7 @@ export const useRecipeStore = defineStore("recipeStore", {
       return state.currentlySelectedCookbookToEdit;
     },
     getRecipesForCookbook(state): Recipe[] | null {
-      return state.currentCookbookRecipes ?? null;
+      return state.currentCookbookRecipes;
     },
     getCurrentCookbook(state): Cookbook | null {
       return state.currentCookbook;
@@ -123,18 +124,14 @@ export const useRecipeStore = defineStore("recipeStore", {
     },
     async setCurrentCookbook(cookbook: Cookbook) {
       this.currentCookbook = cookbook;
-      if (
-        !this.currentCookbookRecipes ||
-        this.currentCookbookRecipes.length === 0
-      ) {
-        try {
-          this.currentCookbookRecipes =
-            await recipeService.getRecipesForCookbook(cookbook.id);
-        } catch (error) {
-          (window as ChefferWindow).$message?.error(
-            "An error occurred while retrieving your recipes!"
-          );
-        }
+      try {
+        this.currentCookbookRecipes = await recipeService.getRecipesForCookbook(
+          cookbook.id
+        );
+      } catch (error) {
+        (window as ChefferWindow).$message?.error(
+          "An error occurred while retrieving your recipes!"
+        );
       }
     },
   },

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { PropType } from "vue";
+import { PropType, h } from "vue";
 import { Recipe } from "../../../models/shared/recipe.model";
-import { Add } from "@vicons/carbon";
+import { Add, Close, Edit } from "@vicons/carbon";
 import { DataTableColumn, NDataTable, NSpace, NButton, NIcon } from "naive-ui";
 import { useRouter } from "vue-router";
 const router = useRouter();
@@ -14,11 +14,44 @@ const props = defineProps({
 });
 const columns = [
   {
-    key: "id",
+    key: "name",
     title: "Name",
   },
-  {},
-  {},
+  {
+    align: "right",
+    width: 65,
+    render(rowData) {
+      return h(
+        NButton,
+        {
+          strong: true,
+          tertiary: true,
+          size: "small",
+          renderIcon: () => h(Edit),
+          // onClick: () => ()
+        },
+        { default: () => "Edit" }
+      );
+    },
+  },
+  {
+    align: "right",
+    width: 65,
+    render(rowData) {
+      return h(
+        NButton,
+        {
+          strong: true,
+          tertiary: false,
+          size: "small",
+          type: "error",
+          renderIcon: () => h(Close),
+          // onClick: () => ()
+        },
+        { default: () => "Delete" }
+      );
+    },
+  },
 ] as DataTableColumn[];
 function addRecipeClicked() {
   router.push({

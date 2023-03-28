@@ -1,4 +1,3 @@
-import { Ingredient } from "./ingredient.model";
 import { Step } from "./step.model";
 
 export class Recipe {
@@ -7,5 +6,4 @@ export class Recipe {
   crawledHtml?: string | null;
   cookbookId!: number;
   steps?: Step[] | null;
-  ingredients?: Ingredient[] | null;
 }

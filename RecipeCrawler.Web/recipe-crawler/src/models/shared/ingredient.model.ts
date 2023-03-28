@@ -4,5 +4,6 @@ export class Ingredient {
   id!: number;
   name!: string;
   measurement!: Measurement;
-  recipeId!: number;
+  amount!: number;
+  stepId!: number;
 }
