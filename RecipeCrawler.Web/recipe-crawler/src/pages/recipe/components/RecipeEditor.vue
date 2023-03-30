@@ -8,6 +8,8 @@ import {
   NInput,
   NFormItem,
   FormItemRule,
+  NPopover,
+  NScrollbar,
 } from "naive-ui";
 import { Add, Chemistry, Save } from "@vicons/carbon";
 import { reactive, ref } from "vue";
@@ -76,7 +78,7 @@ function stepClicked(currentStep: number): void {
 </script>
 <template>
   <section style="margin-top: 1em">
-    <div style="margin-bottom: 0.75em">
+    <div style="margin-bottom: 0.75em; width: 77%">
       <n-form-item
         label="Recipe Name"
         size="large"
@@ -89,10 +91,10 @@ function stepClicked(currentStep: number): void {
         />
       </n-form-item>
     </div>
-    <div style="display: flex">
+    <div style="gap: 15px; display: flex">
       <n-space vertical>
         <n-button
-          style="margin-bottom: 1.75em"
+          style="margin-bottom: 1.75em; margin-left: 0.25em"
           size="small"
           circle
           primary
@@ -104,16 +106,19 @@ function stepClicked(currentStep: number): void {
             </n-icon>
           </template>
         </n-button>
-        <n-steps
-          v-model:current="currentStep"
-          vertical
-          @update-current="stepClicked($event)"
-        >
-          <n-step v-for="step in currentlyEditedRecipe.steps" :key="step.id">
-          </n-step>
-        </n-steps>
+        <n-scrollbar style="max-height: 350px" trigger="hover">
+          <n-steps
+            v-model:current="currentStep"
+            class="steps-padding"
+            vertical
+            @update-current="stepClicked($event)"
+          >
+            <n-step v-for="step in currentlyEditedRecipe.steps" :key="step.id">
+            </n-step>
+          </n-steps>
+        </n-scrollbar>
       </n-space>
-      <div style="flex-grow: 3">
+      <div style="width: 75%">
         <RecipeStep
           v-if="currentlyEditedRecipe.steps!.length > 0"
           :key="currentStepObject.id"
@@ -123,13 +128,19 @@ function stepClicked(currentStep: number): void {
         ></RecipeStep>
       </div>
     </div>
-    <n-space vertical align="end">
-      <n-button type="info" circle ghost size="large">
-        <n-icon>
-          <Chemistry />
-        </n-icon>
-      </n-button>
-      <n-button tupe="primary" circle ghost size="large">
+    <n-space class="floating-buttons" vertical align="end">
+      <n-popover placement="left-start" trigger="click">
+        <template #trigger>
+          <n-button type="info" circle ghost size="large">
+            <n-icon>
+              <Chemistry />
+            </n-icon>
+          </n-button>
+        </template>
+        <span>Left</span>
+      </n-popover>
+
+      <n-button type="primary" circle ghost size="large">
         <n-icon>
           <Save />
         </n-icon>
@@ -137,3 +148,18 @@ function stepClicked(currentStep: number): void {
     </n-space>
   </section>
 </template>
+
+<style scoped>
+.floating-buttons {
+  position: absolute;
+  left: 96%;
+  top: 15%;
+}
+
+.steps-padding {
+  padding: 0.25em;
+}
+.steps-max-height {
+  max-height: 300px;
+}
+</style>
