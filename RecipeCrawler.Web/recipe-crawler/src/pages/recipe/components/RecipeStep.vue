@@ -11,7 +11,7 @@ import {
 import { Close } from "@vicons/carbon";
 import { computed, PropType, ref } from "vue";
 import { Step } from "../../../models/shared/step.model";
-const emits = defineEmits(["stepUpdated", "removeClicked"]);
+const emits = defineEmits(["update:stepUpdated", "removeClicked"]);
 const props = defineProps({
   step: {
     default: () => null,
@@ -36,12 +36,10 @@ const formRules = {
 };
 const computedModel = computed({
   get() {
-    return {
-      ...props.step,
-    };
+    return props.step;
   },
-  set() {
-    emits("stepUpdated", computedModel.value);
+  set(value) {
+    emits("update:stepUpdated", value);
   },
 });
 
@@ -58,12 +56,12 @@ function removeClicked(): void {
         </template>
       </n-button>
     </n-space>
-    <n-form ref="formRef" :rules="formRules">
-      <n-form-item label="Name">
+    <n-form ref="formRef" :model="computedModel" :rules="formRules">
+      <n-form-item path="computedModel.name" label="Name">
         <n-input v-model:value="computedModel.name" placeholder="Name">
         </n-input>
       </n-form-item>
-      <n-form-item label="Description">
+      <n-form-item path="computedModel.description" label="Description">
         <n-input
           v-model:value="computedModel.description"
           type="textarea"
