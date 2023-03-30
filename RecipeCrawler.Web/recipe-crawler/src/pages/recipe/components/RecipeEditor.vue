@@ -1,6 +1,15 @@
 <script setup lang="ts">
-import { NSpace, NSteps, NStep, NButton, NIcon } from "naive-ui";
-import { Add } from "@vicons/carbon";
+import {
+  NSpace,
+  NSteps,
+  NStep,
+  NButton,
+  NIcon,
+  NInput,
+  NFormItem,
+  FormItemRule,
+} from "naive-ui";
+import { Add, Chemistry, Save } from "@vicons/carbon";
 import { reactive, ref } from "vue";
 import { Step } from "../../../models/shared/step.model";
 import { Recipe } from "../../../models/shared/recipe.model";
@@ -12,6 +21,18 @@ const currentlyEditedRecipe =
     ? reactive(new Recipe())
     : store.getCurrentRecipe;
 const currentStep = ref(1);
+
+const recipeNameValidationRule = {
+  trigger: ["blur"],
+  validator: () => {
+    if (
+      !currentlyEditedRecipe.name ||
+      currentlyEditedRecipe.name?.length === 0
+    ) {
+      return Error("Recipe name is required!");
+    }
+  },
+} as FormItemRule;
 
 let currentStepObject: Step;
 if (!currentlyEditedRecipe.steps || currentlyEditedRecipe.steps?.length === 0) {
@@ -54,8 +75,21 @@ function stepClicked(currentStep: number): void {
 }
 </script>
 <template>
-  <section style="display: flex; margin-top: 0.75em">
-    <div>
+  <section style="margin-top: 1em">
+    <div style="margin-bottom: 0.75em">
+      <n-form-item
+        label="Recipe Name"
+        size="large"
+        :required="true"
+        :rule="recipeNameValidationRule"
+      >
+        <n-input
+          v-model:value="currentlyEditedRecipe.name"
+          placeholder="Name of Recipe"
+        />
+      </n-form-item>
+    </div>
+    <div style="display: flex">
       <n-space vertical>
         <n-button
           style="margin-bottom: 1.75em"
@@ -79,15 +113,27 @@ function stepClicked(currentStep: number): void {
           </n-step>
         </n-steps>
       </n-space>
+      <div style="flex-grow: 3">
+        <RecipeStep
+          v-if="currentlyEditedRecipe.steps!.length > 0"
+          :key="currentStepObject.id"
+          v-model:step="currentStepObject"
+          v-model:index="currentStep"
+          @remove-clicked="onRemoveClicked"
+        ></RecipeStep>
+      </div>
     </div>
-    <div style="flex-grow: 3">
-      <RecipeStep
-        v-if="currentlyEditedRecipe.steps!.length > 0"
-        :key="currentStepObject.id"
-        v-model:step="currentStepObject"
-        v-model:index="currentStep"
-        @remove-clicked="onRemoveClicked"
-      ></RecipeStep>
-    </div>
+    <n-space vertical align="end">
+      <n-button type="info" circle ghost size="large">
+        <n-icon>
+          <Chemistry />
+        </n-icon>
+      </n-button>
+      <n-button tupe="primary" circle ghost size="large">
+        <n-icon>
+          <Save />
+        </n-icon>
+      </n-button>
+    </n-space>
   </section>
 </template>
