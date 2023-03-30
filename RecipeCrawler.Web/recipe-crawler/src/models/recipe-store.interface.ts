@@ -13,4 +13,5 @@ export interface IRecipeStore {
   originalCookbook: Cookbook | null;
   currentCookbook: Cookbook | null;
   currentCookbookRecipes: Recipe[] | null;
+  currentRecipe: Recipe | null;
 }

@@ -16,7 +16,7 @@ const props = defineProps({
   step: {
     default: () => null,
     required: true,
-    type: Step as PropType<Step>,
+    type: Object as PropType<Step>,
   },
   index: {
     required: true,

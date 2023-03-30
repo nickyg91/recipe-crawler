@@ -5,12 +5,12 @@ export class TokenResponse {
   public claims: Claim[];
   public refreshToken: string;
 
-  get chefId(): number | undefined {
+  get chefId(): number | null {
     return Number(this.claims?.find((x) => x.type === "chefId")?.value);
   }
 
-  get username(): string | undefined {
-    return this.claims?.find((x) => x.type === "username")?.value;
+  get username(): string | null {
+    return this.claims?.find((x) => x.type === "username")?.value ?? null;
   }
 
   constructor(token: string, claims: Claim[], refreshToken: string) {

@@ -22,6 +22,7 @@ export const useRecipeStore = defineStore("recipeStore", {
       originalCookbook: null,
       currentCookbook: null,
       currentCookbookRecipes: null,
+      currentRecipe: null,
     } as IRecipeStore),
   getters: {
     getRecipes(state) {
@@ -47,6 +48,9 @@ export const useRecipeStore = defineStore("recipeStore", {
     },
     getCurrentCookbook(state): Cookbook | null {
       return state.currentCookbook;
+    },
+    getCurrentRecipe(state): Recipe | null {
+      return state.currentRecipe;
     },
   },
   actions: {
@@ -133,6 +137,9 @@ export const useRecipeStore = defineStore("recipeStore", {
           "An error occurred while retrieving your recipes!"
         );
       }
+    },
+    setCurrentRecipe(recipe: Recipe) {
+      this.currentRecipe = recipe;
     },
   },
 });

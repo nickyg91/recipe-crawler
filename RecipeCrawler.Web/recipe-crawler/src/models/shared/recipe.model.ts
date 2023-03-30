@@ -5,5 +5,5 @@ export class Recipe {
   name!: string;
   crawledHtml?: string | null;
   cookbookId!: number;
-  steps?: Step[] | null;
+  steps!: Step[] | null;
 }
