@@ -17,6 +17,7 @@ import { Step } from "../../../models/shared/step.model";
 import { Recipe } from "../../../models/shared/recipe.model";
 import RecipeStep from "./RecipeStep.vue";
 import { useRecipeStore } from "../../../recipe-store";
+import IngredientForm from "./IngredientForm.vue";
 const store = useRecipeStore();
 const currentlyEditedRecipe =
   store.getCurrentRecipe === null
@@ -137,7 +138,9 @@ function stepClicked(currentStep: number): void {
             </n-icon>
           </n-button>
         </template>
-        <span>Left</span>
+        <div>
+          <IngredientForm />
+        </div>
       </n-popover>
 
       <n-button type="primary" circle ghost size="large">
