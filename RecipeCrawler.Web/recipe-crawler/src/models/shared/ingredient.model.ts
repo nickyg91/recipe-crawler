@@ -6,4 +6,5 @@ export class Ingredient {
   measurement!: Measurement | undefined;
   amount!: number | undefined;
   stepId!: number | undefined;
+  recipeId!: number | undefined;
 }

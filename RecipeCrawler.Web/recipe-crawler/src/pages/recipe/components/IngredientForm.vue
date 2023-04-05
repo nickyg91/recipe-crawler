@@ -13,20 +13,26 @@ import {
   NIcon,
   NScrollbar,
   FormItemRule,
+  useDialog,
 } from "naive-ui";
-import { Add, Close } from "@vicons/carbon";
+import { Add, Close, ThumbsUp } from "@vicons/carbon";
 import { useRecipeStore } from "../../../recipe-store";
 import { Ingredient } from "../../../models/shared/ingredient.model";
-import { reactive, ref } from "vue";
+import { h, reactive, ref } from "vue";
 import { computed } from "vue";
 import { Measurement } from "../../../models/shared/measurement.enum";
 import useMeasurementFunctions from "../../../shared/measurement-functions";
 const store = useRecipeStore();
-const ingredients = reactive(new Array<Ingredient>());
-const currentlyEditedRecipe = store.getCurrentRecipe;
-const formRef = ref<FormInst | null>(null);
-const formModel = reactive(new Ingredient());
 const measurementHelpers = useMeasurementFunctions();
+const dialog = useDialog();
+const emits = defineEmits(["ingredientDeleted"]);
+const currentlyEditedRecipe = store.getCurrentRecipe;
+const ingredients = currentlyEditedRecipe?.ingredients;
+const formRef = ref<FormInst | null>(null);
+const ingredientFormState = reactive({
+  formModel: new Ingredient(),
+});
+
 const measurements = computed(() => {
   const values = [];
   const enumValues = Object.keys(Measurement).filter((x) => !isNaN(+x));
@@ -66,24 +72,64 @@ if (currentlyEditedRecipe?.steps) {
     x.ingredients ? x.ingredients : []
   );
   if (stepIngredients) {
-    ingredients.concat(stepIngredients);
+    currentlyEditedRecipe.ingredients?.push(...stepIngredients);
   }
 }
 
 function addClicked() {
   formRef.value?.validate((errors) => {
     if (!errors) {
-      ingredients.push({ ...formModel });
-      Object.assign(formModel, new Ingredient());
+      currentlyEditedRecipe?.ingredients?.push({
+        ...ingredientFormState.formModel,
+      });
+      Object.assign(ingredientFormState.formModel, {
+        id: (currentlyEditedRecipe?.ingredients?.length ?? 0) * -1,
+        name: undefined,
+        amount: undefined,
+        measurement: undefined,
+      } as Ingredient);
     }
+  });
+}
+
+function deleteIngredient(index: number): void {
+  dialog.warning({
+    title: "Confirm",
+    content:
+      "Are you sure you want to delete this ingredient? It will remove it from all steps that use it.",
+    positiveText: "Yes",
+    positiveButtonProps: {
+      renderIcon: () => h(ThumbsUp),
+      size: "large",
+    },
+    negativeButtonProps: {
+      renderIcon: () => h(Close),
+      size: "large",
+    },
+    negativeText: "No",
+    onPositiveClick: () => {
+      const ingredientToRemove = currentlyEditedRecipe?.ingredients?.splice(
+        index,
+        1
+      );
+      if (ingredientToRemove) {
+        emits("ingredientDeleted", ingredientToRemove[0]);
+      }
+    },
   });
 }
 </script>
 <template>
   <n-space vertical>
     <n-scrollbar style="max-height: 350px" trigger="hover">
-      <n-list v-if="ingredients.length > 0" bordered>
-        <n-list-item v-for="ingredient in ingredients" :key="ingredient.id">
+      <n-list
+        v-if="currentlyEditedRecipe && currentlyEditedRecipe!.ingredients!.length > 0"
+        bordered
+      >
+        <n-list-item
+          v-for="(ingredient, index) in ingredients"
+          :key="ingredient.id"
+        >
           <n-space align="center" justify="space-evenly">
             <span>{{ ingredient.name }}</span>
             <span>{{ ingredient.amount }}</span>
@@ -91,7 +137,7 @@ function addClicked() {
               measurementHelpers.translateEnum(ingredient.measurement!)
             }}</span>
             <span>
-              <n-button type="error" circle>
+              <n-button type="error" circle @click="deleteIngredient(index)">
                 <template #icon>
                   <n-icon>
                     <Close />
@@ -105,12 +151,16 @@ function addClicked() {
     </n-scrollbar>
     <n-form
       ref="formRef"
-      :model="formModel"
+      :key="ingredientFormState.formModel.id"
+      :model="ingredientFormState.formModel"
       :rules="ingredientFormRules"
       size="large"
     >
       <n-form-item label="Name" path="name">
-        <n-input v-model:value="formModel.name" placeholder="Ingredient Name" />
+        <n-input
+          v-model:value="ingredientFormState.formModel.name"
+          placeholder="Ingredient Name"
+        />
       </n-form-item>
       <n-form-item
         :show-require-mark="true"
@@ -118,7 +168,7 @@ function addClicked() {
         path="amount"
       >
         <n-input-number
-          v-model:value="formModel.amount"
+          v-model:value="ingredientFormState.formModel.amount"
           :show-button="false"
           placeholder="Amount"
         />
@@ -129,7 +179,7 @@ function addClicked() {
         path="measurement"
       >
         <n-select
-          v-model:value="formModel.measurement"
+          v-model:value="ingredientFormState.formModel.measurement"
           :options="measurements"
         />
       </n-form-item>

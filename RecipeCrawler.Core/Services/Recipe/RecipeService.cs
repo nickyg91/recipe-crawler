@@ -8,15 +8,12 @@ namespace RecipeCrawler.Core.Services.Recipe;
 public class RecipeService : IRecipeService
 {
     private readonly IRecipeRepository _recipeRepository;
-    private readonly IStepRepository _stepRepository;
     private readonly IMapper _mapper;
     public RecipeService(
         IRecipeRepository recipeRepository, 
-        IStepRepository stepRepository, 
         IMapper mapper)
     {
         _recipeRepository = recipeRepository;
-        _stepRepository = stepRepository;
         _mapper = mapper;
     }
 
@@ -27,6 +24,10 @@ public class RecipeService : IRecipeService
             CookbookId = recipe.CookbookId,
         };
         _mapper.Map(recipe, dbRecipe);
+        foreach (var stepIngredient in dbRecipe.Steps.SelectMany(x => x.StepIngredients))
+        {
+            dbRecipe.Ingredients.Add(stepIngredient.Ingredient);
+        }
         var savedRecipe = await _recipeRepository.SaveRecipe(dbRecipe);
         return _mapper.Map<Entities.Recipe, RecipeViewModel>(savedRecipe);
     }

@@ -64,6 +64,7 @@ builder.Services.AddSingleton<CookbookConfiguration>();
 builder.Services.AddSingleton<RecipeConfiguration>();
 builder.Services.AddSingleton<StepConfiguration>();
 builder.Services.AddSingleton<IngredientConfiguration>();
+builder.Services.AddSingleton<StepIngredientConfiguration>();
 builder.Services.AddScoped<IChefRepository, ChefRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddTransient<IEmailService, EmailService>((provider) => new EmailService(settings.EmailConfiguration!, url));
@@ -102,7 +103,8 @@ builder.Services.AddScoped((provider) =>
         provider.GetService<ChefConfiguration>() ?? new ChefConfiguration(),
         provider.GetService<RecipeConfiguration>() ?? new RecipeConfiguration(),
         provider.GetService<StepConfiguration>() ?? new StepConfiguration(),
-        provider.GetService<IngredientConfiguration>() ?? new IngredientConfiguration());
+        provider.GetService<IngredientConfiguration>() ?? new IngredientConfiguration(),
+        provider.GetService<StepIngredientConfiguration>() ?? new StepIngredientConfiguration());
     return context;
 });
 

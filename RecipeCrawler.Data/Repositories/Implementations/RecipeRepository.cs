@@ -2,7 +2,6 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using RecipeCrawler.Data.Database.Contexts;
 using RecipeCrawler.Entities;
-using Exception = System.Exception;
 
 namespace RecipeCrawler.Data.Repositories.Implementations;
 

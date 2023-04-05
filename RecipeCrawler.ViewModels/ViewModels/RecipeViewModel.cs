@@ -8,6 +8,7 @@ public class RecipeViewModel
     [Required]
     public string Name { get; set; }
     public string? CrawledHtml { get; set; }
-    public List<StepViewModel> Steps { get; set; }
+    public List<StepViewModel>? Steps { get; set; }
+    public List<IngredientViewModel>? Ingredients { get; set; }
     public int CookbookId { get; set; }
 }

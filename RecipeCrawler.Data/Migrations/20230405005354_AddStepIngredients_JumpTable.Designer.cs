@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RecipeCrawler.Data.Database.Contexts;
@@ -11,9 +12,11 @@ using RecipeCrawler.Data.Database.Contexts;
 namespace RecipeCrawler.Data.Migrations
 {
     [DbContext(typeof(ChefferDbContext))]
-    partial class ChefferDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230405005354_AddStepIngredients_JumpTable")]
+    partial class AddStepIngredients_JumpTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,7 +52,7 @@ namespace RecipeCrawler.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(64)
                         .HasColumnType("uuid")
-                        .HasDefaultValue(new Guid("df3b7563-849c-463b-b703-ed2dde2db9c6"))
+                        .HasDefaultValue(new Guid("1f1a1bc3-4504-4201-af2e-5305d0d8759a"))
                         .HasColumnName("email_verification_guid");
 
                     b.Property<bool>("IsEmailVerified")

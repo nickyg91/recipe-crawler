@@ -130,7 +130,11 @@ function stepClicked(currentStep: number): void {
       </div>
     </div>
     <n-space class="floating-buttons" vertical align="end">
-      <n-popover placement="left-start" trigger="click">
+      <n-popover
+        :key="currentlyEditedRecipe.id"
+        placement="left-start"
+        trigger="click"
+      >
         <template #trigger>
           <n-button type="info" circle ghost size="large">
             <n-icon>
