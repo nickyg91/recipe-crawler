@@ -4,7 +4,9 @@ import { Recipe } from "../../../models/shared/recipe.model";
 import { Add, Close, Edit } from "@vicons/carbon";
 import { DataTableColumn, NDataTable, NSpace, NButton, NIcon } from "naive-ui";
 import { useRouter } from "vue-router";
+import { useRecipeStore } from "../../../recipe-store";
 const router = useRouter();
+const store = useRecipeStore();
 const props = defineProps({
   recipes: {
     default: () => [],
@@ -54,6 +56,7 @@ const columns = [
   },
 ] as DataTableColumn[];
 function addRecipeClicked() {
+  store.setCurrentRecipe(new Recipe());
   router.push({
     name: "recipeEditor",
     params: {

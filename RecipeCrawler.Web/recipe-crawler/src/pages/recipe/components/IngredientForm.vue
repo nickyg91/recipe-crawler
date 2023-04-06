@@ -27,7 +27,6 @@ const measurementHelpers = useMeasurementFunctions();
 const dialog = useDialog();
 const emits = defineEmits(["ingredientDeleted"]);
 const currentlyEditedRecipe = store.getCurrentRecipe;
-const ingredients = currentlyEditedRecipe?.ingredients;
 const formRef = ref<FormInst | null>(null);
 const ingredientFormState = reactive({
   formModel: new Ingredient(),
@@ -79,8 +78,10 @@ if (currentlyEditedRecipe?.steps) {
 function addClicked() {
   formRef.value?.validate((errors) => {
     if (!errors) {
-      currentlyEditedRecipe?.ingredients?.push({
-        ...ingredientFormState.formModel,
+      store.$patch((state) => {
+        state.currentRecipe?.ingredients?.push({
+          ...ingredientFormState.formModel,
+        });
       });
       Object.assign(ingredientFormState.formModel, {
         id: (currentlyEditedRecipe?.ingredients?.length ?? 0) * -1,
@@ -127,7 +128,7 @@ function deleteIngredient(index: number): void {
         bordered
       >
         <n-list-item
-          v-for="(ingredient, index) in ingredients"
+          v-for="(ingredient, index) in currentlyEditedRecipe!.ingredients!"
           :key="ingredient.id"
         >
           <n-space align="center" justify="space-evenly">
