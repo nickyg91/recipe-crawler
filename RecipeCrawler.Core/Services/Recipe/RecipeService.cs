@@ -2,6 +2,7 @@ using AutoMapper;
 using RecipeCrawler.Core.Exceptions;
 using RecipeCrawler.Core.Services.Recipe.Interfaces;
 using RecipeCrawler.Data.Repositories;
+using RecipeCrawler.Entities;
 using RecipeCrawler.ViewModels.ViewModels;
 namespace RecipeCrawler.Core.Services.Recipe;
 
@@ -22,6 +23,7 @@ public class RecipeService : IRecipeService
         var dbRecipe = new Entities.Recipe
         {
             CookbookId = recipe.CookbookId,
+            Ingredients = new List<Ingredient>(),
         };
         _mapper.Map(recipe, dbRecipe);
         foreach (var stepIngredient in dbRecipe.Steps.SelectMany(x => x.StepIngredients))

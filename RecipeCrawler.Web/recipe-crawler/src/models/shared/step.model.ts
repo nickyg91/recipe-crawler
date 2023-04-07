@@ -6,7 +6,7 @@ export class Step {
     description: string,
     name: string,
     recipeId: number,
-    ingredients: Ingredient[] | null
+    ingredients: Ingredient[]
   ) {
     this.id = id;
     this.description = description;
@@ -19,5 +19,5 @@ export class Step {
   description!: string;
   name!: string;
   recipeId!: number;
-  ingredients?: Ingredient[] | null;
+  ingredients: Ingredient[];
 }

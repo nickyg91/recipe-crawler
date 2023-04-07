@@ -57,6 +57,30 @@ export const useRecipeStore = defineStore("recipeStore", {
     addRecipe(recipe: ParsedResponse) {
       this.recipes.push(recipe);
     },
+    async saveRecipe(recipe: Recipe) {
+      try {
+        const savedRecipe = await recipeService.saveRecipe(recipe);
+        if (this.currentCookbookRecipes) {
+          const exists = this.currentCookbookRecipes.some(
+            (x) => x.id === savedRecipe.id
+          );
+          if (!exists) {
+            this.currentCookbookRecipes.push(savedRecipe);
+          } else {
+            const index = this.currentCookbookRecipes.findIndex(
+              (x) => x.id === savedRecipe.id
+            );
+            this.currentCookbookRecipes[index] = savedRecipe;
+          }
+        } else {
+          this.currentCookbookRecipes = [savedRecipe];
+        }
+      } catch (e) {
+        (window as ChefferWindow).$message?.error(
+          "An error occurred while retrieving your recipe!"
+        );
+      }
+    },
     setTheme(isLightMode: boolean) {
       this.isLightMode = isLightMode;
     },

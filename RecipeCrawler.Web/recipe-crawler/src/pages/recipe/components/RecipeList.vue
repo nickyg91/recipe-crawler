@@ -5,6 +5,7 @@ import { Add, Close, Edit } from "@vicons/carbon";
 import { DataTableColumn, NDataTable, NSpace, NButton, NIcon } from "naive-ui";
 import { useRouter } from "vue-router";
 import { useRecipeStore } from "../../../recipe-store";
+import { ChefferWindow } from "../../../models/window.extension";
 const router = useRouter();
 const store = useRecipeStore();
 const props = defineProps({
@@ -56,13 +57,22 @@ const columns = [
   },
 ] as DataTableColumn[];
 function addRecipeClicked() {
-  store.setCurrentRecipe(new Recipe());
-  router.push({
-    name: "recipeEditor",
-    params: {
-      recipeId: 0,
-    },
-  });
+  const recipeToCreate = new Recipe();
+  const currentCookbook = store.getCurrentCookbook;
+  if (currentCookbook) {
+    recipeToCreate.cookbookId = currentCookbook.id;
+    store.setCurrentRecipe(recipeToCreate);
+    router.push({
+      name: "recipeEditor",
+      params: {
+        recipeId: 0,
+      },
+    });
+  } else {
+    (window as ChefferWindow).$message?.error(
+      "No active cookbook selected! Please select one from the list."
+    );
+  }
 }
 </script>
 <template>

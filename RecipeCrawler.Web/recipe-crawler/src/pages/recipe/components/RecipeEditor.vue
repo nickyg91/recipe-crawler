@@ -40,7 +40,7 @@ const recipeNameValidationRule = {
 let currentStepObject: Step;
 if (!currentlyEditedRecipe.steps || currentlyEditedRecipe.steps?.length === 0) {
   currentStepObject = reactive(
-    new Step(0, "", "", currentlyEditedRecipe?.id ?? 0, null)
+    new Step(0, "", "", currentlyEditedRecipe?.id ?? 0, [])
   );
   currentlyEditedRecipe.steps = [currentStepObject];
 } else if (
@@ -57,7 +57,7 @@ function addStep(): void {
       "",
       "",
       currentlyEditedRecipe?.id ?? 0,
-      null
+      []
     )
   );
   currentlyEditedRecipe.steps?.push(stepToAdd);
@@ -75,6 +75,10 @@ function onRemoveClicked(index: number): void {
 function stepClicked(currentStep: number): void {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   currentStepObject = currentlyEditedRecipe.steps![currentStep - 1];
+}
+
+async function saveRecipe() {
+  await store.saveRecipe(currentlyEditedRecipe);
 }
 </script>
 <template>
@@ -125,6 +129,7 @@ function stepClicked(currentStep: number): void {
           :key="currentStepObject.id"
           v-model:step="currentStepObject"
           v-model:index="currentStep"
+          :ingredients="currentlyEditedRecipe.ingredients ?? []"
           @remove-clicked="onRemoveClicked"
         ></RecipeStep>
       </div>
@@ -147,7 +152,7 @@ function stepClicked(currentStep: number): void {
         </div>
       </n-popover>
 
-      <n-button type="primary" circle ghost size="large">
+      <n-button type="primary" circle ghost size="large" @click="saveRecipe()">
         <n-icon>
           <Save />
         </n-icon>
