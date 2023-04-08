@@ -85,9 +85,9 @@ function addClicked() {
       });
       Object.assign(ingredientFormState.formModel, {
         id: (currentlyEditedRecipe?.ingredients?.length ?? 0) * -1,
-        name: undefined,
-        amount: undefined,
-        measurement: undefined,
+        name: "",
+        amount: 0,
+        measurement: Measurement.Cup,
       } as Ingredient);
     }
   });
