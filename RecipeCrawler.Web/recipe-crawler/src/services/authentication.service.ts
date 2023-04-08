@@ -2,7 +2,7 @@ import { AxiosResponse } from "axios";
 import { Account } from "../models/account.model";
 import { Login } from "../models/login.model";
 import { TokenResponse } from "../models/token-response.model";
-import axiosInstance from "./axios-instance.model";
+import { axiosInstance } from "./axios-instance.model";
 const baseUrl = "api/account";
 export class AuthenticationService {
   static injectionKey = "authenticationService";

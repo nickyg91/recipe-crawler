@@ -1,5 +1,5 @@
 import { Recipe } from "../../../models/shared/recipe.model";
-import axiosInstance from "../../../services/axios-instance.model";
+import { axiosInstance } from "../../../services/axios-instance.model";
 
 const baseUrl = "api/cookbook";
 export class RecipeService {
