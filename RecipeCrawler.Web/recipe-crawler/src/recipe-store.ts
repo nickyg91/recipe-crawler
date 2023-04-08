@@ -127,6 +127,29 @@ export const useRecipeStore = defineStore("recipeStore", {
         );
       }
     },
+    async deleteRecipe(cookbookId: number, recipeId: number) {
+      try {
+        const isDeleted = await recipeService.deleteRecipe(
+          cookbookId,
+          recipeId
+        );
+        if (isDeleted) {
+          const recipeToRemoveIndex = this.currentCookbookRecipes?.findIndex(
+            (x) => x.id === recipeId
+          );
+          if (recipeToRemoveIndex !== undefined && recipeToRemoveIndex > -1) {
+            this.currentCookbookRecipes?.splice(recipeToRemoveIndex, 1);
+            (window as ChefferWindow).$message?.success("Recipe deleted!");
+          } else {
+            (window as ChefferWindow).$message?.warning(
+              "Recipe not found? Try again."
+            );
+          }
+        }
+      } catch (error) {
+        (window as ChefferWindow).$message?.error("Error deleting recipe!");
+      }
+    },
     setCurrentlyEditingCookbook(id: number) {
       const index = this.cookbooks.findIndex((x) => x.id === id);
       this.currentlySelectedCookbookToEdit = this.cookbooks[index];
