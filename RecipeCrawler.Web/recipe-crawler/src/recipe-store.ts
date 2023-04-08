@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ParsedResponse } from "./pages/recipe/models/parsed-response.model";
 import { IRecipeStore } from "./models/recipe-store.interface";
 import { TokenResponse } from "./models/token-response.model";
-import axiosInstance from "./services/axios-instance.model";
+import { axiosInstance } from "./services/axios-instance.model";
 import { Cookbook } from "./models/shared/cookbook.model";
 import { CookbookService } from "./pages/cook-books/services/cookbook.service";
 import { ChefferWindow } from "./models/window.extension";

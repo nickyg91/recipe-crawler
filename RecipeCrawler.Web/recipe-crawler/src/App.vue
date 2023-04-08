@@ -18,12 +18,14 @@ import {
   darkTheme,
   useMessage,
   NDialogProvider,
+  NLoadingBarProvider,
 } from "naive-ui";
 import { h } from "vue";
-import { RouterLink, RouterView, useRoute } from "vue-router";
+import { RouterLink, useRoute } from "vue-router";
 import { useRecipeStore } from "./recipe-store";
 import AccountModal from "./pages/account/components/AccountModal.vue";
 import { ChefferWindow } from "./models/window.extension";
+import PageContent from "./pages/PageContent.vue";
 const route = useRoute();
 const selectedKeyRef = ref();
 watch(
@@ -32,7 +34,6 @@ watch(
     selectedKeyRef.value = val?.valueOf();
   }
 );
-
 const messageApi = useMessage();
 (window as ChefferWindow).$message = messageApi;
 const state = useRecipeStore();
@@ -118,73 +119,75 @@ const openAccountModal = () => {
 };
 </script>
 <template>
-  <n-dialog-provider>
-    <n-layout class="full-height" has-sider>
-      <n-layout-sider
-        v-if="!isMobile"
-        collapse-mode="width"
-        :collapsed-width="64"
-        :width="240"
-        show-trigger="bar"
-        bordered
-        @collapse="collapsed = true"
-        @expand="collapsed = false"
+  <n-loading-bar-provider>
+    <n-dialog-provider>
+      <n-layout class="full-height" has-sider>
+        <n-layout-sider
+          v-if="!isMobile"
+          collapse-mode="width"
+          :collapsed-width="64"
+          :width="240"
+          show-trigger="bar"
+          bordered
+          @collapse="collapsed = true"
+          @expand="collapsed = false"
+        >
+          <n-menu
+            :collapsed="collapsed"
+            :collapsed-width="64"
+            :collapsed-icon-size="22"
+            :options="menuOptions"
+            :value="selectedKeyRef"
+          />
+        </n-layout-sider>
+        <n-layout-content content-style="padding: 24px;">
+          <n-space justify="end" align="center">
+            <n-switch @update:value="state.setTheme($event)">
+              <template #icon>
+                <n-icon v-if="!getTheme">
+                  <moon></moon>
+                </n-icon>
+                <n-icon v-if="getTheme">
+                  <sun></sun>
+                </n-icon>
+              </template>
+            </n-switch>
+            <n-button
+              strong
+              primary
+              circle
+              type="primary"
+              @click="openAccountModal"
+            >
+              <template #icon>
+                <n-icon>
+                  <User />
+                </n-icon>
+              </template>
+            </n-button>
+          </n-space>
+          <Suspense>
+            <PageContent />
+          </Suspense>
+        </n-layout-content>
+      </n-layout>
+      <n-layout-footer
+        v-if="isMobile"
+        style="padding-top: 5px; padding-bottom: 5px"
+        position="absolute"
       >
         <n-menu
-          :collapsed="collapsed"
-          :collapsed-width="64"
-          :collapsed-icon-size="22"
+          v-model:value="selectedKeyRef"
+          :class="{ 'mobile-menu': isMobile }"
           :options="menuOptions"
-          :value="selectedKeyRef"
+          mode="horizontal"
         />
-      </n-layout-sider>
-      <n-layout-content content-style="padding: 24px;">
-        <n-space justify="end" align="center">
-          <n-switch @update:value="state.setTheme($event)">
-            <template #icon>
-              <n-icon v-if="!getTheme">
-                <moon></moon>
-              </n-icon>
-              <n-icon v-if="getTheme">
-                <sun></sun>
-              </n-icon>
-            </template>
-          </n-switch>
-          <n-button
-            strong
-            primary
-            circle
-            type="primary"
-            @click="openAccountModal"
-          >
-            <template #icon>
-              <n-icon>
-                <User />
-              </n-icon>
-            </template>
-          </n-button>
-        </n-space>
-        <Suspense>
-          <router-view />
-        </Suspense>
-      </n-layout-content>
-    </n-layout>
-    <n-layout-footer
-      v-if="isMobile"
-      style="padding-top: 5px; padding-bottom: 5px"
-      position="absolute"
-    >
-      <n-menu
-        v-model:value="selectedKeyRef"
-        :class="{ 'mobile-menu': isMobile }"
-        :options="menuOptions"
-        mode="horizontal"
-      />
-    </n-layout-footer>
-  </n-dialog-provider>
-  <n-modal :show="showAccountModal">
-    <AccountModal @close-clicked="closeModal" />
-  </n-modal>
+      </n-layout-footer>
+    </n-dialog-provider>
+    <n-modal :show="showAccountModal">
+      <AccountModal @close-clicked="closeModal" />
+    </n-modal>
+  </n-loading-bar-provider>
 </template>
 <style>
 .text-center {
