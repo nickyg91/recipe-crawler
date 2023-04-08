@@ -56,7 +56,7 @@ public class ChefService : IChefService
         dbCookbook!.CoverImage = string.IsNullOrEmpty(cookbook.CoverImageBase64)
             ? null
             : Convert.FromBase64String(cookbook.CoverImageBase64);
-        var results = await _cookbookRepository.UpdateCookbook(dbCookbook!);
+        var results = await _cookbookRepository.UpdateCookbook(dbCookbook);
         
         return results > 0;
     }

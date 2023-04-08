@@ -23,4 +23,8 @@
     <ProjectReference Include="..\RecipeCrawler.ViewModels\RecipeCrawler.ViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Enums" />
+  </ItemGroup>
+
 </Project>

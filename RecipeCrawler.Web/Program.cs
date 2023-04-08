@@ -17,6 +17,8 @@ using RecipeCrawler.Core.Configuration;
 using RecipeCrawler.Core.Services.Chef;
 using RecipeCrawler.Core.Services.Chef.Interfaces;
 using RecipeCrawler.Core.Services.Email;
+using RecipeCrawler.Core.Services.Recipe;
+using RecipeCrawler.Core.Services.Recipe.Interfaces;
 using RecipeCrawler.ViewModels.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -62,12 +64,16 @@ builder.Services.AddSingleton<CookbookConfiguration>();
 builder.Services.AddSingleton<RecipeConfiguration>();
 builder.Services.AddSingleton<StepConfiguration>();
 builder.Services.AddSingleton<IngredientConfiguration>();
+builder.Services.AddSingleton<StepIngredientConfiguration>();
 builder.Services.AddScoped<IChefRepository, ChefRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddTransient<IEmailService, EmailService>((provider) => new EmailService(settings.EmailConfiguration!, url));
 builder.Services.AddTransient<TokenGenerator>();
 builder.Services.AddScoped<IChefService, ChefService>();
 builder.Services.AddScoped<ICookbookRepository, CookbookRepository>();
+builder.Services.AddScoped<IRecipeService, RecipeService>();
+builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
+builder.Services.AddScoped<IStepRepository, StepRepository>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<IAuthenticatedChef, AuthenticatedChef>(provider =>
 {
@@ -97,7 +103,8 @@ builder.Services.AddScoped((provider) =>
         provider.GetService<ChefConfiguration>() ?? new ChefConfiguration(),
         provider.GetService<RecipeConfiguration>() ?? new RecipeConfiguration(),
         provider.GetService<StepConfiguration>() ?? new StepConfiguration(),
-        provider.GetService<IngredientConfiguration>() ?? new IngredientConfiguration());
+        provider.GetService<IngredientConfiguration>() ?? new IngredientConfiguration(),
+        provider.GetService<StepIngredientConfiguration>() ?? new StepIngredientConfiguration());
     return context;
 });
 

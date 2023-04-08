@@ -4,7 +4,8 @@ import { DocumentHorizontal, Close, Edit } from "@vicons/carbon";
 import { Cookbook } from "../../../models/shared/cookbook.model";
 import { type PropType } from "vue";
 import { useRecipeStore } from "../../../recipe-store";
-
+import { useRouter } from "vue-router";
+const router = useRouter();
 const dialog = useDialog();
 const props = defineProps({
   cookbook: {
@@ -15,7 +16,16 @@ const props = defineProps({
 
 const store = useRecipeStore();
 
-async function cardClicked(): Promise<void> {
+function cardClicked(): void {
+  router.push({
+    name: "recipes",
+    params: {
+      cookbookId: props.cookbook.id,
+    },
+  });
+}
+
+async function editClicked(): Promise<void> {
   store.setCurrentlyEditingCookbook(props.cookbook.id);
   return;
 }
@@ -34,7 +44,7 @@ async function deleteClicked(id: number): Promise<void> {
 }
 </script>
 <template>
-  <n-card hoverable size="large" :title="cookbook?.name">
+  <n-card hoverable size="large" :title="cookbook?.name" @click="cardClicked()">
     <template #cover>
       <img
         v-if="cookbook!.coverImageBase64 && cookbook.coverImageBase64.length > 0"
@@ -48,7 +58,7 @@ async function deleteClicked(id: number): Promise<void> {
     </template>
     <template #action>
       <n-space justify="center" align="center">
-        <n-button type="info" circle strong secondary @click="cardClicked()">
+        <n-button type="info" circle strong secondary @click="editClicked()">
           <template #icon>
             <n-icon>
               <Edit />

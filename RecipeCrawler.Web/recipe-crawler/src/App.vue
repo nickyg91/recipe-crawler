@@ -81,26 +81,29 @@ const menuOptions: MenuOption[] = reactive([
   },
 ]);
 
-state.$onAction(({ name }) => {
-  if (name === "setUserInfo") {
-    menuOptions.push({
-      label: () =>
-        h(
-          RouterLink,
-          {
-            to: {
-              name: "cookBooks",
+watch(
+  () => state.userInfo,
+  (value) => {
+    if (value?.chefId !== null) {
+      menuOptions.push({
+        label: () =>
+          h(
+            RouterLink,
+            {
+              to: {
+                name: "cookBooks",
+              },
             },
-          },
-          {
-            default: () => "Cook Books",
-          }
-        ),
-      key: "cookBooks",
-      icon: () => h(Catalog),
-    });
+            {
+              default: () => "Cook Books",
+            }
+          ),
+        key: "cookBooks",
+        icon: () => h(Catalog),
+      });
+    }
   }
-});
+);
 
 const isMobile = computed(() => {
   return state.isMobile;
@@ -184,6 +187,10 @@ const openAccountModal = () => {
   </n-modal>
 </template>
 <style>
+.text-center {
+  text-align: center;
+}
+
 .mobile-menu.n-menu .n-menu-item-content {
   display: block;
   text-align: center;

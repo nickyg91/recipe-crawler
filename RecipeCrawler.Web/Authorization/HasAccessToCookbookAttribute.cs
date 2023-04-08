@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using RecipeCrawler.Core.Exceptions;
-using RecipeCrawler.Core.Services.Chef.Interfaces;
 using RecipeCrawler.Data.Repositories;
 
 namespace RecipeCrawler.Web.Authorization;
@@ -41,19 +40,11 @@ public class HasAccessToCookbookAttribute : AuthorizeAttribute, IAsyncAuthorizat
         }
         else
         {
-            try
-            {
-                var cookbook = await _cookbookRepository.GetCookbookById(cookbookId);
-                if (cookbook?.ChefId != chefId)
-                {
-                    context.Result = new ForbidResult();
-                }
-            }
-            catch (ChefCookbookAccessViolationException)
+            var cookbook = await _cookbookRepository.GetCookbookById(cookbookId);
+            if (cookbook?.ChefId != chefId)
             {
                 context.Result = new ForbidResult();
             }
-           
         }
     }
 }

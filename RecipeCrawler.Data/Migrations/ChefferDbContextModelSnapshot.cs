@@ -49,7 +49,7 @@ namespace RecipeCrawler.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(64)
                         .HasColumnType("uuid")
-                        .HasDefaultValue(new Guid("9ba96b93-c864-4f47-ad16-a7505efcd916"))
+                        .HasDefaultValue(new Guid("df3b7563-849c-463b-b703-ed2dde2db9c6"))
                         .HasColumnName("email_verification_guid");
 
                     b.Property<bool>("IsEmailVerified")
@@ -124,6 +124,10 @@ namespace RecipeCrawler.Data.Migrations
                         .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<byte>("Amount")
+                        .HasColumnType("smallint")
+                        .HasColumnName("amount");
 
                     b.Property<DateTime>("CreatedAtUtc")
                         .ValueGeneratedOnAdd()
@@ -209,6 +213,9 @@ namespace RecipeCrawler.Data.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
+
                     b.Property<int>("RecipeId")
                         .HasColumnType("integer")
                         .HasColumnName("recipe_id");
@@ -219,6 +226,39 @@ namespace RecipeCrawler.Data.Migrations
                     b.HasIndex("RecipeId");
 
                     b.ToTable("step", "cheffer");
+                });
+
+            modelBuilder.Entity("RecipeCrawler.Entities.StepIngredient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at_utc")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<int>("IngredientId")
+                        .HasColumnType("integer")
+                        .HasColumnName("ingredient_id");
+
+                    b.Property<int>("StepId")
+                        .HasColumnType("integer")
+                        .HasColumnName("step_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_step_ingredient");
+
+                    b.HasIndex("IngredientId");
+
+                    b.HasIndex("StepId");
+
+                    b.ToTable("step_ingredient", "cheffer");
                 });
 
             modelBuilder.Entity("RecipeCrawler.Entities.Cookbook", b =>
@@ -267,6 +307,27 @@ namespace RecipeCrawler.Data.Migrations
                     b.Navigation("Recipe");
                 });
 
+            modelBuilder.Entity("RecipeCrawler.Entities.StepIngredient", b =>
+                {
+                    b.HasOne("RecipeCrawler.Entities.Ingredient", "Ingredient")
+                        .WithMany("StepIngredients")
+                        .HasForeignKey("IngredientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_ingredient_step_ingredients");
+
+                    b.HasOne("RecipeCrawler.Entities.Step", "Step")
+                        .WithMany("StepIngredients")
+                        .HasForeignKey("StepId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_step_step_ingredients");
+
+                    b.Navigation("Ingredient");
+
+                    b.Navigation("Step");
+                });
+
             modelBuilder.Entity("RecipeCrawler.Entities.Chef", b =>
                 {
                     b.Navigation("Cookbooks");
@@ -277,11 +338,21 @@ namespace RecipeCrawler.Data.Migrations
                     b.Navigation("Recipes");
                 });
 
+            modelBuilder.Entity("RecipeCrawler.Entities.Ingredient", b =>
+                {
+                    b.Navigation("StepIngredients");
+                });
+
             modelBuilder.Entity("RecipeCrawler.Entities.Recipe", b =>
                 {
                     b.Navigation("Ingredients");
 
                     b.Navigation("Steps");
+                });
+
+            modelBuilder.Entity("RecipeCrawler.Entities.Step", b =>
+                {
+                    b.Navigation("StepIngredients");
                 });
 #pragma warning restore 612, 618
         }

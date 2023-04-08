@@ -12,12 +12,14 @@ namespace RecipeCrawler.Data.Database.Contexts
         private readonly RecipeConfiguration _recipeConfiguration;
         private readonly StepConfiguration _stepConfiguration;
         private readonly IngredientConfiguration _ingredientConfiguration;
+        private readonly StepIngredientConfiguration _stepIngredientConfiguration;
 
         public DbSet<Chef> Chefs { get; set; }
         public DbSet<Cookbook> Cookbooks { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<Step> Steps { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<StepIngredient> StepIngredients { get; set; }
 
         //explicitly used for ef migrations
         public ChefferDbContext(DbContextOptions<ChefferDbContext> options)
@@ -28,6 +30,7 @@ namespace RecipeCrawler.Data.Database.Contexts
             _recipeConfiguration = new RecipeConfiguration();
             _stepConfiguration = new StepConfiguration();
             _ingredientConfiguration = new IngredientConfiguration();
+            _stepIngredientConfiguration = new StepIngredientConfiguration();
         }
 
         public ChefferDbContext(string connectionString,
@@ -35,7 +38,8 @@ namespace RecipeCrawler.Data.Database.Contexts
             ChefConfiguration chefConfiguration,
             RecipeConfiguration recipeConfiguration,
             StepConfiguration stepConfiguration,
-            IngredientConfiguration ingredientConfiguration) : base()
+            IngredientConfiguration ingredientConfiguration,
+            StepIngredientConfiguration stepIngredientConfiguration) : base()
         {
             _connectionString = connectionString;
             _cookbookConfiguration = cookbookConfiguration;
@@ -43,6 +47,7 @@ namespace RecipeCrawler.Data.Database.Contexts
             _recipeConfiguration = recipeConfiguration;
             _stepConfiguration = stepConfiguration;
             _ingredientConfiguration = ingredientConfiguration;
+            _stepIngredientConfiguration = stepIngredientConfiguration;
         }
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
@@ -59,6 +64,7 @@ namespace RecipeCrawler.Data.Database.Contexts
             _recipeConfiguration.Configure(builder.Entity<Recipe>());
             _stepConfiguration.Configure(builder.Entity<Step>());
             _ingredientConfiguration.Configure(builder.Entity<Ingredient>());
+            _stepIngredientConfiguration.Configure(builder.Entity<StepIngredient>());
         }
     }
 }

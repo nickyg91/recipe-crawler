@@ -6,7 +6,10 @@ import axiosInstance from "./services/axios-instance.model";
 import { Cookbook } from "./models/shared/cookbook.model";
 import { CookbookService } from "./pages/cook-books/services/cookbook.service";
 import { ChefferWindow } from "./models/window.extension";
+import { RecipeService } from "./pages/recipe/services/recipe-api.service";
+import { Recipe } from "./models/shared/recipe.model";
 const cookbookService = new CookbookService();
+const recipeService = new RecipeService();
 export const useRecipeStore = defineStore("recipeStore", {
   state: () =>
     ({
@@ -17,6 +20,9 @@ export const useRecipeStore = defineStore("recipeStore", {
       cookbooks: new Array<Cookbook>(),
       currentlySelectedCookbookToEdit: null,
       originalCookbook: null,
+      currentCookbook: null,
+      currentCookbookRecipes: null,
+      currentRecipe: null,
     } as IRecipeStore),
   getters: {
     getRecipes(state) {
@@ -37,10 +43,43 @@ export const useRecipeStore = defineStore("recipeStore", {
     getCurrentlyEditedCookbook(state): Cookbook | null {
       return state.currentlySelectedCookbookToEdit;
     },
+    getRecipesForCookbook(state): Recipe[] | null {
+      return state.currentCookbookRecipes;
+    },
+    getCurrentCookbook(state): Cookbook | null {
+      return state.currentCookbook;
+    },
+    getCurrentRecipe(state): Recipe | null {
+      return state.currentRecipe;
+    },
   },
   actions: {
     addRecipe(recipe: ParsedResponse) {
       this.recipes.push(recipe);
+    },
+    async saveRecipe(recipe: Recipe) {
+      try {
+        const savedRecipe = await recipeService.saveRecipe(recipe);
+        if (this.currentCookbookRecipes) {
+          const exists = this.currentCookbookRecipes.some(
+            (x) => x.id === savedRecipe.id
+          );
+          if (!exists) {
+            this.currentCookbookRecipes.push(savedRecipe);
+          } else {
+            const index = this.currentCookbookRecipes.findIndex(
+              (x) => x.id === savedRecipe.id
+            );
+            this.currentCookbookRecipes[index] = savedRecipe;
+          }
+        } else {
+          this.currentCookbookRecipes = [savedRecipe];
+        }
+      } catch (e) {
+        (window as ChefferWindow).$message?.error(
+          "An error occurred while retrieving your recipe!"
+        );
+      }
     },
     setTheme(isLightMode: boolean) {
       this.isLightMode = isLightMode;
@@ -110,6 +149,21 @@ export const useRecipeStore = defineStore("recipeStore", {
       }
       this.originalCookbook = null;
       this.currentlySelectedCookbookToEdit = null;
+    },
+    async setCurrentCookbook(cookbook: Cookbook) {
+      this.currentCookbook = cookbook;
+      try {
+        this.currentCookbookRecipes = await recipeService.getRecipesForCookbook(
+          cookbook.id
+        );
+      } catch (error) {
+        (window as ChefferWindow).$message?.error(
+          "An error occurred while retrieving your recipes!"
+        );
+      }
+    },
+    setCurrentRecipe(recipe: Recipe) {
+      this.currentRecipe = recipe;
     },
   },
 });

@@ -11,6 +11,6 @@ namespace RecipeCrawler.Entities
         public string Password { get; set; }
         public Guid? EmailVerificationGuid { get; set; }
         public bool IsEmailVerified { get; set; }
-        public List<Cookbook> Cookbooks { get; set; }
+        public ICollection<Cookbook> Cookbooks { get; set; }
     }
 }
