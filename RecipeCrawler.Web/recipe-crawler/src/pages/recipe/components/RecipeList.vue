@@ -2,10 +2,18 @@
 import { PropType, h } from "vue";
 import { Recipe } from "../../../models/shared/recipe.model";
 import { Add, Close, Edit } from "@vicons/carbon";
-import { DataTableColumn, NDataTable, NSpace, NButton, NIcon } from "naive-ui";
+import {
+  DataTableColumn,
+  NDataTable,
+  NSpace,
+  NButton,
+  NIcon,
+  useDialog,
+} from "naive-ui";
 import { useRouter } from "vue-router";
 import { useRecipeStore } from "../../../recipe-store";
 import { ChefferWindow } from "../../../models/window.extension";
+const dialog = useDialog();
 const router = useRouter();
 const store = useRecipeStore();
 const props = defineProps({
@@ -49,7 +57,7 @@ const columns = [
           size: "small",
           type: "error",
           renderIcon: () => h(Close),
-          // onClick: () => ()
+          onClick: () => deleteClicked(rowData.id as number),
         },
         { default: () => "Delete" }
       );
@@ -73,6 +81,19 @@ function addRecipeClicked() {
       "No active cookbook selected! Please select one from the list."
     );
   }
+}
+async function deleteClicked(id: number): Promise<void> {
+  const currentCookbookId = Number(router.currentRoute.value.params.cookbookId);
+  dialog.warning({
+    content:
+      "Are you sure you want to delete this? You wont be able to get it back.",
+    title: "Delete?",
+    positiveText: "Yes",
+    negativeText: "No",
+    onPositiveClick: async () => {
+      await store.deleteRecipe(currentCookbookId, id);
+    },
+  });
 }
 </script>
 <template>
