@@ -34,7 +34,6 @@ namespace RecipeCrawler.Data.EntityConfigurations
                     .HasConstraintName("fk_cookbook_chef")
                     .HasForeignKey(x => x.ChefId);
             
-            
             builder
                 .Property(x => x.CoverImage)
                 .HasMaxLength(5_000_000)

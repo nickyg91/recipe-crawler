@@ -49,7 +49,7 @@ namespace RecipeCrawler.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(64)
                         .HasColumnType("uuid")
-                        .HasDefaultValue(new Guid("df3b7563-849c-463b-b703-ed2dde2db9c6"))
+                        .HasDefaultValue(new Guid("81503cc6-c52c-4e76-b7ef-9ed65ecad072"))
                         .HasColumnName("email_verification_guid");
 
                     b.Property<bool>("IsEmailVerified")

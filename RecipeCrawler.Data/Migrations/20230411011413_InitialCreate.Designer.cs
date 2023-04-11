@@ -12,8 +12,8 @@ using RecipeCrawler.Data.Database.Contexts;
 namespace RecipeCrawler.Data.Migrations
 {
     [DbContext(typeof(ChefferDbContext))]
-    [Migration("20230326194444_AddAmountToIngredient")]
-    partial class AddAmountToIngredient
+    [Migration("20230411011413_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,7 +52,7 @@ namespace RecipeCrawler.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(64)
                         .HasColumnType("uuid")
-                        .HasDefaultValue(new Guid("1a7c23a1-5430-48f3-8bb6-360e7d17fd4c"))
+                        .HasDefaultValue(new Guid("81503cc6-c52c-4e76-b7ef-9ed65ecad072"))
                         .HasColumnName("email_verification_guid");
 
                     b.Property<bool>("IsEmailVerified")
@@ -255,7 +255,7 @@ namespace RecipeCrawler.Data.Migrations
                         .HasColumnName("step_id");
 
                     b.HasKey("Id")
-                        .HasName("step_ingredient_pk");
+                        .HasName("pk_step_ingredient");
 
                     b.HasIndex("IngredientId");
 
@@ -313,16 +313,18 @@ namespace RecipeCrawler.Data.Migrations
             modelBuilder.Entity("RecipeCrawler.Entities.StepIngredient", b =>
                 {
                     b.HasOne("RecipeCrawler.Entities.Ingredient", "Ingredient")
-                        .WithMany()
+                        .WithMany("StepIngredients")
                         .HasForeignKey("IngredientId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_ingredient_step_ingredients");
 
                     b.HasOne("RecipeCrawler.Entities.Step", "Step")
                         .WithMany("StepIngredients")
                         .HasForeignKey("StepId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_step_step_ingredients");
 
                     b.Navigation("Ingredient");
 
@@ -337,6 +339,11 @@ namespace RecipeCrawler.Data.Migrations
             modelBuilder.Entity("RecipeCrawler.Entities.Cookbook", b =>
                 {
                     b.Navigation("Recipes");
+                });
+
+            modelBuilder.Entity("RecipeCrawler.Entities.Ingredient", b =>
+                {
+                    b.Navigation("StepIngredients");
                 });
 
             modelBuilder.Entity("RecipeCrawler.Entities.Recipe", b =>

@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace RecipeCrawler.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialSchemaCreation : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,7 +25,7 @@ namespace RecipeCrawler.Data.Migrations
                     username = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     email = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
                     password_hash = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
-                    email_verification_guid = table.Column<Guid>(type: "uuid", maxLength: 64, nullable: true, defaultValue: new Guid("9ba96b93-c864-4f47-ad16-a7505efcd916")),
+                    email_verification_guid = table.Column<Guid>(type: "uuid", maxLength: 64, nullable: true, defaultValue: new Guid("81503cc6-c52c-4e76-b7ef-9ed65ecad072")),
                     is_email_verified = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     created_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
                 },
@@ -91,6 +91,7 @@ namespace RecipeCrawler.Data.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     Measurement = table.Column<byte>(type: "smallint", nullable: false),
+                    amount = table.Column<byte>(type: "smallint", nullable: false),
                     recipe_id = table.Column<int>(type: "integer", nullable: false),
                     created_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
                 },
@@ -115,6 +116,7 @@ namespace RecipeCrawler.Data.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Description = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     recipe_id = table.Column<int>(type: "integer", nullable: false),
+                    Order = table.Column<int>(type: "integer", nullable: false),
                     created_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
                 },
                 constraints: table =>
@@ -125,6 +127,36 @@ namespace RecipeCrawler.Data.Migrations
                         column: x => x.recipe_id,
                         principalSchema: "cheffer",
                         principalTable: "recipe",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "step_ingredient",
+                schema: "cheffer",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ingredient_id = table.Column<int>(type: "integer", nullable: false),
+                    step_id = table.Column<int>(type: "integer", nullable: false),
+                    created_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_step_ingredient", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_ingredient_step_ingredients",
+                        column: x => x.ingredient_id,
+                        principalSchema: "cheffer",
+                        principalTable: "ingredient",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_step_step_ingredients",
+                        column: x => x.step_id,
+                        principalSchema: "cheffer",
+                        principalTable: "step",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -152,11 +184,27 @@ namespace RecipeCrawler.Data.Migrations
                 schema: "cheffer",
                 table: "step",
                 column: "recipe_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_step_ingredient_ingredient_id",
+                schema: "cheffer",
+                table: "step_ingredient",
+                column: "ingredient_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_step_ingredient_step_id",
+                schema: "cheffer",
+                table: "step_ingredient",
+                column: "step_id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "step_ingredient",
+                schema: "cheffer");
+
             migrationBuilder.DropTable(
                 name: "ingredient",
                 schema: "cheffer");
