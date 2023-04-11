@@ -8,10 +8,10 @@ export interface IRecipeStore {
   isLightMode: boolean;
   isMobile: boolean;
   userInfo: TokenResponse | null;
-  cookbooks: Array<Cookbook>;
+  cookbooks: Cookbook[];
   currentlySelectedCookbookToEdit: Cookbook | null;
   originalCookbook: Cookbook | null;
   currentCookbook: Cookbook | null;
-  currentCookbookRecipes: Recipe[] | null;
+  currentCookbookRecipes: Recipe[];
   currentRecipe: Recipe | null;
 }

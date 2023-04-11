@@ -39,7 +39,7 @@ const columns = [
           tertiary: true,
           size: "small",
           renderIcon: () => h(Edit),
-          // onClick: () => ()
+          onClick: () => editClicked(rowData.id as number),
         },
         { default: () => "Edit" }
       );
@@ -94,6 +94,10 @@ async function deleteClicked(id: number): Promise<void> {
       await store.deleteRecipe(currentCookbookId, id);
     },
   });
+}
+async function editClicked(id: number): Promise<void> {
+  const currentCookbookId = Number(router.currentRoute.value.params.cookbookId);
+  await store.getFullRecipeDetails(id, currentCookbookId);
 }
 </script>
 <template>

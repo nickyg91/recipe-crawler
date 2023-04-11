@@ -31,7 +31,12 @@ public class RecipeRepository : IRecipeRepository
 
     public async Task<Recipe?> GetRecipeById(int id)
     {
-        return await _context.Recipes.AsNoTracking().SingleOrDefaultAsync(x => x.Id == id);
+        return await _context.Recipes
+            .AsNoTracking()
+            .Include(x => x.Steps)
+            .ThenInclude(x => x.StepIngredients)
+            .Include(x => x.Ingredients)
+            .SingleOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<bool> UpdateRecipe(Recipe recipe)

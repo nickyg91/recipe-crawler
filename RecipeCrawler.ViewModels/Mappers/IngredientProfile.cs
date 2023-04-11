@@ -9,7 +9,7 @@ public class IngredientProfile : Profile
     public IngredientProfile()
     {
         CreateMap<IngredientViewModel, Ingredient>(MemberList.Destination)
-            .ForMember(dst => dst.Id, x => x.MapFrom(src => src.Id))
+            .ForMember(dst => dst.Id, x => x.MapFrom(src => src.Id < 0 ? 0 : src.Id))
             .ForMember(dst => dst.Measurement, x => x.MapFrom(src => src.Measurement))
             .ForMember(dst => dst.Name, x => x.MapFrom(src => src.Name))
             .ForMember(dst => dst.Amount, x => x.MapFrom(src => src.Amount))

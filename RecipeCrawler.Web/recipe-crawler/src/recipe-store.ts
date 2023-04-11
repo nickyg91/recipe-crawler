@@ -21,7 +21,7 @@ export const useRecipeStore = defineStore("recipeStore", {
       currentlySelectedCookbookToEdit: null,
       originalCookbook: null,
       currentCookbook: null,
-      currentCookbookRecipes: null,
+      currentCookbookRecipes: [],
       currentRecipe: null,
     } as IRecipeStore),
   getters: {
@@ -182,6 +182,28 @@ export const useRecipeStore = defineStore("recipeStore", {
       } catch (error) {
         (window as ChefferWindow).$message?.error(
           "An error occurred while retrieving your recipes!"
+        );
+      }
+    },
+    async getFullRecipeDetails(recipeId: number, cookbookId: number) {
+      try {
+        const index =
+          this.currentCookbookRecipes?.findIndex((x) => x.id === recipeId) ??
+          -1;
+        if (index < 0) {
+          (window as ChefferWindow).$message?.error(
+            "This recipe doesn't exist."
+          );
+        } else {
+          const fullDetails = await recipeService.getRecipeById(
+            cookbookId,
+            recipeId
+          );
+          this.currentCookbookRecipes[index] = fullDetails;
+        }
+      } catch (error) {
+        (window as ChefferWindow).$message?.error(
+          "Error getting recipe details."
         );
       }
     },
