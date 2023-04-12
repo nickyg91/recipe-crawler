@@ -9,7 +9,8 @@ public class StepIngredientConfiguration : IEntityTypeConfiguration<StepIngredie
     public void Configure(EntityTypeBuilder<StepIngredient> builder)
     {
         builder.ToTable("step_ingredient");
-        builder.Property(x => x.Id).HasColumnName("id");
+        builder.Property(x => x.Id)
+            .UseIdentityColumn().HasColumnName("id");
         builder.HasKey(x => x.Id).HasName("pk_step_ingredient");
 
         builder
@@ -25,7 +26,7 @@ public class StepIngredientConfiguration : IEntityTypeConfiguration<StepIngredie
             .HasForeignKey(x => x.StepId)
             .IsRequired()
             .HasConstraintName("fk_step_step_ingredients");
-        
+
         builder.HasOne(x => x.Ingredient)
             .WithMany(x => x.StepIngredients)
             .HasForeignKey(x => x.IngredientId)

@@ -11,6 +11,7 @@ namespace RecipeCrawler.Data.EntityConfigurations
             builder.ToTable("ingredient");
             builder
                 .Property(x => x.Id)
+                .UseIdentityColumn()
                 .HasColumnName("id");
 
             builder.HasKey(x => x.Id).HasName("pk_ingredient_id");

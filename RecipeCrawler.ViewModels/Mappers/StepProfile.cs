@@ -9,17 +9,17 @@ public class StepProfile : Profile
     public StepProfile()
     {
         CreateMap<StepViewModel, Step>(MemberList.Destination)
-            .ForMember(dst => dst.Id, x => x.MapFrom(src => src.Id < 0 ? 0 : src.Id))
+            .ForMember(dst => dst.Id, x => x.MapFrom(src => src.Id))
             .ForMember(dst => dst.Description, x => x.MapFrom(src => src.Description))
             .ForMember(dst => dst.Recipe, x => x.Ignore())
             .ForMember(dst => dst.StepIngredients, 
                 x => x.MapFrom(src => src.Ingredients != null ? src.Ingredients.Select(y => new StepIngredient
             {
-                Id = y.Id < 0 ? 0 : y.Id,
+                Id = y.Id,
                 StepId = y.StepId,
                 Ingredient = new Ingredient
                 {
-                    Id = y.Id < 0 ? 0 : y.Id,
+                    Id = y.Id,
                     Amount = y.Amount,
                     Measurement = y.Measurement,
                     Name = y.Name,

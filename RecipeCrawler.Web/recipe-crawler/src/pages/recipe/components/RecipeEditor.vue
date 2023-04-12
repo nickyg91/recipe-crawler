@@ -40,7 +40,7 @@ const recipeNameValidationRule = {
 let currentStepObject: Step;
 if (!currentlyEditedRecipe.steps || currentlyEditedRecipe.steps?.length === 0) {
   currentStepObject = reactive(
-    new Step(0, "", "", currentlyEditedRecipe?.id ?? 0, [])
+    new Step(0, "", "", currentlyEditedRecipe?.id ?? 0, [], 0)
   );
   currentlyEditedRecipe.steps = [currentStepObject];
 } else if (
@@ -53,11 +53,12 @@ if (!currentlyEditedRecipe.steps || currentlyEditedRecipe.steps?.length === 0) {
 function addStep(): void {
   const stepToAdd = reactive(
     new Step(
-      currentStepObject.id - 1,
+      0,
       "",
       "",
       currentlyEditedRecipe?.id ?? 0,
-      []
+      [],
+      currentlyEditedRecipe.steps ? currentlyEditedRecipe.steps.length - 1 : 0
     )
   );
   currentlyEditedRecipe.steps?.push(stepToAdd);
@@ -126,7 +127,7 @@ async function saveRecipe() {
       <div style="width: 75%">
         <RecipeStep
           v-if="currentlyEditedRecipe.steps!.length > 0"
-          :key="currentStepObject.id"
+          :key="currentStep"
           v-model:step="currentStepObject"
           v-model:index="currentStep"
           :ingredients="currentlyEditedRecipe.ingredients ?? []"

@@ -12,12 +12,6 @@ const recipes = computed(() => store.getRecipesForCookbook);
     <n-h1>
       {{ currentCookbook?.name }}
     </n-h1>
-    <!-- <n-breadcrumb>
-      <n-breadcrumb-item href="/cook-books"> Cookbooks </n-breadcrumb-item>
-      <n-breadcrumb-item>
-        {{ currentCookbook?.name }}
-      </n-breadcrumb-item>
-    </n-breadcrumb> -->
   </n-space>
   <RecipeList :recipes="recipes ?? []" />
 </template>

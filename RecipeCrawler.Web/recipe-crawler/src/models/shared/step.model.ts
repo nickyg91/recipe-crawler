@@ -6,13 +6,15 @@ export class Step {
     description: string,
     name: string,
     recipeId: number,
-    ingredients: Ingredient[]
+    ingredients: Ingredient[],
+    order: number
   ) {
     this.id = id;
     this.description = description;
     this.name = name;
     this.recipeId = recipeId;
     this.ingredients = ingredients;
+    this.order = order;
   }
 
   id!: number;
@@ -20,4 +22,5 @@ export class Step {
   name!: string;
   recipeId!: number;
   ingredients: Ingredient[];
+  order!: number;
 }

@@ -84,7 +84,7 @@ function addClicked() {
         });
       });
       Object.assign(ingredientFormState.formModel, {
-        id: (currentlyEditedRecipe?.ingredients?.length ?? 0) * -1,
+        id: 0,
         name: "",
         amount: 0,
         measurement: Measurement.Cup,
@@ -129,7 +129,7 @@ function deleteIngredient(index: number): void {
       >
         <n-list-item
           v-for="(ingredient, index) in currentlyEditedRecipe!.ingredients!"
-          :key="ingredient.id"
+          :key="index"
         >
           <n-space align="center" justify="space-evenly">
             <span>{{ ingredient.name }}</span>
@@ -152,7 +152,7 @@ function deleteIngredient(index: number): void {
     </n-scrollbar>
     <n-form
       ref="formRef"
-      :key="ingredientFormState.formModel.id"
+      :key="currentlyEditedRecipe!.ingredients?.find(x => x == ingredientFormState.formModel)"
       :model="ingredientFormState.formModel"
       :rules="ingredientFormRules"
       size="large"
