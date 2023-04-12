@@ -18,6 +18,8 @@ import { Recipe } from "../../../models/shared/recipe.model";
 import RecipeStep from "./RecipeStep.vue";
 import { useRecipeStore } from "../../../recipe-store";
 import IngredientForm from "./IngredientForm.vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const store = useRecipeStore();
 const currentlyEditedRecipe =
   store.getCurrentRecipe === null
@@ -80,6 +82,7 @@ function stepClicked(currentStep: number): void {
 
 async function saveRecipe() {
   await store.saveRecipe(currentlyEditedRecipe);
+  router.back();
 }
 </script>
 <template>

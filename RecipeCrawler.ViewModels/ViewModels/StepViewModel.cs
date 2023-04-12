@@ -6,4 +6,5 @@ public class StepViewModel
     public int RecipeId { get; set; }
     public string Description { get; set; }
     public List<IngredientViewModel>? Ingredients { get; set; }
+    public int Order { get; set; }
 }

@@ -17,6 +17,7 @@ import { SelectMixedOption } from "naive-ui/es/select/src/interface";
 import useMeasurementFunctions from "../../../shared/measurement-functions";
 const measurementHelpers = useMeasurementFunctions();
 const emits = defineEmits(["update:stepUpdated", "removeClicked"]);
+
 const props = defineProps({
   step: {
     default: () => null,
@@ -48,8 +49,8 @@ const formRules = {
 const computedMultiselectIngredientOptions = computed(() =>
   props.ingredients.map((x) => {
     return {
-      key: x.id,
-      value: x.id,
+      key: x.keyId,
+      value: x.keyId,
       label: `${x.name} - ${x.amount} - ${measurementHelpers.translateEnum(
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         x.measurement!
@@ -67,14 +68,19 @@ const computedModel = computed({
   },
 });
 
+const ingredientValues = ref(
+  computedModel.value.ingredients.map((x) => x.keyId)
+);
+
 function removeClicked(): void {
   emits("removeClicked", props.index);
 }
 
 function onValueUpdated(values: number[]) {
   const ingredients = props.ingredients.filter(
-    (x) => values.indexOf(x.id) > -1
+    (x) => values.indexOf(x.keyId) > -1
   );
+  ingredientValues.value = values;
   computedModel.value.ingredients = ingredients;
 }
 </script>
@@ -105,6 +111,7 @@ function onValueUpdated(values: number[]) {
         label="Ingredients"
       >
         <n-select
+          :value="ingredientValues"
           multiple
           :options="computedMultiselectIngredientOptions"
           @update:value="onValueUpdated($event)"

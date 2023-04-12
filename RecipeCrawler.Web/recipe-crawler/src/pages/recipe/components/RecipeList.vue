@@ -98,6 +98,12 @@ async function deleteClicked(id: number): Promise<void> {
 async function editClicked(id: number): Promise<void> {
   const currentCookbookId = Number(router.currentRoute.value.params.cookbookId);
   await store.getFullRecipeDetails(id, currentCookbookId);
+  router.push({
+    name: "recipeEditor",
+    params: {
+      recipeId: id,
+    },
+  });
 }
 </script>
 <template>

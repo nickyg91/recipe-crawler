@@ -75,6 +75,9 @@ export const useRecipeStore = defineStore("recipeStore", {
         } else {
           this.currentCookbookRecipes = [savedRecipe];
         }
+        (window as ChefferWindow).$message?.success(
+          "Your recipe has been saved!"
+        );
       } catch (e) {
         (window as ChefferWindow).$message?.error(
           "An error occurred while retrieving your recipe!"
@@ -195,11 +198,12 @@ export const useRecipeStore = defineStore("recipeStore", {
             "This recipe doesn't exist."
           );
         } else {
-          const fullDetails = await recipeService.getRecipeById(
+          const fullRecipe = await recipeService.getRecipeById(
             cookbookId,
             recipeId
           );
-          this.currentCookbookRecipes[index] = fullDetails;
+          this.currentCookbookRecipes[index] = fullRecipe;
+          this.currentRecipe = fullRecipe;
         }
       } catch (error) {
         (window as ChefferWindow).$message?.error(

@@ -57,8 +57,8 @@ if (!builder.Environment.IsDevelopment())
 builder.Services.AddAutoMapper(typeof(ChefProfile));
 builder.Services.AddAutoMapper(typeof(CookbookProfile));
 builder.Services.AddAutoMapper(typeof(RecipeProfile));
-builder.Services.AddAutoMapper(typeof(StepProfile));
 builder.Services.AddAutoMapper(typeof(IngredientProfile));
+builder.Services.AddAutoMapper(typeof(StepProfile));
 builder.Services.AddSingleton<ChefConfiguration>();
 builder.Services.AddSingleton<CookbookConfiguration>();
 builder.Services.AddSingleton<RecipeConfiguration>();

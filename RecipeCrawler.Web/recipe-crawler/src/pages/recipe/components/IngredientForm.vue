@@ -84,6 +84,8 @@ function addClicked() {
         });
       });
       Object.assign(ingredientFormState.formModel, {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        keyId: currentlyEditedRecipe!.ingredients!.length + 1,
         id: 0,
         name: "",
         amount: 0,
@@ -152,7 +154,7 @@ function deleteIngredient(index: number): void {
     </n-scrollbar>
     <n-form
       ref="formRef"
-      :key="currentlyEditedRecipe!.ingredients?.find(x => x == ingredientFormState.formModel)"
+      :key="ingredientFormState.formModel.keyId"
       :model="ingredientFormState.formModel"
       :rules="ingredientFormRules"
       size="large"
