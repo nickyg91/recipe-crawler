@@ -49,8 +49,8 @@ const formRules = {
 const computedMultiselectIngredientOptions = computed(() =>
   props.ingredients.map((x) => {
     return {
-      key: x.keyId,
-      value: x.keyId,
+      key: !x.id ? x.keyId : x.id,
+      value: !x.id ? x.keyId : x.id,
       label: `${x.name} - ${x.amount} - ${measurementHelpers.translateEnum(
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         x.measurement!
@@ -69,7 +69,7 @@ const computedModel = computed({
 });
 
 const ingredientValues = ref(
-  computedModel.value.ingredients.map((x) => x.keyId)
+  computedModel.value.ingredients.map((x) => (!x.id ? x.keyId : x.id))
 );
 
 function removeClicked(): void {
@@ -78,7 +78,7 @@ function removeClicked(): void {
 
 function onValueUpdated(values: number[]) {
   const ingredients = props.ingredients.filter(
-    (x) => values.indexOf(x.keyId) > -1
+    (x) => values.indexOf(!x.id ? x.keyId : x.id) > -1
   );
   ingredientValues.value = values;
   computedModel.value.ingredients = ingredients;
