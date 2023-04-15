@@ -20,8 +20,15 @@ public class IngredientProfile : Profile
 
         CreateMap<IngredientViewModel, StepIngredient>(MemberList.Destination)
             .ForMember(dst => dst.StepId, x => x.MapFrom(src => src.StepId))
-            .ForMember(dst => dst.Ingredient, x => x.MapFrom(src => src))
-            .ReverseMap();
+            .ForMember(dst => dst.Ingredient, x => x.MapFrom(src => src));
+
+        CreateMap<StepIngredient, IngredientViewModel>(MemberList.Destination)
+            .ForMember(dst => dst.StepId, x => x.MapFrom(src => src.StepId))
+            .ForMember(dst => dst.RecipeId, x => x.MapFrom(src => src.Ingredient.RecipeId))
+            .ForMember(dst => dst.Measurement, x => x.MapFrom(src => src.Ingredient.Measurement))
+            .ForMember(dst => dst.Amount, x => x.MapFrom(src => src.Ingredient.Amount))
+            .ForMember(dst => dst.Name, x => x.MapFrom(src => src.Ingredient.Name))
+            .ForMember(dst => dst.Id, x => x.MapFrom(src => src.Ingredient.Id));
         
         CreateMap<Ingredient, IngredientViewModel>(MemberList.Destination)
             .ForMember(dst => dst.Id, x => x.MapFrom(src => src.Id))
@@ -38,5 +45,6 @@ public class IngredientProfile : Profile
             .ForMember(dst => dst.Id, x => x.MapFrom(src => src.Ingredient.Id))
             .ForMember(dst => dst.Name, x => x.MapFrom(src => src.Ingredient.Name))
             .ReverseMap();
+        
     }
 }

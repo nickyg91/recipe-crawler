@@ -35,6 +35,7 @@ public class RecipeRepository : IRecipeRepository
             .AsNoTracking()
             .Include(x => x.Steps)
             .ThenInclude(x => x.StepIngredients)
+            .ThenInclude(x => x.Ingredient)
             .Include(x => x.Ingredients)
             .SingleOrDefaultAsync(x => x.Id == id);
     }

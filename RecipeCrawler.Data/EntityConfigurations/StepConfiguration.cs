@@ -22,10 +22,13 @@ namespace RecipeCrawler.Data.EntityConfigurations
             builder.Property(x => x.CreatedAtUtc)
                 .HasColumnName("created_at_utc")
                 .IsRequired()
+                .IsUnicode()
                 .HasDefaultValueSql("now()");
 
             builder.Property(x => x.Description).IsRequired().HasMaxLength(256);
 
+            builder.Property(x => x.Name).IsRequired().HasColumnName("name");
+            
             builder
                 .HasOne(x => x.Recipe)
                 .WithMany(x => x.Steps)
