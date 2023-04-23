@@ -19,6 +19,7 @@ import RecipeStep from "./RecipeStep.vue";
 import { useRecipeStore } from "../../../recipe-store";
 import IngredientForm from "./IngredientForm.vue";
 import { useRouter } from "vue-router";
+import { Ingredient } from "../../../models/shared/ingredient.model";
 const router = useRouter();
 const store = useRecipeStore();
 const currentlyEditedRecipe =
@@ -84,6 +85,14 @@ async function saveRecipe() {
   await store.saveRecipe(currentlyEditedRecipe);
   //router.back();
 }
+
+function ingredientAddedFromForm(ingredient: Ingredient): void {
+  currentStepObject.ingredients.push(ingredient);
+}
+
+function ingredientRemovedFromForm(index: number): void {
+  currentStepObject.ingredients.splice(index, 1);
+}
 </script>
 <template>
   <section style="margin-top: 1em">
@@ -133,7 +142,7 @@ async function saveRecipe() {
           :key="currentStep"
           v-model:step="currentStepObject"
           v-model:index="currentStep"
-          :ingredients="currentlyEditedRecipe.ingredients ?? []"
+          :ingredients="currentStepObject.ingredients ?? []"
           @remove-clicked="onRemoveClicked"
         ></RecipeStep>
       </div>
@@ -152,7 +161,12 @@ async function saveRecipe() {
           </n-button>
         </template>
         <div>
-          <IngredientForm />
+          <IngredientForm
+            :key="currentStepObject.id"
+            :ingredients="currentStepObject.ingredients"
+            @ingredient-added="ingredientAddedFromForm($event)"
+            @ingredient-deleted="ingredientRemovedFromForm"
+          />
         </div>
       </n-popover>
 

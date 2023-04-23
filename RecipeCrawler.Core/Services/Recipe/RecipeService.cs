@@ -24,29 +24,6 @@ public class RecipeService : IRecipeService
     {
         var dbRecipe = _mapper.Map<RecipeViewModel, Entities.Recipe>(recipe);
 
-        foreach (var ingredient in dbRecipe.Ingredients)
-        {
-            ingredient.Recipe = dbRecipe;
-        }
-
-        foreach (var stepIngredient in dbRecipe.Steps.SelectMany(x => x.StepIngredients))
-        {
-            stepIngredient.Ingredient.Recipe = dbRecipe;
-        }
-
-        foreach (var stepIngredient in dbRecipe.Steps.SelectMany(x => x.StepIngredients))
-        {
-            if (!dbRecipe.Ingredients.Any(x => x.Equals(stepIngredient.Ingredient)))
-            {
-                continue;
-            }
-            var ingredient = dbRecipe.Ingredients.FirstOrDefault(x => x.Equals(stepIngredient.Ingredient));
-            if (ingredient != null)
-            {
-                dbRecipe.Ingredients.Remove(ingredient);
-            }
-        }
-
         var savedRecipe = await _recipeRepository.SaveRecipe(dbRecipe);
         return _mapper.Map<Entities.Recipe, RecipeViewModel>(savedRecipe);
     }
@@ -84,9 +61,9 @@ public class RecipeService : IRecipeService
             throw new ChefRecipeAccessViolationException("Chef does not have access to this recipe!");
         }
 
-        var mappedUpdatedRecipe = _mapper.Map<RecipeViewModel, Entities.Recipe>(recipe);
-
-        return await _recipeRepository.UpdateRecipe(mappedUpdatedRecipe);
+        var dbRecipe = await _recipeRepository.GetRecipeById(recipe.Id);
+        _mapper.Map(recipe, dbRecipe);
+        return await _recipeRepository.UpdateRecipe(dbRecipe!);
     }
 
     public async Task<bool> DeleteRecipe(int chefId, int recipeId)

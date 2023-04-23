@@ -16,10 +16,8 @@ public class IngredientConfiguration : IEntityTypeConfiguration<Ingredient>
 
         builder.HasKey(x => x.Id).HasName("pk_ingredient_id");
 
-        builder.Property(x => x.RecipeId).HasColumnName("recipe_id");
-
         builder.Property(x => x.Measurement).IsRequired();
-
+        builder.Property(x => x.StepId).IsRequired().HasColumnName("step_id");
         builder.Property(x => x.CreatedAtUtc)
             .HasColumnName("created_at_utc")
             .IsRequired()
@@ -30,8 +28,8 @@ public class IngredientConfiguration : IEntityTypeConfiguration<Ingredient>
         builder.Property(x => x.Amount).HasColumnName("amount").IsRequired();
 
         builder
-            .HasOne(x => x.Recipe)
+            .HasOne(x => x.Step)
             .WithMany(x => x.Ingredients)
-            .HasForeignKey(x => x.RecipeId);
+            .HasForeignKey(x => x.StepId);
     }
 }
