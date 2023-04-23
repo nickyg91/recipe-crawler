@@ -82,7 +82,7 @@ function stepClicked(currentStep: number): void {
 
 async function saveRecipe() {
   await store.saveRecipe(currentlyEditedRecipe);
-  router.back();
+  //router.back();
 }
 </script>
 <template>

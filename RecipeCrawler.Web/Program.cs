@@ -12,6 +12,7 @@ using RecipeCrawler.Data.Repositories.Implementations;
 using RecipeCrawler.Web.Authentication;
 using RecipeCrawler.Web.Configuration;
 using System.Text;
+using AutoMapper.EquivalencyExpression;
 using RecipeCrawler.Core.Authentication;
 using RecipeCrawler.Core.Configuration;
 using RecipeCrawler.Core.Services.Chef;
@@ -54,11 +55,15 @@ if (!builder.Environment.IsDevelopment())
     oauthSecret = builder.Configuration.GetValue<string>("OAUTH_SECRET");
 }
 
-builder.Services.AddAutoMapper(typeof(ChefProfile));
-builder.Services.AddAutoMapper(typeof(CookbookProfile));
-builder.Services.AddAutoMapper(typeof(RecipeProfile));
-builder.Services.AddAutoMapper(typeof(IngredientProfile));
-builder.Services.AddAutoMapper(typeof(StepProfile));
+builder.Services.AddAutoMapper(config =>
+{
+    config.AddCollectionMappers();
+    config.AddMaps(
+        typeof(CookbookProfile),
+        typeof(RecipeProfile),
+        typeof(IngredientProfile),
+        typeof(StepProfile));
+});
 builder.Services.AddSingleton<ChefConfiguration>();
 builder.Services.AddSingleton<CookbookConfiguration>();
 builder.Services.AddSingleton<RecipeConfiguration>();

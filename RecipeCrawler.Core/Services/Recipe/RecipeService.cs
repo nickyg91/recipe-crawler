@@ -4,14 +4,16 @@ using RecipeCrawler.Core.Services.Recipe.Interfaces;
 using RecipeCrawler.Data.Repositories;
 using RecipeCrawler.Entities;
 using RecipeCrawler.ViewModels.ViewModels;
+
 namespace RecipeCrawler.Core.Services.Recipe;
 
 public class RecipeService : IRecipeService
 {
     private readonly IRecipeRepository _recipeRepository;
     private readonly IMapper _mapper;
+
     public RecipeService(
-        IRecipeRepository recipeRepository, 
+        IRecipeRepository recipeRepository,
         IMapper mapper)
     {
         _recipeRepository = recipeRepository;
@@ -20,16 +22,31 @@ public class RecipeService : IRecipeService
 
     public async Task<RecipeViewModel> SaveRecipe(RecipeViewModel recipe)
     {
-        var dbRecipe = new Entities.Recipe
+        var dbRecipe = _mapper.Map<RecipeViewModel, Entities.Recipe>(recipe);
+
+        foreach (var ingredient in dbRecipe.Ingredients)
         {
-            CookbookId = recipe.CookbookId,
-            Ingredients = new List<Ingredient>(),
-        };
-        _mapper.Map(recipe, dbRecipe);
+            ingredient.Recipe = dbRecipe;
+        }
+
         foreach (var stepIngredient in dbRecipe.Steps.SelectMany(x => x.StepIngredients))
         {
-            dbRecipe.Ingredients.Add(stepIngredient.Ingredient);
+            stepIngredient.Ingredient.Recipe = dbRecipe;
         }
+
+        foreach (var stepIngredient in dbRecipe.Steps.SelectMany(x => x.StepIngredients))
+        {
+            if (!dbRecipe.Ingredients.Any(x => x.Equals(stepIngredient.Ingredient)))
+            {
+                continue;
+            }
+            var ingredient = dbRecipe.Ingredients.FirstOrDefault(x => x.Equals(stepIngredient.Ingredient));
+            if (ingredient != null)
+            {
+                dbRecipe.Ingredients.Remove(ingredient);
+            }
+        }
+
         var savedRecipe = await _recipeRepository.SaveRecipe(dbRecipe);
         return _mapper.Map<Entities.Recipe, RecipeViewModel>(savedRecipe);
     }

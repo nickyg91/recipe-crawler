@@ -66,15 +66,6 @@ const ingredientFormRules = {
   } as FormItemRule,
 };
 
-if (currentlyEditedRecipe?.steps) {
-  const stepIngredients = currentlyEditedRecipe.steps.flatMap((x) =>
-    x.ingredients ? x.ingredients : []
-  );
-  if (stepIngredients) {
-    currentlyEditedRecipe.ingredients?.push(...stepIngredients);
-  }
-}
-
 function addClicked() {
   formRef.value?.validate((errors) => {
     if (!errors) {
