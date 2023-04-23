@@ -16,7 +16,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Enums" />
+      <Reference Include="AutoMapper.Collection">
+        <HintPath>..\..\..\.nuget\packages\automapper.collection\9.0.0\lib\netstandard2.1\AutoMapper.Collection.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

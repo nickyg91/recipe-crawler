@@ -16,17 +16,24 @@ import {
   useDialog,
 } from "naive-ui";
 import { Add, Close, ThumbsUp } from "@vicons/carbon";
-import { useRecipeStore } from "../../../recipe-store";
 import { Ingredient } from "../../../models/shared/ingredient.model";
 import { h, reactive, ref } from "vue";
 import { computed } from "vue";
 import { Measurement } from "../../../models/shared/measurement.enum";
 import useMeasurementFunctions from "../../../shared/measurement-functions";
-const store = useRecipeStore();
+import { PropType } from "vue";
+
+const props = defineProps({
+  ingredients: {
+    type: Array as PropType<Array<Ingredient>>,
+    required: true,
+    default: () => [],
+  },
+});
+
 const measurementHelpers = useMeasurementFunctions();
 const dialog = useDialog();
-const emits = defineEmits(["ingredientDeleted"]);
-const currentlyEditedRecipe = store.getCurrentRecipe;
+const emits = defineEmits(["ingredientAdded", "ingredientDeleted"]);
 const formRef = ref<FormInst | null>(null);
 const ingredientFormState = reactive({
   formModel: new Ingredient(),
@@ -44,6 +51,7 @@ const measurements = computed(() => {
   }
   return values;
 });
+
 const ingredientFormRules = {
   name: {
     required: true,
@@ -66,29 +74,18 @@ const ingredientFormRules = {
   } as FormItemRule,
 };
 
-if (currentlyEditedRecipe?.steps) {
-  const stepIngredients = currentlyEditedRecipe.steps.flatMap((x) =>
-    x.ingredients ? x.ingredients : []
-  );
-  if (stepIngredients) {
-    currentlyEditedRecipe.ingredients?.push(...stepIngredients);
-  }
-}
-
 function addClicked() {
   formRef.value?.validate((errors) => {
     if (!errors) {
-      store.$patch((state) => {
-        state.currentRecipe?.ingredients?.push({
-          ...ingredientFormState.formModel,
-        });
-      });
+      emits("ingredientAdded", { ...ingredientFormState.formModel });
       Object.assign(ingredientFormState.formModel, {
-        id: (currentlyEditedRecipe?.ingredients?.length ?? 0) * -1,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        keyId: props.ingredients!.length + 1,
+        id: 0,
         name: "",
-        amount: 0,
-        measurement: Measurement.Cup,
-      } as Ingredient);
+        amount: null,
+        measurement: null,
+      });
     }
   });
 }
@@ -109,13 +106,7 @@ function deleteIngredient(index: number): void {
     },
     negativeText: "No",
     onPositiveClick: () => {
-      const ingredientToRemove = currentlyEditedRecipe?.ingredients?.splice(
-        index,
-        1
-      );
-      if (ingredientToRemove) {
-        emits("ingredientDeleted", ingredientToRemove[0]);
-      }
+      emits("ingredientDeleted", index);
     },
   });
 }
@@ -123,14 +114,8 @@ function deleteIngredient(index: number): void {
 <template>
   <n-space vertical>
     <n-scrollbar style="max-height: 350px" trigger="hover">
-      <n-list
-        v-if="currentlyEditedRecipe && currentlyEditedRecipe!.ingredients!.length > 0"
-        bordered
-      >
-        <n-list-item
-          v-for="(ingredient, index) in currentlyEditedRecipe!.ingredients!"
-          :key="ingredient.id"
-        >
+      <n-list v-if="ingredients.length > 0" bordered>
+        <n-list-item v-for="(ingredient, index) in ingredients" :key="index">
           <n-space align="center" justify="space-evenly">
             <span>{{ ingredient.name }}</span>
             <span>{{ ingredient.amount }}</span>
@@ -152,7 +137,7 @@ function deleteIngredient(index: number): void {
     </n-scrollbar>
     <n-form
       ref="formRef"
-      :key="ingredientFormState.formModel.id"
+      :key="ingredientFormState.formModel.keyId"
       :model="ingredientFormState.formModel"
       :rules="ingredientFormRules"
       size="large"

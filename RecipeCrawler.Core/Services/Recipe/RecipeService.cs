@@ -4,14 +4,16 @@ using RecipeCrawler.Core.Services.Recipe.Interfaces;
 using RecipeCrawler.Data.Repositories;
 using RecipeCrawler.Entities;
 using RecipeCrawler.ViewModels.ViewModels;
+
 namespace RecipeCrawler.Core.Services.Recipe;
 
 public class RecipeService : IRecipeService
 {
     private readonly IRecipeRepository _recipeRepository;
     private readonly IMapper _mapper;
+
     public RecipeService(
-        IRecipeRepository recipeRepository, 
+        IRecipeRepository recipeRepository,
         IMapper mapper)
     {
         _recipeRepository = recipeRepository;
@@ -20,16 +22,8 @@ public class RecipeService : IRecipeService
 
     public async Task<RecipeViewModel> SaveRecipe(RecipeViewModel recipe)
     {
-        var dbRecipe = new Entities.Recipe
-        {
-            CookbookId = recipe.CookbookId,
-            Ingredients = new List<Ingredient>(),
-        };
-        _mapper.Map(recipe, dbRecipe);
-        foreach (var stepIngredient in dbRecipe.Steps.SelectMany(x => x.StepIngredients))
-        {
-            dbRecipe.Ingredients.Add(stepIngredient.Ingredient);
-        }
+        var dbRecipe = _mapper.Map<RecipeViewModel, Entities.Recipe>(recipe);
+
         var savedRecipe = await _recipeRepository.SaveRecipe(dbRecipe);
         return _mapper.Map<Entities.Recipe, RecipeViewModel>(savedRecipe);
     }
@@ -67,9 +61,9 @@ public class RecipeService : IRecipeService
             throw new ChefRecipeAccessViolationException("Chef does not have access to this recipe!");
         }
 
-        var mappedUpdatedRecipe = _mapper.Map<RecipeViewModel, Entities.Recipe>(recipe);
-
-        return await _recipeRepository.UpdateRecipe(mappedUpdatedRecipe);
+        var dbRecipe = await _recipeRepository.GetRecipeById(recipe.Id);
+        _mapper.Map(recipe, dbRecipe);
+        return await _recipeRepository.UpdateRecipe(dbRecipe!);
     }
 
     public async Task<bool> DeleteRecipe(int chefId, int recipeId)

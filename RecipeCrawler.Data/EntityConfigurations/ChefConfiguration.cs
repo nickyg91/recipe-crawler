@@ -12,6 +12,7 @@ namespace RecipeCrawler.Data.EntityConfigurations
 
             builder
                 .Property(x => x.Id)
+                .UseIdentityColumn()
                 .HasColumnName("id");
 
             builder.HasKey(x => x.Id).HasName("pk_chef_id");

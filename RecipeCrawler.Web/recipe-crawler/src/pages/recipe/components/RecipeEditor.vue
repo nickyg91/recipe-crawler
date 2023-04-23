@@ -18,6 +18,9 @@ import { Recipe } from "../../../models/shared/recipe.model";
 import RecipeStep from "./RecipeStep.vue";
 import { useRecipeStore } from "../../../recipe-store";
 import IngredientForm from "./IngredientForm.vue";
+import { useRouter } from "vue-router";
+import { Ingredient } from "../../../models/shared/ingredient.model";
+const router = useRouter();
 const store = useRecipeStore();
 const currentlyEditedRecipe =
   store.getCurrentRecipe === null
@@ -40,7 +43,7 @@ const recipeNameValidationRule = {
 let currentStepObject: Step;
 if (!currentlyEditedRecipe.steps || currentlyEditedRecipe.steps?.length === 0) {
   currentStepObject = reactive(
-    new Step(0, "", "", currentlyEditedRecipe?.id ?? 0, [])
+    new Step(0, "", "", currentlyEditedRecipe?.id ?? 0, [], 0)
   );
   currentlyEditedRecipe.steps = [currentStepObject];
 } else if (
@@ -53,11 +56,12 @@ if (!currentlyEditedRecipe.steps || currentlyEditedRecipe.steps?.length === 0) {
 function addStep(): void {
   const stepToAdd = reactive(
     new Step(
-      currentStepObject.id - 1,
+      0,
       "",
       "",
       currentlyEditedRecipe?.id ?? 0,
-      []
+      [],
+      currentlyEditedRecipe.steps ? currentlyEditedRecipe.steps.length - 1 : 0
     )
   );
   currentlyEditedRecipe.steps?.push(stepToAdd);
@@ -79,6 +83,15 @@ function stepClicked(currentStep: number): void {
 
 async function saveRecipe() {
   await store.saveRecipe(currentlyEditedRecipe);
+  //router.back();
+}
+
+function ingredientAddedFromForm(ingredient: Ingredient): void {
+  currentStepObject.ingredients.push(ingredient);
+}
+
+function ingredientRemovedFromForm(index: number): void {
+  currentStepObject.ingredients.splice(index, 1);
 }
 </script>
 <template>
@@ -126,10 +139,10 @@ async function saveRecipe() {
       <div style="width: 75%">
         <RecipeStep
           v-if="currentlyEditedRecipe.steps!.length > 0"
-          :key="currentStepObject.id"
+          :key="currentStep"
           v-model:step="currentStepObject"
           v-model:index="currentStep"
-          :ingredients="currentlyEditedRecipe.ingredients ?? []"
+          :ingredients="currentStepObject.ingredients ?? []"
           @remove-clicked="onRemoveClicked"
         ></RecipeStep>
       </div>
@@ -148,7 +161,12 @@ async function saveRecipe() {
           </n-button>
         </template>
         <div>
-          <IngredientForm />
+          <IngredientForm
+            :key="currentStepObject.id"
+            :ingredients="currentStepObject.ingredients"
+            @ingredient-added="ingredientAddedFromForm($event)"
+            @ingredient-deleted="ingredientRemovedFromForm"
+          />
         </div>
       </n-popover>
 

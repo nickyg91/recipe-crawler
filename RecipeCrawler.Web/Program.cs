@@ -12,6 +12,7 @@ using RecipeCrawler.Data.Repositories.Implementations;
 using RecipeCrawler.Web.Authentication;
 using RecipeCrawler.Web.Configuration;
 using System.Text;
+using AutoMapper.EquivalencyExpression;
 using RecipeCrawler.Core.Authentication;
 using RecipeCrawler.Core.Configuration;
 using RecipeCrawler.Core.Services.Chef;
@@ -54,17 +55,20 @@ if (!builder.Environment.IsDevelopment())
     oauthSecret = builder.Configuration.GetValue<string>("OAUTH_SECRET");
 }
 
-builder.Services.AddAutoMapper(typeof(ChefProfile));
-builder.Services.AddAutoMapper(typeof(CookbookProfile));
-builder.Services.AddAutoMapper(typeof(RecipeProfile));
-builder.Services.AddAutoMapper(typeof(StepProfile));
-builder.Services.AddAutoMapper(typeof(IngredientProfile));
+builder.Services.AddAutoMapper(config =>
+{
+    config.AddCollectionMappers();
+    config.AddMaps(
+        typeof(CookbookProfile),
+        typeof(RecipeProfile),
+        typeof(IngredientProfile),
+        typeof(StepProfile));
+});
 builder.Services.AddSingleton<ChefConfiguration>();
 builder.Services.AddSingleton<CookbookConfiguration>();
 builder.Services.AddSingleton<RecipeConfiguration>();
 builder.Services.AddSingleton<StepConfiguration>();
 builder.Services.AddSingleton<IngredientConfiguration>();
-builder.Services.AddSingleton<StepIngredientConfiguration>();
 builder.Services.AddScoped<IChefRepository, ChefRepository>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddTransient<IEmailService, EmailService>((provider) => new EmailService(settings.EmailConfiguration!, url));
@@ -103,8 +107,7 @@ builder.Services.AddScoped((provider) =>
         provider.GetService<ChefConfiguration>() ?? new ChefConfiguration(),
         provider.GetService<RecipeConfiguration>() ?? new RecipeConfiguration(),
         provider.GetService<StepConfiguration>() ?? new StepConfiguration(),
-        provider.GetService<IngredientConfiguration>() ?? new IngredientConfiguration(),
-        provider.GetService<StepIngredientConfiguration>() ?? new StepIngredientConfiguration());
+        provider.GetService<IngredientConfiguration>() ?? new IngredientConfiguration());
     return context;
 });
 

@@ -1,6 +1,7 @@
 import { Measurement } from "./measurement.enum";
 
 export class Ingredient {
+  keyId!: number;
   id!: number;
   name!: string;
   measurement!: Measurement;
