@@ -8,17 +8,12 @@
 
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="12.0.1" />
+      <PackageReference Include="AutoMapper.Collection" Version="9.0.0" />
       <PackageReference Include="AutoMapper.Extensions.EnumMapping" Version="3.0.1" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\RecipeCrawler.Entities\RecipeCrawler.Entities.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="AutoMapper.Collection">
-        <HintPath>..\..\..\.nuget\packages\automapper.collection\9.0.0\lib\netstandard2.1\AutoMapper.Collection.dll</HintPath>
-      </Reference>
     </ItemGroup>
 
 </Project>
