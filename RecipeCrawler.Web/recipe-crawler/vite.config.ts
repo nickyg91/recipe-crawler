@@ -4,7 +4,7 @@ import { readFileSync } from "fs";
 import { join } from "path";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ command, mode }) => {
+export default defineConfig(({ command }) => {
   if (command === "serve") {
     const baseFolder =
       process.env.APPDATA !== undefined && process.env.APPDATA !== ""
