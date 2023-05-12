@@ -8,6 +8,7 @@ import CookBooks from "./pages/cook-books/CookbooksPage.vue";
 import RecipePage from "./pages/recipe/RecipePage.vue";
 import RecipeEditor from "./pages/recipe/components/RecipeEditor.vue";
 import { useRecipeStore } from "./recipe-store";
+import ViewRecipe from "./pages/recipe/ViewRecipe.vue";
 
 function requiresAuthentication() {
   const store = useRecipeStore();
@@ -76,6 +77,12 @@ export const routes = [
     path: "/cook-books/:cookbookId/recipes/:recipeId/edit",
     component: RecipeEditor,
     name: "recipeEditor",
+    beforeEnter: [requiresAuthentication, requiresCookbookId],
+  },
+  {
+    path: "/cook-book/:cookbookId/recipes/:recipeId/view",
+    component: ViewRecipe,
+    name: "viewRecipe",
     beforeEnter: [requiresAuthentication, requiresCookbookId],
   },
 ] as RouteRecordRaw[];

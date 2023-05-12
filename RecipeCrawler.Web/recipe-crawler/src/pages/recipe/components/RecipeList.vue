@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { PropType, h } from "vue";
+import { PropType, computed, h } from "vue";
 import { Recipe } from "../../../models/shared/recipe.model";
-import { Add, Close, Edit } from "@vicons/carbon";
+import { Add, Close, Edit, View } from "@vicons/carbon";
 import {
   DataTableColumn,
   NDataTable,
@@ -23,10 +23,31 @@ const props = defineProps({
     required: true,
   },
 });
+
+const currentCookbookId = computed(() =>
+  Number(router.currentRoute.value.params.cookbookId)
+);
+
 const columns = [
   {
     key: "name",
     title: "Name",
+  },
+  {
+    align: "right",
+    width: 65,
+    render(rowData) {
+      return h(
+        NButton,
+        {
+          size: "small",
+          type: "primary",
+          renderIcon: () => h(View),
+          onClick: () => viewClicked(rowData.id as number),
+        },
+        { default: () => "View" }
+      );
+    },
   },
   {
     align: "right",
@@ -83,7 +104,6 @@ function addRecipeClicked() {
   }
 }
 async function deleteClicked(id: number): Promise<void> {
-  const currentCookbookId = Number(router.currentRoute.value.params.cookbookId);
   dialog.warning({
     content:
       "Are you sure you want to delete this? You wont be able to get it back.",
@@ -91,15 +111,24 @@ async function deleteClicked(id: number): Promise<void> {
     positiveText: "Yes",
     negativeText: "No",
     onPositiveClick: async () => {
-      await store.deleteRecipe(currentCookbookId, id);
+      await store.deleteRecipe(currentCookbookId.value, id);
     },
   });
 }
 async function editClicked(id: number): Promise<void> {
-  const currentCookbookId = Number(router.currentRoute.value.params.cookbookId);
-  await store.getFullRecipeDetails(id, currentCookbookId);
+  await store.getFullRecipeDetails(id, currentCookbookId.value);
   router.push({
     name: "recipeEditor",
+    params: {
+      recipeId: id,
+    },
+  });
+}
+
+async function viewClicked(id: number): Promise<void> {
+  await store.getFullRecipeDetails(id, currentCookbookId.value);
+  router.push({
+    name: "viewRecipe",
     params: {
       recipeId: id,
     },
